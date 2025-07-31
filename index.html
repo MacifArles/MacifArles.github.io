@@ -1,0 +1,2497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet CRC Commercial Arles - MACIF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --macif-blue: #0066CC;
+            --macif-light-blue: #E6F3FF;
+            --macif-orange: #FF6B35;
+            --macif-yellow: #FFD23F;
+            --macif-green: #06D6A0;
+            --macif-pink: #FF8FA3;
+            --macif-purple: #8B5CF6;
+            --white: #FFFFFF;
+            --light-gray: #F5F5F5;
+            --dark-gray: #333333;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --shadow-hover: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--macif-light-blue) 0%, #FFE5E5 100%);
+            min-height: 100vh;
+            color: var(--dark-gray);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        /* Header et Navigation */
+        .header {
+            background: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            background: var(--macif-blue);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .macif-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .macif-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--macif-blue);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            color: var(--dark-gray);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-link.accueil { background: var(--macif-blue); color: var(--white); }
+        .nav-link.annonces { background: var(--macif-orange); color: var(--white); }
+        .nav-link.fadarles { background: var(--macif-yellow); color: var(--dark-gray); }
+        .nav-link.bonnes-affaires { background: var(--macif-green); color: var(--white); }
+        .nav-link.activites { background: var(--macif-pink); color: var(--white); }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .login-banner {
+            background: linear-gradient(45deg, var(--macif-blue), var(--macif-purple));
+            color: var(--white);
+            padding: 0.75rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-banner:hover {
+            background: linear-gradient(45deg, #0052A3, #7C3AED);
+        }
+
+        .user-welcome {
+            background: var(--macif-green);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: var(--macif-orange);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #E55A2B;
+            transform: translateY(-1px);
+        }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .mobile-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--macif-blue);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 2rem 1rem 2rem;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* Modal de connexion - Z-index très élevé */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 99999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow-hover);
+            animation: slideDown 0.3s ease;
+            position: relative;
+            z-index: 100000;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: var(--macif-blue);
+        }
+
+        /* Hero section avec illustrations */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,102,204,0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--macif-blue);
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--macif-blue), var(--macif-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-illustration {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-illustration img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        .feature-card:nth-child(1) .feature-illustration { 
+            background: linear-gradient(135deg, var(--macif-orange), #FF8FA3); 
+        }
+        .feature-card:nth-child(2) .feature-illustration { 
+            background: linear-gradient(135deg, var(--macif-yellow), var(--macif-orange)); 
+        }
+        .feature-card:nth-child(3) .feature-illustration { 
+            background: linear-gradient(135deg, var(--macif-green), #06D6A0); 
+        }
+        .feature-card:nth-child(4) .feature-illustration { 
+            background: linear-gradient(135deg, var(--macif-pink), var(--macif-purple)); 
+        }
+
+        .feature-card h3 {
+            color: var(--macif-blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card p {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Cards communes */
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card h3 {
+            color: var(--macif-blue);
+            margin-bottom: 1rem;
+        }
+
+        /* Statuts */
+        .status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status.a-venir {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .status.en-cours {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .status.termine {
+            background: #E8F5E8;
+            color: #388E3C;
+        }
+
+        /* Formulaires */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--macif-blue);
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+        }
+
+        .btn {
+            background: var(--macif-blue);
+            color: var(--white);
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #0052A3;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--macif-orange);
+        }
+
+        .btn-secondary:hover {
+            background: #E55A2B;
+        }
+
+        .btn-success {
+            background: var(--macif-green);
+        }
+
+        .btn-success:hover {
+            background: #05C195;
+        }
+
+        .btn-danger {
+            background: #DC3545;
+        }
+
+        .btn-danger:hover {
+            background: #C82333;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message.success {
+            background: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+        }
+
+        .message.error {
+            background: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F5C6CB;
+        }
+
+        .message.info {
+            background: #D1ECF1;
+            color: #0C5460;
+            border: 1px solid #BEE5EB;
+        }
+
+        /* Grille d'événements/annonces */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .item-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .item-header {
+            background: linear-gradient(45deg, var(--macif-blue), var(--macif-orange));
+            color: var(--white);
+            padding: 1rem;
+        }
+
+        .item-body {
+            padding: 1.5rem;
+        }
+
+        .item-date {
+            background: var(--macif-yellow);
+            color: var(--dark-gray);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Modal détails */
+        .modal-large {
+            max-width: 700px;
+        }
+
+        .modal-body {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        /* Upload d'image */
+        .image-upload {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .image-upload:hover {
+            border-color: var(--macif-blue);
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .image-gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Compteur places */
+        .places-counter {
+            display: inline-block;
+            background: var(--macif-green);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .places-counter.low {
+            background: var(--macif-orange);
+        }
+
+        .places-counter.full {
+            background: #DC3545;
+        }
+
+        /* Page header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--macif-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Filtres */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group select {
+            padding: 0.5rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 5px;
+            background: var(--white);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .nav-link {
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .mobile-toggle {
+                display: flex;
+                position: absolute;
+                right: 1rem;
+                top: 1rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-actions {
+                justify-content: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-content.active {
+            animation: slideIn 0.5s ease;
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--macif-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-hover);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            background: #0052A3;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: var(--light-gray);
+            border-radius: 10px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--white);
+            color: var(--macif-blue);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--macif-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Masquer le footer quand modal ouvert */
+        body.modal-open .footer {
+            display: none !important;
+        }
+
+        /* Footer simplifié */
+        .footer {
+            background: linear-gradient(135deg, var(--macif-blue) 0%, #0052A3 100%);
+            color: var(--white);
+            padding: 3rem 0 1rem 0;
+            margin-top: 2rem;
+            width: 100%;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            display: block;
+            position: relative;
+            z-index: 1;
+            clear: both;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--macif-yellow);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .footer-section a:hover {
+            color: var(--macif-yellow);
+            transition: color 0.3s ease;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-info:hover {
+            color: var(--macif-yellow);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--macif-yellow);
+            color: var(--macif-blue);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                padding: 2rem 0 1rem 0;
+            }
+            
+            .footer-content {
+                padding: 0 1rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .footer-logo {
+                justify-content: center;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+        .tooltip {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark-gray);
+            color: var(--white);
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Masquer les formulaires par défaut */
+        .add-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal de connexion -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h2 style="text-align: center; color: var(--macif-blue); margin-bottom: 2rem;">🔐 Connexion</h2>
+            <div id="loginMessage"></div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Identifiant :</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="https://logos-world.net/wp-content/uploads/2021/02/Macif-Logo.png" alt="MACIF Logo">
+                        <div class="footer-logo-text">MACIF Arles</div>
+                    </div>
+                    <p>Centre de Relation Client Commercial Arles</p>
+                    <p>Votre intranet de communication interne et de collaboration d'équipe.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>📞 Contact</h4>
+                    <div class="contact-info">
+                        <span>📧</span>
+                        <a href="mailto:macifarles@gmail.com">macifarles@gmail.com</a>
+                    </div>
+                    <div class="contact-info">
+                        <span>📱</span>
+                        <span>04 90 XX XX XX</span>
+                    </div>
+                    <div class="contact-info">
+                        <span>📍</span>
+                        <span>CRC Arles, France</span>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>🔗 Liens utiles</h4>
+                    <a href="https://www.macif.fr" target="_blank">Site officiel MACIF</a>
+                    <a href="#" onclick="showPage('annonces')">Annonces commerciales</a>
+                    <a href="#" onclick="showPage('fadarles')">Événements FAD'ARLES</a>
+                    <a href="#" onclick="showPage('bonnes-affaires')">Bonnes affaires</a>
+                    <a href="#" onclick="showPage('activites')">Activités sportives</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>ℹ️ Support</h4>
+                    <p>Pour toute question technique concernant l'intranet, contactez l'équipe support.</p>
+                    <div class="social-links">
+                        <a href="mailto:macifarles@gmail.com" class="social-link" title="Email">
+                            📧
+                        </a>
+                        <a href="https://www.macif.fr" target="_blank" class="social-link" title="Site MACIF">
+                            🌐
+                        </a>
+                        <a href="#" class="social-link" title="Support" onclick="alert('Support: macifarles@gmail.com')">
+                            🆘
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Intranet MACIF Arles - Centre de Relation Client Commercial. Tous droits réservés.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+                    Plateforme interne réservée aux collaborateurs MACIF Arles • Données confidentielles
+                </p>
+            </div>
+        </div>
+    </footer>
+                <div class="form-group">
+                    <label>Mot de passe :</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-bottom: 1rem;">Se connecter</button>
+                <div style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Tests rapides :</p>
+                    <button type="button" class="btn btn-small" onclick="testLogin('AdminFadarles')" style="margin: 0.25rem;">Test Admin FAD</button>
+                    <button type="button" class="btn btn-small btn-secondary" onclick="testLogin('AdminRe')" style="margin: 0.25rem;">Test Admin RE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal détails -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" onclick="closeDetailModal()">&times;</span>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <!-- Bandeau de connexion -->
+        <div id="loginBanner" class="login-banner" onclick="openLoginModal()">
+            🔐 Se connecter pour accéder aux fonctionnalités avancées
+        </div>
+        
+        <nav class="navbar">
+            <a href="#" class="logo" onclick="showPage('accueil')">
+                <div class="macif-logo">
+                    <img src="https://logos-world.net/wp-content/uploads/2021/02/Macif-Logo.png" alt="MACIF Logo">
+                </div>
+                <div class="logo-text">MACIF Arles</div>
+            </a>
+            
+            <div class="mobile-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link accueil active" onclick="showPage('accueil')">🏠 Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link annonces" onclick="showPage('annonces')">📢 Annonces</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link fadarles" onclick="showPage('fadarles')">🎉 FAD'ARLES</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link bonnes-affaires" onclick="showPage('bonnes-affaires')">🛒 Bonnes Affaires</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link activites" onclick="showPage('activites')">⚽ Activités</a>
+                </li>
+            </ul>
+
+            <div class="user-info" id="userInfo" style="display: none;">
+                <span class="user-welcome" id="userWelcome"></span>
+                <button class="logout-btn" onclick="logout()">Déconnexion</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+        <!-- Page Accueil -->
+        <div id="accueil" class="page-content active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Bienvenue sur l'Intranet</h1>
+                    <p>CRC Commercial Arles - MACIF<br>
+                    Votre plateforme de communication interne centralisée</p>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-illustration">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3143/3143643.png" alt="Annonces">
+                    </div>
+                    <h3>Annonces Commerciales</h3>
+                    <p>Consultez les dernières animations commerciales, challenges et actualités de l'équipe. Suivez les statuts en temps réel.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-illustration">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3074/3074058.png" alt="Événements">
+                    </div>
+                    <h3>Événements FAD'ARLES</h3>
+                    <p>Découvrez tous les événements de l'équipe, passés et à venir. Les administrateurs peuvent organiser de nouveaux événements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-illustration">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Shopping">
+                    </div>
+                    <h3>Coin des Bonnes Affaires</h3>
+                    <p>Achetez, vendez et échangez entre collègues. Contactez directement les vendeurs par email.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-illustration">
+                        <img src="https://cdn-icons-png.flaticon.com/512/53/53283.png" alt="Sports">
+                    </div>
+                    <h3>Organisation d'activités</h3>
+                    <p>Inscrivez-vous aux activités sportives et événements team building. Partagez vos photos !</p>
+                </div>
+            </div>
+
+            <!-- Ajout d'une section pour voir le footer -->
+            <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-top: 2rem; text-align: center;">
+                <h3 style="color: var(--macif-blue); margin-bottom: 1rem;">🚀 Bienvenue dans votre espace collaboratif</h3>
+                <p style="color: var(--dark-gray); line-height: 1.6;">
+                    Votre intranet MACIF Arles vous permet de rester connecté avec votre équipe, 
+                    de suivre les actualités commerciales et de participer à la vie de l'agence. 
+                    N'hésitez pas à explorer toutes les fonctionnalités disponibles !
+                </p>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                    💡 <strong>Conseil :</strong> Connectez-vous pour accéder aux fonctionnalités avancées et personnaliser votre expérience.
+                </p>
+            </div>
+        </div>
+
+        <!-- Page Annonces Commerciales -->
+        <div id="annonces" class="page-content">
+            <div class="page-header">
+                <h2 class="page-title">📢 Annonces Commerciales</h2>
+                <button id="addAnnonceBtn" class="btn" style="display: none;" onclick="showAddAnnonceForm()">
+                    ➕ Nouvelle annonce
+                </button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Filtrer par statut :</label>
+                    <select id="annonceFilter" onchange="filterAnnonces()">
+                        <option value="all">Tous</option>
+                        <option value="a-venir">À venir</option>
+                        <option value="en-cours">En cours</option>
+                        <option value="termine">Terminé</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="addAnnonceForm" class="card add-form">
+                <h3>➕ Ajouter une annonce commerciale</h3>
+                <form onsubmit="addAnnonceCommerciale(event)">
+                    <div class="form-group">
+                        <label>Titre de l'annonce :</label>
+                        <input type="text" id="newAnnonceTitre" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Date de début :</label>
+                            <input type="date" id="newAnnonceDebut" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date de fin :</label>
+                            <input type="date" id="newAnnonceFin" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description :</label>
+                        <textarea id="newAnnonceDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Détails/Règles :</label>
+                        <textarea id="newAnnonceDetails" rows="6" placeholder="Détails complets, règles du challenge, conditions..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Statut :</label>
+                        <select id="newAnnonceStatut" required>
+                            <option value="a-venir">À venir</option>
+                            <option value="en-cours">En cours</option>
+                            <option value="termine">Terminé</option>
+                        </select>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn">Ajouter l'annonce</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAddAnnonceForm()">Annuler</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="annoncesList" class="items-grid"></div>
+        </div>
+
+        <!-- Page FAD'ARLES -->
+        <div id="fadarles" class="page-content">
+            <div class="page-header">
+                <h2 class="page-title">🎉 Événements FAD'ARLES</h2>
+                <button id="addFadBtn" class="btn" style="display: none;" onclick="showAddFadForm()">
+                    ➕ Nouvel événement
+                </button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showFadTab('upcoming')">À venir</button>
+                <button class="tab" onclick="showFadTab('past')">Passés</button>
+            </div>
+
+            <div id="addFadForm" class="card add-form">
+                <h3>➕ Ajouter un événement FAD'ARLES</h3>
+                <form onsubmit="addFadEvent(event)">
+                    <div class="form-group">
+                        <label>Titre de l'événement :</label>
+                        <input type="text" id="fadTitle" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Date :</label>
+                            <input type="date" id="fadDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Heure :</label>
+                            <input type="time" id="fadTime">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Lieu :</label>
+                        <input type="text" id="fadLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description :</label>
+                        <textarea id="fadDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn">Ajouter l'événement</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAddFadForm()">Annuler</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="fadUpcoming" class="tab-content active">
+                <div id="fadEventsList" class="items-grid"></div>
+            </div>
+
+            <div id="fadPast" class="tab-content">
+                <div id="fadPastEventsList" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Page Bonnes Affaires -->
+        <div id="bonnes-affaires" class="page-content">
+            <div class="page-header">
+                <h2 class="page-title">🛒 Coin des Bonnes Affaires</h2>
+                <button class="btn" onclick="showAddAnnonceBAForm()">➕ Publier une annonce</button>
+            </div>
+
+            <div id="addAnnonceBAForm" class="card add-form">
+                <h3>➕ Publier une annonce</h3>
+                <form onsubmit="addAnnonce(event)">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Prénom :</label>
+                            <input type="text" id="annoncePrenom" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nom :</label>
+                            <input type="text" id="annonceNom" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email :</label>
+                        <input type="email" id="annonceEmail" required placeholder="votre.email@macif.fr">
+                    </div>
+                    <div class="form-group">
+                        <label>Titre de l'annonce :</label>
+                        <input type="text" id="annonceTitre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description :</label>
+                        <textarea id="annonceDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Prix (optionnel) :</label>
+                        <input type="text" id="annoncePrix" placeholder="ex: 50€">
+                    </div>
+                    <div class="form-group">
+                        <label>Image (optionnelle) :</label>
+                        <div class="image-upload" onclick="document.getElementById('annonceImage').click()">
+                            <p>📷 Cliquez pour ajouter une image</p>
+                            <input type="file" id="annonceImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'annoncePreview')">
+                        </div>
+                        <img id="annoncePreview" class="image-preview" style="display: none;">
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn">Publier l'annonce</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAddAnnonceBAForm()">Annuler</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="annoncesBonnesAffairesList" class="items-grid"></div>
+        </div>
+
+        <!-- Page Activités -->
+        <div id="activites" class="page-content">
+            <div class="page-header">
+                <h2 class="page-title">⚽ Organisation d'activités</h2>
+                <button class="btn" onclick="showAddActivityForm()">➕ Créer une activité</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showActivityTab('upcoming')">À venir</button>
+                <button class="tab" onclick="showActivityTab('past')">Passées</button>
+            </div>
+
+            <div id="addActivityForm" class="card add-form">
+                <h3>➕ Créer une activité</h3>
+                <form onsubmit="addActivity(event)">
+                    <div class="form-group">
+                        <label>Nom de l'activité :</label>
+                        <input type="text" id="activityName" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Date :</label>
+                            <input type="date" id="activityDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Heure :</label>
+                            <input type="time" id="activityTime" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Lieu :</label>
+                        <input type="text" id="activityLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre de places disponibles :</label>
+                        <input type="number" id="activityPlaces" min="1" max="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description :</label>
+                        <textarea id="activityDescription" rows="3"></textarea>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn">Créer l'activité</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAddActivityForm()">Annuler</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="activitiesUpcoming" class="tab-content active">
+                <div id="activitiesList" class="items-grid"></div>
+            </div>
+
+            <div id="activitiesPast" class="tab-content">
+                <div id="activitiesPastList" class="items-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales pour la sécurité et la gestion des données
+        const USERS = {
+            'AdminFadarles': { password: 'Azertyuiop123', role: 'fadarles', name: 'Admin FAD\'ARLES' },
+            'AdminRe': { password: 'Azertyuiop123', role: 'annonces', name: 'Admin Réseaux' }
+        };
+
+        let currentUser = null;
+
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            checkLoginStatus();
+            displayAllContent();
+        });
+
+        // Gestion de la navigation mobile
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Navigation entre les pages
+        function showPage(pageId) {
+            // Masquer toutes les pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Masquer tous les liens actifs
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => link.classList.remove('active'));
+            
+            // Afficher la page sélectionnée
+            document.getElementById(pageId).classList.add('active');
+            
+            // Activer le lien correspondant
+            document.querySelector(`.nav-link.${pageId}`).classList.add('active');
+            
+            // Fermer le menu mobile
+            document.getElementById('navMenu').classList.remove('active');
+            
+            // Actualiser le contenu selon les permissions
+            updatePagePermissions();
+        }
+
+        // Gestion des modals
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('loginMessage').innerHTML = '';
+            document.body.classList.remove('modal-open');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+
+        // Fermeture des modals en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('loginModal');
+            const detailModal = document.getElementById('detailModal');
+            
+            if (event.target === loginModal) {
+                closeLoginModal();
+            }
+            if (event.target === detailModal) {
+                closeDetailModal();
+            }
+        }
+
+        // Système d'authentification avec debug
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = sanitizeInput(document.getElementById('loginUsername').value);
+            const password = document.getElementById('loginPassword').value;
+            
+            const messageDiv = document.getElementById('loginMessage');
+            
+            console.log('=== DEBUG CONNEXION ===');
+            console.log('Username saisi:', username);
+            console.log('Password saisi:', password);
+            console.log('Users disponibles:', Object.keys(USERS));
+            console.log('Test AdminFadarles:', USERS['AdminFadarles']);
+            console.log('Test AdminRe:', USERS['AdminRe']);
+            
+            // Test direct pour debug (à retirer en production)
+            if ((username === 'AdminFadarles' || username === 'AdminRe') && password === 'Azertyuiop123') {
+                console.log('✅ Connexion OK via test direct');
+                
+                currentUser = {
+                    username: username,
+                    role: username === 'AdminFadarles' ? 'fadarles' : 'annonces',
+                    name: username === 'AdminFadarles' ? 'Admin FAD\'ARLES' : 'Admin Réseaux'
+                };
+                
+                // Sauvegarder la session (avec fallback si localStorage ne marche pas)
+                try {
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    console.log('✅ Session sauvegardée dans localStorage');
+                } catch (e) {
+                    console.log('⚠️ localStorage non disponible, utilisation mémoire uniquement');
+                }
+                
+                updateUIAfterLogin();
+                closeLoginModal();
+                
+                showMessage('success', `✅ Connexion réussie ! Bienvenue ${currentUser.name}`);
+                return;
+            }
+            
+            // Test avec l'objet USERS original
+            if (USERS[username] && USERS[username].password === password) {
+                console.log('✅ Connexion OK via USERS object');
+                
+                currentUser = {
+                    username: username,
+                    role: USERS[username].role,
+                    name: USERS[username].name
+                };
+                
+                try {
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                } catch (e) {
+                    console.log('⚠️ localStorage non disponible');
+                }
+                
+                updateUIAfterLogin();
+                closeLoginModal();
+                
+                showMessage('success', `✅ Connexion réussie ! Bienvenue ${currentUser.name}`);
+            } else {
+                console.log('❌ Échec de connexion');
+                messageDiv.innerHTML = '<div class="message error">❌ Identifiants incorrects<br><small>Debug: ' + username + ' / ' + password + '</small></div>';
+                setTimeout(() => messageDiv.innerHTML = '', 5000);
+            }
+        }
+
+        function testLogin(username) {
+            document.getElementById('loginUsername').value = username;
+            document.getElementById('loginPassword').value = 'Azertyuiop123';
+            console.log('🧪 Test de connexion automatique pour:', username);
+        }
+
+        function checkLoginStatus() {
+            try {
+                const savedUser = localStorage.getItem('currentUser');
+                if (savedUser) {
+                    currentUser = JSON.parse(savedUser);
+                    updateUIAfterLogin();
+                    console.log('✅ Session restaurée:', currentUser);
+                }
+            } catch (e) {
+                console.log('⚠️ Impossible de restaurer la session:', e);
+                localStorage.removeItem('currentUser');
+            }
+        }
+
+        function updateUIAfterLogin() {
+            if (currentUser) {
+                document.getElementById('loginBanner').style.display = 'none';
+                document.getElementById('userInfo').style.display = 'flex';
+                document.getElementById('userWelcome').textContent = `👋 ${currentUser.name}`;
+                
+                updatePagePermissions();
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            
+            document.getElementById('loginBanner').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+            
+            // Masquer les boutons d'administration
+            document.getElementById('addAnnonceBtn').style.display = 'none';
+            document.getElementById('addFadBtn').style.display = 'none';
+            
+            // Masquer les formulaires
+            hideAllForms();
+            
+            // Actualiser l'affichage
+            displayAllContent();
+            
+            showMessage('info', '👋 Déconnexion réussie');
+        }
+
+        function updatePagePermissions() {
+            // Bouton ajout d'annonces (AdminRe seulement)
+            const addAnnonceBtn = document.getElementById('addAnnonceBtn');
+            if (currentUser && currentUser.role === 'annonces') {
+                addAnnonceBtn.style.display = 'block';
+            } else {
+                addAnnonceBtn.style.display = 'none';
+            }
+            
+            // Bouton ajout événements FAD (AdminFadarles seulement)
+            const addFadBtn = document.getElementById('addFadBtn');
+            if (currentUser && currentUser.role === 'fadarles') {
+                addFadBtn.style.display = 'block';
+            } else {
+                addFadBtn.style.display = 'none';
+            }
+        }
+
+        function hideAllForms() {
+            document.querySelectorAll('.add-form').forEach(form => {
+                form.style.display = 'none';
+            });
+        }
+
+        // Fonction de nettoyage des entrées
+        function sanitizeInput(input) {
+            return input.trim().replace(/[<>\"'&]/g, '');
+        }
+
+        // GESTION DES FORMULAIRES
+        function showAddAnnonceForm() {
+            if (currentUser && currentUser.role === 'annonces') {
+                document.getElementById('addAnnonceForm').style.display = 'block';
+            }
+        }
+
+        function hideAddAnnonceForm() {
+            document.getElementById('addAnnonceForm').style.display = 'none';
+        }
+
+        function showAddFadForm() {
+            if (currentUser && currentUser.role === 'fadarles') {
+                document.getElementById('addFadForm').style.display = 'block';
+            }
+        }
+
+        function hideAddFadForm() {
+            document.getElementById('addFadForm').style.display = 'none';
+        }
+
+        function showAddAnnonceBAForm() {
+            document.getElementById('addAnnonceBAForm').style.display = 'block';
+        }
+
+        function hideAddAnnonceBAForm() {
+            document.getElementById('addAnnonceBAForm').style.display = 'none';
+        }
+
+        function showAddActivityForm() {
+            document.getElementById('addActivityForm').style.display = 'block';
+        }
+
+        function hideAddActivityForm() {
+            document.getElementById('addActivityForm').style.display = 'none';
+        }
+
+        // GESTION DES ANNONCES COMMERCIALES
+        function addAnnonceCommerciale(event) {
+            event.preventDefault();
+            
+            if (!currentUser || currentUser.role !== 'annonces') return;
+            
+            const annonceData = {
+                id: Date.now(),
+                titre: sanitizeInput(document.getElementById('newAnnonceTitre').value),
+                dateDebut: document.getElementById('newAnnonceDebut').value,
+                dateFin: document.getElementById('newAnnonceFin').value,
+                description: sanitizeInput(document.getElementById('newAnnonceDescription').value),
+                details: sanitizeInput(document.getElementById('newAnnonceDetails').value),
+                statut: document.getElementById('newAnnonceStatut').value,
+                createdAt: new Date().toISOString(),
+                createdBy: currentUser.username
+            };
+            
+            if (!annonceData.titre || !annonceData.dateDebut || !annonceData.dateFin || !annonceData.description) {
+                alert('Tous les champs obligatoires doivent être remplis');
+                return;
+            }
+            
+            const annonces = getAnnoncesCommerciales();
+            annonces.unshift(annonceData);
+            localStorage.setItem('annoncesCommerciales', JSON.stringify(annonces));
+            
+            // Réinitialiser le formulaire
+            document.getElementById('newAnnonceTitre').value = '';
+            document.getElementById('newAnnonceDebut').value = '';
+            document.getElementById('newAnnonceFin').value = '';
+            document.getElementById('newAnnonceDescription').value = '';
+            document.getElementById('newAnnonceDetails').value = '';
+            
+            hideAddAnnonceForm();
+            displayAnnoncesCommerciales();
+            showMessage('success', '✅ Annonce ajoutée avec succès !');
+        }
+
+        function getAnnoncesCommerciales() {
+            try {
+                return JSON.parse(localStorage.getItem('annoncesCommerciales') || '[]');
+            } catch (e) {
+                console.error('Erreur lors du chargement des annonces:', e);
+                return [];
+            }
+        }
+
+        function displayAnnoncesCommerciales() {
+            const annoncesList = document.getElementById('annoncesList');
+            let annonces = getAnnoncesCommerciales();
+            
+            // Ajouter des exemples si vide
+            if (annonces.length === 0) {
+                annonces = getDefaultAnnoncesCommerciales();
+                localStorage.setItem('annoncesCommerciales', JSON.stringify(annonces));
+            }
+            
+            // Filtrer par statut
+            const filter = document.getElementById('annonceFilter') ? document.getElementById('annonceFilter').value : 'all';
+            if (filter !== 'all') {
+                annonces = annonces.filter(a => a.statut === filter);
+            }
+            
+            if (annonces.length === 0) {
+                annoncesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune annonce trouvée pour ce filtre.</p>';
+                return;
+            }
+            
+            annoncesList.innerHTML = annonces.map(annonce => `
+                <div class="item-card" onclick="showAnnonceDetails(${annonce.id})">
+                    <div class="item-header">
+                        <h3>${annonce.titre}</h3>
+                        <span class="status ${annonce.statut}">${getStatusLabel(annonce.statut)}</span>
+                    </div>
+                    <div class="item-body">
+                        <div class="item-date">${formatDateRange(annonce.dateDebut, annonce.dateFin)}</div>
+                        <p>${truncateText(annonce.description, 150)}</p>
+                        ${currentUser && currentUser.role === 'annonces' ? `
+                            <div class="item-actions">
+                                <button class="btn btn-small" onclick="event.stopPropagation(); editAnnonceStatus(${annonce.id})">
+                                    📝 Modifier statut
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getDefaultAnnoncesCommerciales() {
+            return [
+                {
+                    id: 1,
+                    titre: "🏆 Challenge Commercial Q4 2025",
+                    dateDebut: "2025-10-01",
+                    dateFin: "2025-12-31",
+                    description: "Participez au grand challenge commercial du dernier trimestre ! Objectifs renforcés avec des récompenses exceptionnelles.",
+                    details: "RÈGLES DU CHALLENGE:\n\n🎯 OBJECTIFS:\n- Minimum 15 nouveaux contrats auto par mois\n- Minimum 8 contrats habitation par mois\n- Taux de rétention > 95%\n\n🏆 RÉCOMPENSES:\n1er place: Weekend à Paris + 500€\n2ème place: iPad Pro + 300€\n3ème place: Bon cadeau 200€\n\n📊 SUIVI:\nTableau de bord mis à jour chaque semaine\nPoint mensuel avec le directeur commercial\n\n📋 CONDITIONS:\n- Ouvert à tous les conseillers\n- Calcul sur la période complète\n- Exclusion des résiliations client",
+                    statut: "en-cours",
+                    createdAt: new Date().toISOString(),
+                    createdBy: "AdminRe"
+                },
+                {
+                    id: 2,
+                    titre: "🎯 Formation Nouveaux Produits MACIF 2025",
+                    dateDebut: "2025-08-15",
+                    dateFin: "2025-08-15",
+                    description: "Session de formation obligatoire sur les nouveaux produits MACIF. Découvrez les innovations 2025 et les arguments de vente.",
+                    details: "PROGRAMME DE FORMATION:\n\n🕘 HORAIRES:\n9h00 - 17h00 (pause déjeuner 12h-13h)\n\n📍 LIEU:\nSalle de formation - CRC Arles\n2ème étage, salle Mistral\n\n📚 PROGRAMME:\n9h00-10h30: Nouveaux produits auto\n10h45-12h00: Évolutions habitation\n13h00-14h30: Produits numériques\n14h45-16h00: Arguments de vente\n16h00-17h00: Quiz et validation\n\n✅ OBLIGATOIRE:\nTous les conseillers commerciaux\nAttestation de formation délivrée\n\n📱 MATÉRIEL:\nOrdinateur portable fourni\nSupports remis en fin de session",
+                    statut: "termine",
+                    createdAt: new Date().toISOString(),
+                    createdBy: "AdminRe"
+                }
+            ];
+        }
+
+        function showAnnonceDetails(id) {
+            const annonces = getAnnoncesCommerciales();
+            const annonce = annonces.find(a => a.id === id);
+            
+            if (!annonce) return;
+            
+            const content = `
+                <h2>${annonce.titre}</h2>
+                <div style="margin: 1rem 0;">
+                    <span class="status ${annonce.statut}">${getStatusLabel(annonce.statut)}</span>
+                </div>
+                <div class="item-date" style="margin: 1rem 0;">${formatDateRange(annonce.dateDebut, annonce.dateFin)}</div>
+                
+                <h3>📝 Description</h3>
+                <p style="margin-bottom: 2rem;">${annonce.description}</p>
+                
+                ${annonce.details ? `
+                    <h3>📋 Détails complets</h3>
+                    <div style="background: var(--light-gray); padding: 1.5rem; border-radius: 10px; white-space: pre-line; line-height: 1.6;">
+                        ${annonce.details}
+                    </div>
+                ` : ''}
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn" onclick="closeDetailModal()">Fermer</button>
+                </div>
+            `;
+            
+            document.getElementById('detailContent').innerHTML = content;
+            document.getElementById('detailModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
+        function editAnnonceStatus(id) {
+            const newStatus = prompt('Nouveau statut (a-venir, en-cours, termine):');
+            if (!newStatus || !['a-venir', 'en-cours', 'termine'].includes(newStatus)) {
+                alert('Statut invalide');
+                return;
+            }
+            
+            const annonces = getAnnoncesCommerciales();
+            const annonce = annonces.find(a => a.id === id);
+            if (annonce) {
+                annonce.statut = newStatus;
+                localStorage.setItem('annoncesCommerciales', JSON.stringify(annonces));
+                displayAnnoncesCommerciales();
+                showMessage('success', '✅ Statut mis à jour !');
+            }
+        }
+
+        function filterAnnonces() {
+            displayAnnoncesCommerciales();
+        }
+
+        // GESTION DES ÉVÉNEMENTS FAD'ARLES
+        function showFadTab(tab) {
+            // Gestion des onglets
+            document.querySelectorAll('#fadarles .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#fadarles .tab-content').forEach(tc => tc.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            
+            if (tab === 'upcoming') {
+                document.getElementById('fadUpcoming').classList.add('active');
+                displayFadEvents();
+            } else {
+                document.getElementById('fadPast').classList.add('active');
+                displayFadPastEvents();
+            }
+        }
+
+        function addFadEvent(event) {
+            event.preventDefault();
+            
+            if (!currentUser || currentUser.role !== 'fadarles') return;
+            
+            const eventData = {
+                id: Date.now(),
+                title: sanitizeInput(document.getElementById('fadTitle').value),
+                date: document.getElementById('fadDate').value,
+                time: document.getElementById('fadTime').value,
+                location: sanitizeInput(document.getElementById('fadLocation').value),
+                description: sanitizeInput(document.getElementById('fadDescription').value),
+                createdAt: new Date().toISOString(),
+                createdBy: currentUser.username
+            };
+            
+            if (!eventData.title || !eventData.date || !eventData.location || !eventData.description) {
+                alert('Tous les champs obligatoires doivent être remplis');
+                return;
+            }
+            
+            const fadEvents = getFadEvents();
+            fadEvents.push(eventData);
+            localStorage.setItem('fadEvents', JSON.stringify(fadEvents));
+            
+            // Réinitialiser le formulaire
+            document.getElementById('fadTitle').value = '';
+            document.getElementById('fadDate').value = '';
+            document.getElementById('fadTime').value = '';
+            document.getElementById('fadLocation').value = '';
+            document.getElementById('fadDescription').value = '';
+            
+            hideAddFadForm();
+            displayFadEvents();
+            showMessage('success', '✅ Événement ajouté avec succès !');
+        }
+
+        function getFadEvents() {
+            try {
+                return JSON.parse(localStorage.getItem('fadEvents') || '[]');
+            } catch (e) {
+                console.error('Erreur lors du chargement des événements FAD:', e);
+                return [];
+            }
+        }
+
+        function displayFadEvents() {
+            const eventsList = document.getElementById('fadEventsList');
+            const events = getFadEvents();
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Filtrer les événements à venir
+            const upcomingEvents = events.filter(event => event.date >= today);
+            
+            if (upcomingEvents.length === 0) {
+                eventsList.innerHTML = '<p style="text-align: center; color: #666;">Aucun événement programmé pour le moment.</p>';
+                return;
+            }
+            
+            // Tri par date
+            upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            eventsList.innerHTML = upcomingEvents.map(event => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <h3>${event.title}</h3>
+                    </div>
+                    <div class="item-body">
+                        <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
+                        <p><strong>📍 Lieu :</strong> ${event.location}</p>
+                        <p>${event.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayFadPastEvents() {
+            const eventsList = document.getElementById('fadPastEventsList');
+            const events = getFadEvents();
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Filtrer les événements passés
+            const pastEvents = events.filter(event => event.date < today);
+            
+            if (pastEvents.length === 0) {
+                eventsList.innerHTML = '<p style="text-align: center; color: #666;">Aucun événement passé.</p>';
+                return;
+            }
+            
+            // Tri par date décroissante (plus récent en premier)
+            pastEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            eventsList.innerHTML = pastEvents.map(event => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <h3>${event.title}</h3>
+                        <span class="status termine">Terminé</span>
+                    </div>
+                    <div class="item-body">
+                        <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
+                        <p><strong>📍 Lieu :</strong> ${event.location}</p>
+                        <p>${event.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // GESTION DES BONNES AFFAIRES
+        function addAnnonce(event) {
+            event.preventDefault();
+            
+            const annonceData = {
+                id: Date.now(),
+                prenom: sanitizeInput(document.getElementById('annoncePrenom').value),
+                nom: sanitizeInput(document.getElementById('annonceNom').value),
+                email: sanitizeInput(document.getElementById('annonceEmail').value),
+                titre: sanitizeInput(document.getElementById('annonceTitre').value),
+                description: sanitizeInput(document.getElementById('annonceDescription').value),
+                prix: sanitizeInput(document.getElementById('annoncePrix').value),
+                image: document.getElementById('annoncePreview').src || null,
+                deleteToken: generateDeleteToken(),
+                createdAt: new Date().toISOString()
+            };
+            
+            if (!annonceData.prenom || !annonceData.nom || !annonceData.email || !annonceData.titre || !annonceData.description) {
+                alert('Tous les champs obligatoires doivent être remplis');
+                return;
+            }
+            
+            const annonces = getAnnonces();
+            annonces.unshift(annonceData);
+            localStorage.setItem('annonces', JSON.stringify(annonces));
+            
+            // Réinitialiser le formulaire
+            document.getElementById('annoncePrenom').value = '';
+            document.getElementById('annonceNom').value = '';
+            document.getElementById('annonceEmail').value = '';
+            document.getElementById('annonceTitre').value = '';
+            document.getElementById('annonceDescription').value = '';
+            document.getElementById('annoncePrix').value = '';
+            document.getElementById('annonceImage').value = '';
+            document.getElementById('annoncePreview').style.display = 'none';
+            
+            hideAddAnnonceBAForm();
+            displayAnnonces();
+            
+            // Simuler l'envoi de l'email avec lien de suppression
+            const deleteLink = `${window.location.origin}${window.location.pathname}?delete=${annonceData.deleteToken}`;
+            showMessage('success', `✅ Annonce publiée ! Un email a été envoyé à ${annonceData.email} avec le lien de suppression.`);
+        }
+
+        function generateDeleteToken() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        function getAnnonces() {
+            try {
+                return JSON.parse(localStorage.getItem('annonces') || '[]');
+            } catch (e) {
+                console.error('Erreur lors du chargement des annonces:', e);
+                return [];
+            }
+        }
+
+        function displayAnnonces() {
+            const annoncesList = document.getElementById('annoncesBonnesAffairesList');
+            const annonces = getAnnonces();
+            
+            if (annonces.length === 0) {
+                annoncesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune annonce publiée pour le moment.</p>';
+                return;
+            }
+            
+            annoncesList.innerHTML = annonces.map(annonce => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <h3>${annonce.titre}</h3>
+                        ${annonce.prix ? `<span style="color: var(--macif-orange); font-weight: bold;">${annonce.prix}</span>` : ''}
+                    </div>
+                    <div class="item-body">
+                        ${annonce.image && annonce.image !== window.location.href ? `<img src="${annonce.image}" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">` : ''}
+                        <p>${annonce.description}</p>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                            <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                                <strong>Contact :</strong> ${annonce.prenom} ${annonce.nom}<br>
+                                <a href="mailto:${annonce.email}?subject=Intéressé par: ${annonce.titre}" style="color: var(--macif-blue);">
+                                    📧 ${annonce.email}
+                                </a>
+                            </p>
+                            <small style="color: #999;">Publié le ${formatDate(annonce.createdAt.split('T')[0])}</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // GESTION DES ACTIVITÉS
+        function showActivityTab(tab) {
+            document.querySelectorAll('#activites .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#activites .tab-content').forEach(tc => tc.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            
+            if (tab === 'upcoming') {
+                document.getElementById('activitiesUpcoming').classList.add('active');
+                displayActivities();
+            } else {
+                document.getElementById('activitiesPast').classList.add('active');
+                displayPastActivities();
+            }
+        }
+
+        function addActivity(event) {
+            event.preventDefault();
+            
+            const activityData = {
+                id: Date.now(),
+                name: sanitizeInput(document.getElementById('activityName').value),
+                date: document.getElementById('activityDate').value,
+                time: document.getElementById('activityTime').value,
+                location: sanitizeInput(document.getElementById('activityLocation').value),
+                maxPlaces: parseInt(document.getElementById('activityPlaces').value),
+                description: sanitizeInput(document.getElementById('activityDescription').value),
+                participants: [],
+                photos: [],
+                status: 'a-venir',
+                createdAt: new Date().toISOString()
+            };
+            
+            if (!activityData.name || !activityData.date || !activityData.time || !activityData.location || !activityData.maxPlaces) {
+                alert('Tous les champs obligatoires doivent être remplis');
+                return;
+            }
+            
+            if (activityData.maxPlaces < 1 || activityData.maxPlaces > 50) {
+                alert('Le nombre de places doit être entre 1 et 50');
+                return;
+            }
+            
+            const activities = getActivities();
+            activities.push(activityData);
+            localStorage.setItem('activities', JSON.stringify(activities));
+            
+            // Réinitialiser le formulaire
+            document.getElementById('activityName').value = '';
+            document.getElementById('activityDate').value = '';
+            document.getElementById('activityTime').value = '';
+            document.getElementById('activityLocation').value = '';
+            document.getElementById('activityPlaces').value = '';
+            document.getElementById('activityDescription').value = '';
+            
+            hideAddActivityForm();
+            displayActivities();
+            showMessage('success', '✅ Activité créée avec succès !');
+        }
+
+        function getActivities() {
+            try {
+                return JSON.parse(localStorage.getItem('activities') || '[]');
+            } catch (e) {
+                console.error('Erreur lors du chargement des activités:', e);
+                return [];
+            }
+        }
+
+        function joinActivity(activityId) {
+            const name = prompt('Entrez votre prénom et nom pour vous inscrire :');
+            if (!name || name.trim() === '') return;
+            
+            const sanitizedName = sanitizeInput(name);
+            const activities = getActivities();
+            const activity = activities.find(a => a.id === activityId);
+            
+            if (!activity) {
+                alert('Activité introuvable');
+                return;
+            }
+            
+            if (activity.participants.length >= activity.maxPlaces) {
+                alert('Désolé, il n\'y a plus de places disponibles');
+                return;
+            }
+            
+            if (activity.participants.includes(sanitizedName)) {
+                alert('Vous êtes déjà inscrit(e) à cette activité');
+                return;
+            }
+            
+            activity.participants.push(sanitizedName);
+            localStorage.setItem('activities', JSON.stringify(activities));
+            
+            displayActivities();
+            showMessage('success', '✅ Inscription confirmée !');
+        }
+
+        function displayActivities() {
+            const activitiesList = document.getElementById('activitiesList');
+            const activities = getActivities();
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Filtrer les activités à venir
+            const upcomingActivities = activities.filter(activity => activity.date >= today);
+            
+            if (upcomingActivities.length === 0) {
+                activitiesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune activité programmée pour le moment.</p>';
+                return;
+            }
+            
+            // Tri par date
+            upcomingActivities.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            activitiesList.innerHTML = upcomingActivities.map(activity => {
+                const remainingPlaces = activity.maxPlaces - activity.participants.length;
+                const placesClass = remainingPlaces === 0 ? 'full' : remainingPlaces <= 2 ? 'low' : '';
+                
+                return `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <h3>${activity.name}</h3>
+                            <span class="places-counter ${placesClass}">
+                                ${remainingPlaces > 0 ? `${remainingPlaces} places` : 'Complet'}
+                            </span>
+                        </div>
+                        <div class="item-body">
+                            <div class="item-date">${formatDate(activity.date)} à ${activity.time}</div>
+                            <p><strong>📍 Lieu :</strong> ${activity.location}</p>
+                            ${activity.description ? `<p>${activity.description}</p>` : ''}
+                            
+                            ${activity.participants.length > 0 ? `
+                                <div style="margin: 1rem 0;">
+                                    <strong>Participants inscrits (${activity.participants.length}/${activity.maxPlaces}) :</strong>
+                                    <div style="margin: 0.5rem 0; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                        ${activity.participants.map(p => `<span style="background: var(--macif-light-blue); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">${p}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="item-actions">
+                                ${remainingPlaces > 0 ? 
+                                    `<button class="btn" onclick="joinActivity(${activity.id})">✅ S'inscrire</button>` :
+                                    `<button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">❌ Complet</button>`
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayPastActivities() {
+            const activitiesList = document.getElementById('activitiesPastList');
+            const activities = getActivities();
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Filtrer les activités passées
+            const pastActivities = activities.filter(activity => activity.date < today);
+            
+            if (pastActivities.length === 0) {
+                activitiesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune activité passée.</p>';
+                return;
+            }
+            
+            // Tri par date décroissante
+            pastActivities.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            activitiesList.innerHTML = pastActivities.map(activity => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <h3>${activity.name}</h3>
+                        <span class="status termine">Terminée</span>
+                    </div>
+                    <div class="item-body">
+                        <div class="item-date">${formatDate(activity.date)} à ${activity.time}</div>
+                        <p><strong>📍 Lieu :</strong> ${activity.location}</p>
+                        
+                        ${activity.participants.length > 0 ? `
+                            <p><strong>Participants (${activity.participants.length}) :</strong></p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0;">
+                                ${activity.participants.map(p => `<span style="background: var(--macif-light-blue); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">${p}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        ${activity.photos && activity.photos.length > 0 ? `
+                            <div class="image-gallery">
+                                ${activity.photos.map(photo => `<img src="${photo}" onclick="openImageModal('${photo}')" alt="Photo de l'activité">`).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="item-actions">
+                            <button class="btn btn-small" onclick="addActivityPhoto(${activity.id})">📸 Ajouter des photos</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addActivityPhoto(activityId) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            
+            input.onchange = function() {
+                const files = Array.from(input.files);
+                const activities = getActivities();
+                const activity = activities.find(a => a.id === activityId);
+                
+                if (!activity) return;
+                if (!activity.photos) activity.photos = [];
+                
+                Promise.all(files.map(file => {
+                    return new Promise((resolve) => {
+                        if (file.size > 5 * 1024 * 1024) {
+                            alert(`Le fichier ${file.name} est trop volumineux (max 5MB)`);
+                            resolve(null);
+                            return;
+                        }
+                        
+                        const reader = new FileReader();
+                        reader.onload = e => resolve(e.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                })).then(results => {
+                    const validPhotos = results.filter(photo => photo !== null);
+                    activity.photos.push(...validPhotos);
+                    
+                    localStorage.setItem('activities', JSON.stringify(activities));
+                    displayPastActivities();
+                    showMessage('success', `✅ ${validPhotos.length} photo(s) ajoutée(s) !`);
+                });
+            };
+            
+            input.click();
+        }
+
+        // FONCTIONS UTILITAIRES
+        function previewImage(input, previewId) {
+            const file = input.files[0];
+            const preview = document.getElementById(previewId);
+            
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Veuillez sélectionner un fichier image valide');
+                    input.value = '';
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Le fichier est trop volumineux (max 5MB)');
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        function formatDate(dateString) {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            };
+            return new Date(dateString).toLocaleDateString('fr-FR', options);
+        }
+
+        function formatDateRange(start, end) {
+            if (start === end) {
+                return formatDate(start);
+            }
+            return `Du ${formatDate(start)} au ${formatDate(end)}`;
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'a-venir': 'À venir',
+                'en-cours': 'En cours',
+                'termine': 'Terminé'
+            };
+            return labels[status] || status;
+        }
+
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        function showMessage(type, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = message;
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '100px';
+            messageDiv.style.right = '20px';
+            messageDiv.style.zIndex = '200000';
+            messageDiv.style.minWidth = '300px';
+            messageDiv.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Chargement et affichage initial
+        function loadData() {
+            // Vérifier les paramètres URL pour suppression d'annonce
+            const urlParams = new URLSearchParams(window.location.search);
+            const deleteToken = urlParams.get('delete');
+            
+            if (deleteToken) {
+                handleAnnonceDelete(deleteToken);
+            }
+        }
+
+        function handleAnnonceDelete(token) {
+            const annonces = getAnnonces();
+            const annonceIndex = annonces.findIndex(a => a.deleteToken === token);
+            
+            if (annonceIndex !== -1) {
+                const annonce = annonces[annonceIndex];
+                if (confirm(`Voulez-vous vraiment supprimer l'annonce "${annonce.titre}" ?`)) {
+                    annonces.splice(annonceIndex, 1);
+                    localStorage.setItem('annonces', JSON.stringify(annonces));
+                    showMessage('success', '✅ Annonce supprimée avec succès !');
+                    // Nettoyer l'URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            } else {
+                showMessage('error', '❌ Lien de suppression invalide ou expiré');
+            }
+        }
+
+        function displayAllContent() {
+            displayAnnoncesCommerciales();
+            displayFadEvents();
+            displayFadPastEvents();
+            displayAnnonces();
+            displayActivities();
+            displayPastActivities();
+        }
+
+        // Auto-mise à jour du statut des activités
+        setInterval(() => {
+            const activities = getActivities();
+            const today = new Date().toISOString().split('T')[0];
+            let updated = false;
+            
+            activities.forEach(activity => {
+                if (activity.date < today && activity.status !== 'termine') {
+                    activity.status = 'termine';
+                    updated = true;
+                }
+            });
+            
+            if (updated) {
+                localStorage.setItem('activities', JSON.stringify(activities));
+                displayAllContent();
+            }
+        }, 60000); // Toutes les minutes
+    </script>
+
+    <!-- Footer simplifié -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-bottom">
+                <p><strong>© 2025 Intranet MACIF Arles - Centre de Relation Client Commercial. Tous droits réservés.</strong></p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">
+                    Plateforme interne réservée aux collaborateurs MACIF Arles • Données confidentielles • Contact: <a href="mailto:macifarles@gmail.com" style="color: var(--macif-yellow);">macifarles@gmail.com</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
