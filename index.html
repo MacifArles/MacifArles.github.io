@@ -216,15 +216,52 @@
 
         .modal-content {
             background-color: var(--white);
-            margin: 10% auto;
+            margin: 5% auto;
             padding: 2rem;
             border-radius: 20px;
             width: 90%;
-            max-width: 400px;
+            max-width: 800px;
+            max-height: 80vh;
             box-shadow: var(--shadow-hover);
             animation: slideDown 0.3s ease;
             position: relative;
             z-index: 100000;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scrollbar améliorée pour les modals */
+        .modal-body {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+            margin-right: -0.5rem;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: var(--light-gray);
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--macif-blue);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #0052A3;
+        }
+
+        /* Support pour Firefox */
+        .modal-body {
+            scrollbar-width: thin;
+            scrollbar-color: var(--macif-blue) var(--light-gray);
         }
 
         @keyframes slideDown {
@@ -304,13 +341,16 @@
 
         .feature-card {
             background: var(--white);
-            padding: 2rem;
+            padding: 0;
             border-radius: 20px;
             box-shadow: var(--shadow);
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-height: 280px;
+            display: flex;
+            align-items: flex-end;
         }
 
         .feature-card:hover {
@@ -322,59 +362,70 @@
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .feature-card:hover::before {
-            left: 100%;
-        }
-
-        .feature-illustration {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 1.5rem;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             z-index: 1;
         }
 
-        .feature-illustration img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 15px;
+        /* Images de fond par défaut pour chaque card */
+        .feature-card:nth-child(1)::before {
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1553484771-371a605b060b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
-        .feature-card:nth-child(1) .feature-illustration { 
-            background: linear-gradient(135deg, var(--macif-orange), #FF8FA3); 
+
+        .feature-card:nth-child(2)::before {
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
-        .feature-card:nth-child(2) .feature-illustration { 
-            background: linear-gradient(135deg, var(--macif-yellow), var(--macif-orange)); 
+
+        .feature-card:nth-child(3)::before {
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
-        .feature-card:nth-child(3) .feature-illustration { 
-            background: linear-gradient(135deg, var(--macif-green), #06D6A0); 
+
+        .feature-card:nth-child(4)::before {
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
-        .feature-card:nth-child(4) .feature-illustration { 
-            background: linear-gradient(135deg, var(--macif-pink), var(--macif-purple)); 
+
+        .feature-card-content {
+            position: relative;
+            z-index: 2;
+            color: var(--white);
+            padding: 2rem;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
         }
 
         .feature-card h3 {
-            color: var(--macif-blue);
+            color: var(--white);
             margin-bottom: 1rem;
-            font-size: 1.3rem;
-            position: relative;
-            z-index: 1;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .feature-card p {
-            position: relative;
-            z-index: 1;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            line-height: 1.5;
+        }
+
+        /* Effet de brillance au survol */
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+            z-index: 3;
+        }
+
+        .feature-card:hover::after {
+            left: 100%;
         }
 
         /* Cards communes */
@@ -590,14 +641,122 @@
             flex-wrap: wrap;
         }
 
-        /* Modal détails */
+        /* Modal détails avec scrollbar améliorée */
         .modal-large {
-            max-width: 700px;
+            max-width: 900px;
         }
 
-        .modal-body {
-            max-height: 60vh;
-            overflow-y: auto;
+        /* Contenu avec liens cliquables */
+        .content-with-links {
+            line-height: 1.6;
+        }
+
+        .content-with-links a {
+            color: var(--macif-blue);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--macif-blue);
+            transition: all 0.3s ease;
+        }
+
+        .content-with-links a:hover {
+            color: var(--macif-orange);
+            border-bottom-color: var(--macif-orange);
+            background: var(--macif-light-blue);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .content-with-links a::before {
+            content: "🔗 ";
+            font-size: 0.9em;
+        }
+
+        /* Section support externe */
+        .external-support {
+            background: var(--macif-light-blue);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--macif-blue);
+        }
+
+        .external-support h4 {
+            color: var(--macif-blue);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Système de réactions */
+        .reactions-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+
+        .reaction-btn {
+            background: var(--light-gray);
+            border: none;
+            border-radius: 20px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            min-width: 50px;
+            justify-content: center;
+        }
+
+        .reaction-btn:hover {
+            background: var(--macif-light-blue);
+            transform: translateY(-1px);
+        }
+
+        .reaction-btn.reacted {
+            background: var(--macif-blue);
+            color: var(--white);
+        }
+
+        .reaction-btn.reacted:hover {
+            background: #0052A3;
+        }
+
+        .reaction-count {
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        /* Image personnalisée sur les cards */
+        .item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0;
+            margin-bottom: 0;
+        }
+
+        .item-image-container {
+            position: relative;
+            overflow: hidden;
+            margin: -1rem -1rem 1rem -1rem;
+        }
+
+        .item-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
+            height: 60px;
+            z-index: 1;
         }
 
         /* Upload d'image */
@@ -762,6 +921,16 @@
 
             .item-actions {
                 justify-content: center;
+            }
+
+            .modal-content {
+                margin: 2% auto;
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .modal-body {
+                max-height: 70vh;
             }
         }
 
@@ -1044,9 +1213,6 @@
                     <label>Identifiant :</label>
                     <input type="text" id="loginUsername" required>
                 </div>
-
-    
-           
                 <div class="form-group">
                     <label>Mot de passe :</label>
                     <input type="password" id="loginPassword" required>
@@ -1061,11 +1227,11 @@
         </div>
     </div>
 
-    <!-- Modal détails -->
+    <!-- Modal détails avec scrollbar -->
     <div id="detailModal" class="modal">
         <div class="modal-content modal-large">
             <span class="close" onclick="closeDetailModal()">&times;</span>
-            <div id="detailContent"></div>
+            <div class="modal-body" id="detailContent"></div>
         </div>
     </div>
 
@@ -1079,7 +1245,7 @@
         <nav class="navbar">
             <a href="#" class="logo" onclick="showPage('accueil')">
                 <div class="macif-logo">
-                    <img src="data:image/png;base64,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" alt="MACIF Logo">
+                    <img src="data:image/png;base64,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" alt="MACIF Logo">
                 </div>
                 <div class="logo-text"></div>
             </a>
@@ -1129,32 +1295,28 @@
 
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-illustration">
-                        <img src="https://sdmntpritalynorth.oaiusercontent.com/files/00000000-4218-6246-bb8b-e4be12e61f58/raw?se=2025-07-31T15%3A16%3A19Z&sp=r&sv=2024-08-04&sr=b&scid=52079d56-c633-590a-8014-14d97bc3a1ce&skoid=b928fb90-500a-412f-a661-1ece57a7c318&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-07-31T09%3A20%3A28Z&ske=2025-08-01T09%3A20%3A28Z&sks=b&skv=2024-08-04&sig=qLhuWeA4BXR3OWcjMMrHkeQZyw4VbTub45FrswOVoE4%3D" alt="Annonces">
+                    <div class="feature-card-content">
+                        <h3>Animations Commerciales</h3>
+                        <p>Consultez les dernières animations commerciales, challenges et actualités de l'équipe Arles.</p>
                     </div>
-                    <h3>Animations Commerciales</h3>
-                    <p>Consultez les dernières animations commerciales, challenges et actualités de l'équipe Arles.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-illustration">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3074/3074058.png" alt="Événements">
+                    <div class="feature-card-content">
+                        <h3>Événements FAD'ARLES</h3>
+                        <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
                     </div>
-                    <h3>Événements FAD'ARLES</h3>
-                    <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir. </p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-illustration">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Shopping">
+                    <div class="feature-card-content">
+                        <h3>Coin des Bonnes Affaires</h3>
+                        <p>Achetez, vendez et échangez entre collègues. Contactez directement les vendeurs par chat ou sur la terrasse.</p>
                     </div>
-                    <h3>Coin des Bonnes Affaires</h3>
-                    <p>Achetez, vendez et échangez entre collègues. Contactez directement les vendeurs par chat ou sur la terrasse.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-illustration">
-                        <img src="https://cdn-icons-png.flaticon.com/512/53/53283.png" alt="Sports">
+                    <div class="feature-card-content">
+                        <h3>Organisation d'activités</h3>
+                        <p>Inscrivez-vous aux activités sportives et événements team building. Partagez vos photos !</p>
                     </div>
-                    <h3>Organisation d'activités</h3>
-                    <p>Inscrivez-vous aux activités sportives et événements team building. Partagez vos photos !</p>
                 </div>
             </div>
 
@@ -1219,6 +1381,18 @@
                         <textarea id="newAnnonceDetails" rows="6" placeholder="Détails complets, règles du challenge, conditions..."></textarea>
                     </div>
                     <div class="form-group">
+                        <label>Liens de support externe (optionnel) :</label>
+                        <textarea id="newAnnonceLiens" rows="3" placeholder="Indiquez les liens vers Google Docs, supports externes, etc. (un par ligne)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Image illustrative (optionnelle) :</label>
+                        <div class="image-upload" onclick="document.getElementById('newAnnonceImage').click()">
+                            <p>📷 Cliquez pour ajouter une image à votre annonce</p>
+                            <input type="file" id="newAnnonceImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'newAnnoncePreview')">
+                        </div>
+                        <img id="newAnnoncePreview" class="image-preview" style="display: none;">
+                    </div>
+                    <div class="form-group">
                         <label>Statut :</label>
                         <select id="newAnnonceStatut" required>
                             <option value="a-venir">À venir</option>
@@ -1274,6 +1448,18 @@
                     <div class="form-group">
                         <label>Description :</label>
                         <textarea id="fadDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Liens de support externe (optionnel) :</label>
+                        <textarea id="fadLiens" rows="3" placeholder="Indiquez les liens vers Google Docs, supports externes, etc. (un par ligne)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Image illustrative (optionnelle) :</label>
+                        <div class="image-upload" onclick="document.getElementById('fadImage').click()">
+                            <p>📷 Cliquez pour ajouter une image à l'événement</p>
+                            <input type="file" id="fadImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'fadImagePreview')">
+                        </div>
+                        <img id="fadImagePreview" class="image-preview" style="display: none;">
                     </div>
                     <div class="item-actions">
                         <button type="submit" class="btn">Ajouter l'événement</button>
@@ -1386,6 +1572,14 @@
                         <label>Description :</label>
                         <textarea id="activityDescription" rows="3"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label>Image illustrative (optionnelle) :</label>
+                        <div class="image-upload" onclick="document.getElementById('activityImage').click()">
+                            <p>📷 Cliquez pour ajouter une image à l'activité</p>
+                            <input type="file" id="activityImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'activityImagePreview')">
+                        </div>
+                        <img id="activityImagePreview" class="image-preview" style="display: none;">
+                    </div>
                     <div class="item-actions">
                         <button type="submit" class="btn">Créer l'activité</button>
                         <button type="button" class="btn btn-secondary" onclick="hideAddActivityForm()">Annuler</button>
@@ -1476,6 +1670,18 @@
             if (event.target === detailModal) {
                 closeDetailModal();
             }
+        }
+
+        // Fonction pour convertir les liens en balises cliquables
+        function convertLinksToClickable(text) {
+            if (!text) return '';
+            
+            // Regex pour détecter les URLs
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            
+            return text.replace(urlRegex, function(url) {
+                return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+            });
         }
 
         // Système d'authentification avec debug
@@ -1662,6 +1868,79 @@
             document.getElementById('addActivityForm').style.display = 'none';
         }
 
+        // SYSTÈME DE RÉACTIONS
+        function addReaction(contentType, contentId, reactionType) {
+            const reactions = getReactions();
+            const key = `${contentType}_${contentId}`;
+            
+            if (!reactions[key]) {
+                reactions[key] = {};
+            }
+            
+            if (!reactions[key][reactionType]) {
+                reactions[key][reactionType] = 0;
+            }
+            
+            reactions[key][reactionType]++;
+            localStorage.setItem('reactions', JSON.stringify(reactions));
+            
+            // Actualiser l'affichage selon le type de contenu
+            switch(contentType) {
+                case 'annonce':
+                    displayAnnoncesCommerciales();
+                    break;
+                case 'fad':
+                    displayFadEvents();
+                    displayFadPastEvents();
+                    break;
+                case 'activity':
+                    displayActivities();
+                    displayPastActivities();
+                    break;
+                case 'bonneaffaire':
+                    displayAnnonces();
+                    break;
+            }
+        }
+
+        function getReactions() {
+            try {
+                return JSON.parse(localStorage.getItem('reactions') || '{}');
+            } catch (e) {
+                console.error('Erreur lors du chargement des réactions:', e);
+                return {};
+            }
+        }
+
+        function getReactionCount(contentType, contentId, reactionType) {
+            const reactions = getReactions();
+            const key = `${contentType}_${contentId}`;
+            return reactions[key] && reactions[key][reactionType] ? reactions[key][reactionType] : 0;
+        }
+
+        function generateReactionsBar(contentType, contentId) {
+            const reactionTypes = [
+                { emoji: '👍', name: 'like' },
+                { emoji: '❤️', name: 'love' },
+                { emoji: '🎉', name: 'celebrate' },
+                { emoji: '🔥', name: 'fire' }
+            ];
+            
+            return `
+                <div class="reactions-bar">
+                    ${reactionTypes.map(reaction => {
+                        const count = getReactionCount(contentType, contentId, reaction.name);
+                        return `
+                            <button class="reaction-btn" onclick="addReaction('${contentType}', ${contentId}, '${reaction.name}')">
+                                <span>${reaction.emoji}</span>
+                                <span class="reaction-count">${count > 0 ? count : ''}</span>
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
         // GESTION DES ANNONCES COMMERCIALES
         function addAnnonceCommerciale(event) {
             event.preventDefault();
@@ -1675,6 +1954,8 @@
                 dateFin: document.getElementById('newAnnonceFin').value,
                 description: sanitizeInput(document.getElementById('newAnnonceDescription').value),
                 details: sanitizeInput(document.getElementById('newAnnonceDetails').value),
+                liens: sanitizeInput(document.getElementById('newAnnonceLiens').value),
+                image: document.getElementById('newAnnoncePreview').src !== window.location.href ? document.getElementById('newAnnoncePreview').src : null,
                 statut: document.getElementById('newAnnonceStatut').value,
                 createdAt: new Date().toISOString(),
                 createdBy: currentUser.username
@@ -1695,6 +1976,9 @@
             document.getElementById('newAnnonceFin').value = '';
             document.getElementById('newAnnonceDescription').value = '';
             document.getElementById('newAnnonceDetails').value = '';
+            document.getElementById('newAnnonceLiens').value = '';
+            document.getElementById('newAnnonceImage').value = '';
+            document.getElementById('newAnnoncePreview').style.display = 'none';
             
             hideAddAnnonceForm();
             displayAnnoncesCommerciales();
@@ -1737,6 +2021,12 @@
                         <h3>${annonce.titre}</h3>
                         <span class="status ${annonce.statut}">${getStatusLabel(annonce.statut)}</span>
                     </div>
+                    ${annonce.image ? `
+                        <div class="item-image-container">
+                            <img src="${annonce.image}" class="item-image" alt="Image de l'annonce">
+                            <div class="item-image-overlay"></div>
+                        </div>
+                    ` : ''}
                     <div class="item-body">
                         <div class="item-date">${formatDateRange(annonce.dateDebut, annonce.dateFin)}</div>
                         <p>${truncateText(annonce.description, 150)}</p>
@@ -1747,6 +2037,7 @@
                                 </button>
                             </div>
                         ` : ''}
+                        ${generateReactionsBar('annonce', annonce.id)}
                     </div>
                 </div>
             `).join('');
@@ -1761,6 +2052,7 @@
                     dateFin: "2025-08-02",
                     description: "Durant ses vacances, Audrey rencontre plusieurs difficultés aidons la à survivre à chaque étape.",
                     details: "RÈGLES DU CHALLENGE:\n\n🎯 OBJECTIFS:\n- Se surpasser chaque jour\n- Faire mieux que la veille\n\n🏆 RÉCOMPENSES:\n- Un trésor unique !\n\n📊 SUPPORT:\n- Macifapp.github.io\n\n",
+                    liens: "https://docs.google.com/spreadsheets/d/example123\nhttps://macifapp.github.io",
                     statut: "en-cours",
                     createdAt: new Date().toISOString(),
                     createdBy: "AdminRe"
@@ -1772,6 +2064,7 @@
                     dateFin: "2025-08-15",
                     description: "Session de formation obligatoire sur les nouveaux produits MACIF. Découvrez les innovations 2025 et les arguments de vente.",
                     details: "PROGRAMME DE FORMATION:\n\n🕘 HORAIRES:\n9h00 - 17h00 (pause déjeuner 12h-13h)\n\n📍 LIEU:\nSalle de formation - CRC Arles\n2ème étage, salle Mistral\n\n📚 PROGRAMME:\n9h00-10h30: Nouveaux produits auto\n10h45-12h00: Évolutions habitation\n13h00-14h30: Produits numériques\n14h45-16h00: Arguments de vente\n16h00-17h00: Quiz et validation\n\n✅ OBLIGATOIRE:\nTous les conseillers commerciaux\nAttestation de formation délivrée\n\n📱 MATÉRIEL:\nOrdinateur portable fourni\nSupports remis en fin de session",
+                    liens: "https://docs.google.com/document/d/formation2025",
                     statut: "termine",
                     createdAt: new Date().toISOString(),
                     createdBy: "AdminRe"
@@ -1785,6 +2078,13 @@
             
             if (!annonce) return;
             
+            const liensSection = annonce.liens ? `
+                <div class="external-support">
+                    <h4>🔗 Supports externes</h4>
+                    <div class="content-with-links">${convertLinksToClickable(annonce.liens.replace(/\n/g, '<br>'))}</div>
+                </div>
+            ` : '';
+            
             const content = `
                 <h2>${annonce.titre}</h2>
                 <div style="margin: 1rem 0;">
@@ -1797,10 +2097,12 @@
                 
                 ${annonce.details ? `
                     <h3>📋 Détails complets</h3>
-                    <div style="background: var(--light-gray); padding: 1.5rem; border-radius: 10px; white-space: pre-line; line-height: 1.6;">
+                    <div style="background: var(--light-gray); padding: 1.5rem; border-radius: 10px; white-space: pre-line; line-height: 1.6; margin-bottom: 2rem;">
                         ${annonce.details}
                     </div>
                 ` : ''}
+                
+                ${liensSection}
                 
                 <div style="margin-top: 2rem; text-align: center;">
                     <button class="btn" onclick="closeDetailModal()">Fermer</button>
@@ -1862,6 +2164,8 @@
                 time: document.getElementById('fadTime').value,
                 location: sanitizeInput(document.getElementById('fadLocation').value),
                 description: sanitizeInput(document.getElementById('fadDescription').value),
+                liens: sanitizeInput(document.getElementById('fadLiens').value),
+                image: document.getElementById('fadImagePreview').src !== window.location.href ? document.getElementById('fadImagePreview').src : null,
                 createdAt: new Date().toISOString(),
                 createdBy: currentUser.username
             };
@@ -1881,10 +2185,231 @@
             document.getElementById('fadTime').value = '';
             document.getElementById('fadLocation').value = '';
             document.getElementById('fadDescription').value = '';
+            document.getElementById('fadLiens').value = '';
+            document.getElementById('fadImage').value = '';
+            document.getElementById('fadImagePreview').style.display = 'none';
             
             hideAddFadForm();
             displayFadEvents();
             showMessage('success', '✅ Événement ajouté avec succès !');
+        }
+
+        function displayFadEvents() {
+            const eventsList = document.getElementById('fadEventsList');
+            const events = getFadEvents();
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Filtrer les événements à venir
+            const upcomingEvents = events.filter(event => event.date >= today);
+            
+            if (upcomingEvents.length === 0) {
+                eventsList.innerHTML = '<p style="text-align: center; color: #666;">Aucun événement programmé pour le moment.</p>';
+                return;
+            }
+            
+            // Tri par date
+            upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            eventsList.innerHTML = upcomingEvents.map(event => `
+                <div class="item-card" onclick="showFadEventDetails(${event.id})">
+                    <div class="item-header">
+                        <h3>${event.title}</h3>
+                    </div>
+                    ${event.image ? `
+                        <div class="item-image-container">
+                            <img src="${event.image}" class="item-image" alt="Image de l'événement">
+                            <div class="item-image-overlay"></div>
+                        </div>
+                    ` : ''}
+                    <div class="item-body">
+                        <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
+                        <p><strong>📍 Lieu :</strong> ${event.location}</p>
+                        <p>${truncateText(event.description, 120)}</p>
+                        ${event.liens ? '<p style="color: var(--macif-blue); font-size: 0.9rem; margin-top: 0.5rem;">🔗 Supports disponibles - Cliquez pour voir</p>' : ''}
+                        ${generateReactionsBar('fad', event.id)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayFadPastEvents() {
+            const eventsList = document.getElementById('fadPastEventsList');
+            const events = getFadEvents();
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Filtrer les événements passés
+            const pastEvents = events.filter(event => event.date < today);
+            
+            if (pastEvents.length === 0) {
+                eventsList.innerHTML = '<p style="text-align: center; color: #666;">Aucun événement passé.</p>';
+                return;
+            }
+            
+            // Tri par date décroissante (plus récent en premier)
+            pastEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            eventsList.innerHTML = pastEvents.map(event => `
+                <div class="item-card" onclick="showFadEventDetails(${event.id})">
+                    <div class="item-header">
+                        <h3>${event.title}</h3>
+                        <span class="status termine">Terminé</span>
+                    </div>
+                    ${event.image ? `
+                        <div class="item-image-container">
+                            <img src="${event.image}" class="item-image" alt="Image de l'événement">
+                            <div class="item-image-overlay"></div>
+                        </div>
+                    ` : ''}
+                    <div class="item-body">
+                        <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
+                        <p><strong>📍 Lieu :</strong> ${event.location}</p>
+                        <p>${truncateText(event.description, 120)}</p>
+                        ${event.liens ? '<p style="color: var(--macif-blue); font-size: 0.9rem; margin-top: 0.5rem;">🔗 Supports disponibles - Cliquez pour voir</p>' : ''}
+                        ${generateReactionsBar('fad', event.id)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addActivity(event) {
+            event.preventDefault();
+            
+            const activityData = {
+                id: Date.now(),
+                name: sanitizeInput(document.getElementById('activityName').value),
+                date: document.getElementById('activityDate').value,
+                time: document.getElementById('activityTime').value,
+                location: sanitizeInput(document.getElementById('activityLocation').value),
+                maxPlaces: parseInt(document.getElementById('activityPlaces').value),
+                description: sanitizeInput(document.getElementById('activityDescription').value),
+                image: document.getElementById('activityImagePreview').src !== window.location.href ? document.getElementById('activityImagePreview').src : null,
+                participants: [],
+                photos: [],
+                status: 'a-venir',
+                createdAt: new Date().toISOString()
+            };
+            
+            if (!activityData.name || !activityData.date || !activityData.time || !activityData.location || !activityData.maxPlaces) {
+                alert('Tous les champs obligatoires doivent être remplis');
+                return;
+            }
+            
+            if (activityData.maxPlaces < 1 || activityData.maxPlaces > 50) {
+                alert('Le nombre de places doit être entre 1 et 50');
+                return;
+            }
+            
+            const activities = getActivities();
+            activities.push(activityData);
+            localStorage.setItem('activities', JSON.stringify(activities));
+            
+            // Réinitialiser le formulaire
+            document.getElementById('activityName').value = '';
+            document.getElementById('activityDate').value = '';
+            document.getElementById('activityTime').value = '';
+            document.getElementById('activityLocation').value = '';
+            document.getElementById('activityPlaces').value = '';
+            document.getElementById('activityDescription').value = '';
+            document.getElementById('activityImage').value = '';
+            document.getElementById('activityImagePreview').style.display = 'none';
+            
+            hideAddActivityForm();
+            displayActivities();
+            showMessage('success', '✅ Activité créée avec succès !');
+        }
+
+        function displayActivities() {
+            const activitiesList = document.getElementById('activitiesList');
+            const activities = getActivities();
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Filtrer les activités à venir
+            const upcomingActivities = activities.filter(activity => activity.date >= today);
+            
+            if (upcomingActivities.length === 0) {
+                activitiesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune activité programmée pour le moment.</p>';
+                return;
+            }
+            
+            // Tri par date
+            upcomingActivities.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            activitiesList.innerHTML = upcomingActivities.map(activity => {
+                const remainingPlaces = activity.maxPlaces - activity.participants.length;
+                const placesClass = remainingPlaces === 0 ? 'full' : remainingPlaces <= 2 ? 'low' : '';
+                
+                return `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <h3>${activity.name}</h3>
+                            <span class="places-counter ${placesClass}">
+                                ${remainingPlaces > 0 ? `${remainingPlaces} places` : 'Complet'}
+                            </span>
+                        </div>
+                        ${activity.image ? `
+                            <div class="item-image-container">
+                                <img src="${activity.image}" class="item-image" alt="Image de l'activité">
+                                <div class="item-image-overlay"></div>
+                            </div>
+                        ` : ''}
+                        <div class="item-body">
+                            <div class="item-date">${formatDate(activity.date)} à ${activity.time}</div>
+                            <p><strong>📍 Lieu :</strong> ${activity.location}</p>
+                            ${activity.description ? `<p>${activity.description}</p>` : ''}
+                            
+                            ${activity.participants.length > 0 ? `
+                                <div style="margin: 1rem 0;">
+                                    <strong>Participants inscrits (${activity.participants.length}/${activity.maxPlaces}) :</strong>
+                                    <div style="margin: 0.5rem 0; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                        ${activity.participants.map(p => `<span style="background: var(--macif-light-blue); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">${p}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="item-actions">
+                                ${remainingPlaces > 0 ? 
+                                    `<button class="btn" onclick="joinActivity(${activity.id})">✅ S'inscrire</button>` :
+                                    `<button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">❌ Complet</button>`
+                                }
+                            </div>
+                            ${generateReactionsBar('activity', activity.id)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayAnnonces() {
+            const annoncesList = document.getElementById('annoncesBonnesAffairesList');
+            const annonces = getAnnonces();
+            
+            if (annonces.length === 0) {
+                annoncesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune annonce publiée pour le moment.</p>';
+                return;
+            }
+            
+            annoncesList.innerHTML = annonces.map(annonce => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <h3>${annonce.titre}</h3>
+                        ${annonce.prix ? `<span style="color: var(--macif-orange); font-weight: bold;">${annonce.prix}</span>` : ''}
+                    </div>
+                    <div class="item-body">
+                        ${annonce.image && annonce.image !== window.location.href ? `<img src="${annonce.image}" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">` : ''}
+                        <p>${annonce.description}</p>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                            <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                                <strong>Contact :</strong> ${annonce.prenom} ${annonce.nom}<br>
+                                <a href="mailto:${annonce.email}?subject=Intéressé par: ${annonce.titre}" style="color: var(--macif-blue);">
+                                    📧 ${annonce.email}
+                                </a>
+                            </p>
+                            <small style="color: #999;">Publié le ${formatDate(annonce.createdAt.split('T')[0])}</small>
+                        </div>
+                        ${generateReactionsBar('bonneaffaire', annonce.id)}
+                    </div>
+                </div>
+            `).join('');
         }
 
         function getFadEvents() {
@@ -1913,17 +2438,55 @@
             upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
             
             eventsList.innerHTML = upcomingEvents.map(event => `
-                <div class="item-card">
+                <div class="item-card" onclick="showFadEventDetails(${event.id})">
                     <div class="item-header">
                         <h3>${event.title}</h3>
                     </div>
                     <div class="item-body">
                         <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
                         <p><strong>📍 Lieu :</strong> ${event.location}</p>
-                        <p>${event.description}</p>
+                        <p>${truncateText(event.description, 120)}</p>
+                        ${event.liens ? '<p style="color: var(--macif-blue); font-size: 0.9rem; margin-top: 0.5rem;">🔗 Supports disponibles - Cliquez pour voir</p>' : ''}
                     </div>
                 </div>
             `).join('');
+        }
+
+        function showFadEventDetails(id) {
+            const events = getFadEvents();
+            const event = events.find(e => e.id === id);
+            
+            if (!event) return;
+            
+            const liensSection = event.liens ? `
+                <div class="external-support">
+                    <h4>🔗 Supports externes</h4>
+                    <div class="content-with-links">${convertLinksToClickable(event.liens.replace(/\n/g, '<br>'))}</div>
+                </div>
+            ` : '';
+            
+            const content = `
+                <h2>${event.title}</h2>
+                <div class="item-date" style="margin: 1rem 0;">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
+                
+                <h3>📍 Lieu</h3>
+                <p style="margin-bottom: 2rem;">${event.location}</p>
+                
+                <h3>📝 Description</h3>
+                <div style="background: var(--light-gray); padding: 1.5rem; border-radius: 10px; line-height: 1.6; margin-bottom: 2rem;">
+                    ${event.description}
+                </div>
+                
+                ${liensSection}
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn" onclick="closeDetailModal()">Fermer</button>
+                </div>
+            `;
+            
+            document.getElementById('detailContent').innerHTML = content;
+            document.getElementById('detailModal').style.display = 'block';
+            document.body.classList.add('modal-open');
         }
 
         function displayFadPastEvents() {
@@ -1943,7 +2506,7 @@
             pastEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
             
             eventsList.innerHTML = pastEvents.map(event => `
-                <div class="item-card">
+                <div class="item-card" onclick="showFadEventDetails(${event.id})">
                     <div class="item-header">
                         <h3>${event.title}</h3>
                         <span class="status termine">Terminé</span>
@@ -1951,7 +2514,8 @@
                     <div class="item-body">
                         <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
                         <p><strong>📍 Lieu :</strong> ${event.location}</p>
-                        <p>${event.description}</p>
+                        <p>${truncateText(event.description, 120)}</p>
+                        ${event.liens ? '<p style="color: var(--macif-blue); font-size: 0.9rem; margin-top: 0.5rem;">🔗 Supports disponibles - Cliquez pour voir</p>' : ''}
                     </div>
                 </div>
             `).join('');
