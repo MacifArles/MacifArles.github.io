@@ -124,10 +124,12 @@
         }
 
         .nav-link.accueil { background: var(--macif-blue); color: var(--white); }
-        .nav-link.annonces { background: var(--macif-orange); color: var(--white); }
-        .nav-link.fadarles { background: var(--macif-yellow); color: var(--dark-gray); }
-        .nav-link.bonnes-affaires { background: var(--macif-green); color: var(--white); }
-        .nav-link.activites { background: var(--macif-pink); color: var(--white); }
+        .nav-link.trombinoscope { background: var(--macif-orange); color: var(--white); }
+        .nav-link.anniversaire { background: var(--macif-yellow); color: var(--dark-gray); }
+        .nav-link.fadarles { background: var(--macif-green); color: var(--white); }
+        .nav-link.galerie { background: var(--macif-pink); color: var(--white); }
+        .nav-link.bonnes-affaires { background: var(--macif-purple); color: var(--white); }
+        .nav-link.activites { background: #17A2B8; color: var(--white); }
 
         .user-info {
             display: flex;
@@ -201,7 +203,7 @@
             display: block;
         }
 
-        /* Modal de connexion - Z-index très élevé */
+        /* Modal de connexion */
         .modal {
             display: none;
             position: fixed;
@@ -231,7 +233,6 @@
             flex-direction: column;
         }
 
-        /* Scrollbar améliorée pour les modals */
         .modal-body {
             max-height: 60vh;
             overflow-y: auto;
@@ -258,7 +259,6 @@
             background: #0052A3;
         }
 
-        /* Support pour Firefox */
         .modal-body {
             scrollbar-width: thin;
             scrollbar-color: var(--macif-blue) var(--light-gray);
@@ -282,7 +282,7 @@
             color: var(--macif-blue);
         }
 
-        /* Hero section avec illustrations */
+        /* Hero section */
         .hero {
             text-align: center;
             padding: 3rem 0;
@@ -371,7 +371,6 @@
             z-index: 1;
         }
 
-        /* Images de fond par défaut pour chaque card */
         .feature-card:nth-child(1)::before {
             background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1553484771-371a605b060b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
@@ -386,6 +385,14 @@
 
         .feature-card:nth-child(4)::before {
             background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+        }
+
+        .feature-card:nth-child(5)::before {
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+        }
+
+        .feature-card:nth-child(6)::before {
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
 
         .feature-card-content {
@@ -411,7 +418,6 @@
             line-height: 1.5;
         }
 
-        /* Effet de brillance au survol */
         .feature-card::after {
             content: '';
             position: absolute;
@@ -446,31 +452,6 @@
         .card h3 {
             color: var(--macif-blue);
             margin-bottom: 1rem;
-        }
-
-        /* Statuts */
-        .status {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .status.a-venir {
-            background: #E3F2FD;
-            color: #1976D2;
-        }
-
-        .status.en-cours {
-            background: #FFF3E0;
-            color: #F57C00;
-        }
-
-        .status.termine {
-            background: #E8F5E8;
-            color: #388E3C;
         }
 
         /* Formulaires */
@@ -592,7 +573,7 @@
             border: 1px solid #BEE5EB;
         }
 
-        /* Grille d'événements/annonces */
+        /* Grille d'éléments */
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -641,125 +622,59 @@
             flex-wrap: wrap;
         }
 
-        /* Modal détails avec scrollbar améliorée */
-        .modal-large {
-            max-width: 900px;
-        }
-
-        /* Contenu avec liens cliquables */
-        .content-with-links {
-            line-height: 1.6;
-        }
-
-        .content-with-links a {
-            color: var(--macif-blue);
-            text-decoration: none;
-            font-weight: 500;
-            border-bottom: 1px dotted var(--macif-blue);
-            transition: all 0.3s ease;
-        }
-
-        .content-with-links a:hover {
-            color: var(--macif-orange);
-            border-bottom-color: var(--macif-orange);
-            background: var(--macif-light-blue);
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-
-        .content-with-links a::before {
-            content: "🔗 ";
-            font-size: 0.9em;
-        }
-
-        /* Section support externe */
-        .external-support {
-            background: var(--macif-light-blue);
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            border-left: 4px solid var(--macif-blue);
-        }
-
-        .external-support h4 {
-            color: var(--macif-blue);
-            margin-bottom: 0.5rem;
+        /* Page header */
+        .page-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Système de réactions */
-        .reactions-bar {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .reaction-btn {
+        .page-title {
+            font-size: 2rem;
+            color: var(--macif-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
             background: var(--light-gray);
+            border-radius: 10px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: transparent;
             border: none;
-            border-radius: 20px;
-            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            font-size: 0.9rem;
-            min-width: 50px;
-            justify-content: center;
-        }
-
-        .reaction-btn:hover {
-            background: var(--macif-light-blue);
-            transform: translateY(-1px);
-        }
-
-        .reaction-btn.reacted {
-            background: var(--macif-blue);
-            color: var(--white);
-        }
-
-        .reaction-btn.reacted:hover {
-            background: #0052A3;
-        }
-
-        .reaction-count {
             font-weight: 500;
-            font-size: 0.8rem;
         }
 
-        /* Image personnalisée sur les cards */
-        .item-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 0;
-            margin-bottom: 0;
+        .tab.active {
+            background: var(--white);
+            color: var(--macif-blue);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .item-image-container {
-            position: relative;
-            overflow: hidden;
-            margin: -1rem -1rem 1rem -1rem;
+        .tab-content {
+            display: none;
         }
 
-        .item-image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
-            height: 60px;
-            z-index: 1;
+        .tab-content.active {
+            display: block;
         }
 
-        /* Upload d'image */
+        /* Image upload et preview */
         .image-upload {
             border: 2px dashed #ccc;
             border-radius: 8px;
@@ -800,6 +715,206 @@
             transform: scale(1.05);
         }
 
+        /* Trombinoscope styles */
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-card {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .team-header {
+            background: linear-gradient(45deg, var(--macif-blue), var(--macif-green));
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .team-body {
+            padding: 1.5rem;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .member-card {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .member-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .member-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem auto;
+            border: 3px solid var(--macif-blue);
+        }
+
+        .member-name {
+            font-weight: bold;
+            color: var(--macif-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-description {
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.4;
+        }
+
+        /* Calendrier anniversaires */
+        .calendar-container {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .calendar-day {
+            background: var(--white);
+            padding: 1rem;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        .calendar-day.other-month {
+            background: #f8f9fa;
+            color: #ccc;
+        }
+
+        .calendar-day.today {
+            background: var(--macif-light-blue);
+            font-weight: bold;
+        }
+
+        .calendar-day.has-birthday {
+            background: linear-gradient(135deg, #FFE5E5, #FFF0F0);
+            border: 2px solid var(--macif-pink);
+        }
+
+        .birthday-indicator {
+            background: var(--macif-pink);
+            color: var(--white);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Galerie photos */
+        .gallery-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .gallery-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: var(--white);
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover .photo-overlay {
+            transform: translateY(0);
+        }
+
         /* Compteur places */
         .places-counter {
             display: inline-block;
@@ -819,44 +934,9 @@
             background: #DC3545;
         }
 
-        /* Page header */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            color: var(--macif-blue);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Filtres */
-        .filters {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .filter-group select {
-            padding: 0.5rem;
-            border: 2px solid #E0E0E0;
-            border-radius: 5px;
-            background: var(--white);
+        /* Masquer les formulaires par défaut */
+        .add-form {
+            display: none;
         }
 
         /* Responsive */
@@ -909,18 +989,27 @@
                 grid-template-columns: 1fr;
             }
 
+            .teams-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 1px;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+                padding: 0.5rem;
+            }
+
             .page-header {
                 flex-direction: column;
                 align-items: flex-start;
-            }
-
-            .filters {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .item-actions {
-                justify-content: center;
             }
 
             .modal-content {
@@ -950,90 +1039,7 @@
             animation: slideIn 0.5s ease;
         }
 
-        .floating-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
-            background: var(--macif-blue);
-            color: var(--white);
-            border: none;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: var(--shadow-hover);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1);
-            background: #0052A3;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            background: var(--light-gray);
-            border-radius: 10px;
-            padding: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            background: transparent;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .tab.active {
-            background: var(--white);
-            color: var(--macif-blue);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Loading */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--macif-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Masquer le footer quand modal ouvert */
-        body.modal-open .footer {
-            display: none !important;
-        }
-
-        /* Footer simplifié */
+        /* Footer */
         .footer {
             background: linear-gradient(135deg, var(--macif-blue) 0%, #0052A3 100%);
             color: var(--white);
@@ -1041,62 +1047,12 @@
             margin-top: 2rem;
             width: 100%;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-            display: block;
-            position: relative;
-            z-index: 1;
-            clear: both;
         }
 
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            color: var(--macif-yellow);
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .footer-section p,
-        .footer-section a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            line-height: 1.6;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .footer-section a:hover {
-            color: var(--macif-yellow);
-            transition: color 0.3s ease;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer-logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-        }
-
-        .footer-logo-text {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--white);
         }
 
         .footer-bottom {
@@ -1111,93 +1067,8 @@
             font-size: 0.9rem;
         }
 
-        .contact-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-info:hover {
-            color: var(--macif-yellow);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-link {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: var(--white);
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            background: var(--macif-yellow);
-            color: var(--macif-blue);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .footer {
-                padding: 2rem 0 1rem 0;
-            }
-            
-            .footer-content {
-                padding: 0 1rem;
-            }
-            
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .footer-logo {
-                justify-content: center;
-            }
-            
-            .social-links {
-                justify-content: center;
-            }
-        }
-        .tooltip {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .tooltip::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark-gray);
-            color: var(--white);
-            padding: 0.5rem;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip:hover::after {
-            opacity: 1;
-        }
-
-        /* Masquer les formulaires par défaut */
-        .add-form {
-            display: none;
+        body.modal-open .footer {
+            display: none !important;
         }
     </style>
 </head>
@@ -1219,15 +1090,14 @@
                 </div>
                 <button type="submit" class="btn" style="width: 100%; margin-bottom: 1rem;">Se connecter</button>
                 <div style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
-                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Tests rapides :</p>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Test rapide :</p>
                     <button type="button" class="btn btn-small" onclick="testLogin('AdminFadarles')" style="margin: 0.25rem;">Test Admin FAD</button>
-                    <button type="button" class="btn btn-small btn-secondary" onclick="testLogin('AdminRe')" style="margin: 0.25rem;">Test Admin RE</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal détails avec scrollbar -->
+    <!-- Modal détails -->
     <div id="detailModal" class="modal">
         <div class="modal-content modal-large">
             <span class="close" onclick="closeDetailModal()">&times;</span>
@@ -1237,7 +1107,6 @@
 
     <!-- Header -->
     <header class="header">
-        <!-- Bandeau de connexion -->
         <div id="loginBanner" class="login-banner" onclick="openLoginModal()">
             🔐 Se connecter pour accéder aux fonctionnalités avancées 🔐
         </div>
@@ -1245,7 +1114,7 @@
         <nav class="navbar">
             <a href="#" class="logo" onclick="showPage('accueil')">
                 <div class="macif-logo">
-                    <img src="data:image/png;base64,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" alt="MACIF Logo">
+                    <img src="data:image/png;base64,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" alt="MACIF Logo">
                 </div>
                 <div class="logo-text"></div>
             </a>
@@ -1261,13 +1130,19 @@
                     <a href="#" class="nav-link accueil active" onclick="showPage('accueil')">🏠 Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link annonces" onclick="showPage('annonces')">📢 Animations </a>
+                    <a href="#" class="nav-link trombinoscope" onclick="showPage('trombinoscope')">👥 Trombinoscope</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link fadarles" onclick="showPage('fadarles')">🎉 FAD'ARLES </a>
+                    <a href="#" class="nav-link anniversaire" onclick="showPage('anniversaire')">🎂 Anniversaires</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link bonnes-affaires" onclick="showPage('bonnes-affaires')">🛒 Bonnes Affaires </a>
+                    <a href="#" class="nav-link fadarles" onclick="showPage('fadarles')">🎉 FAD'ARLES</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link galerie" onclick="showPage('galerie')">📸 Galerie</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link bonnes-affaires" onclick="showPage('bonnes-affaires')">🛒 Bonnes Affaires</a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link activites" onclick="showPage('activites')">⚽ Activités</a>
@@ -1283,362 +1158,421 @@
 
     <div class="main-content">
         <div class="container">
-        <!-- Page Accueil -->
-        <div id="accueil" class="page-content active">
-            <div class="hero">
-                <div class="hero-content">
-                    <h1>Bienvenue sur l'Intranet</h1>
-                    <p>CRC Commercial Arles - MACIF<br>
-                    Votre plateforme de communication interne centralisée</p>
+            <!-- Page Accueil -->
+            <div id="accueil" class="page-content active">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1>Bienvenue sur l'Intranet</h1>
+                        <p>CRC Commercial Arles - MACIF<br>
+                        Votre plateforme de communication interne centralisée</p>
+                    </div>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-card-content">
+                            <h3>Trombinoscope</h3>
+                            <p>Découvrez les équipes du CRC Arles, leurs membres et leurs rôles dans l'entreprise.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card-content">
+                            <h3>Anniversaires</h3>
+                            <p>Consultez le calendrier des anniversaires et ne manquez plus aucune célébration !</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card-content">
+                            <h3>Événements FAD'ARLES</h3>
+                            <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card-content">
+                            <h3>Galerie Photos</h3>
+                            <p>Parcourez les albums photos des événements et partagez vos souvenirs !</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card-content">
+                            <h3>Coin des Bonnes Affaires</h3>
+                            <p>Achetez, vendez et échangez entre collègues. Contactez directement les vendeurs.</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card-content">
+                            <h3>Organisation d'activités</h3>
+                            <p>Inscrivez-vous aux activités sportives et événements team building.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-top: 2rem; text-align: center;">
+                    <h3 style="color: var(--macif-blue); margin-bottom: 1rem;">🚀 Bienvenue dans votre espace collaboratif</h3>
+                    <p style="color: var(--dark-gray); line-height: 1.6;">
+                        Votre intranet MACIF Arles vous permet de rester connecté, 
+                        de découvrir vos collègues, de suivre les événements et de participer à la vie du CRC. 
+                        N'hésitez pas à explorer toutes les fonctionnalités disponibles !
+                    </p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                        💡 <strong>Besoins :</strong> N'hésitez pas à faire remonter vos besoins ou envies à votre Manager. 
+                    </p>
                 </div>
             </div>
 
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-card-content">
-                        <h3>Animations Commerciales</h3>
-                        <p>Consultez les dernières animations commerciales, challenges et actualités de l'équipe Arles.</p>
-                    </div>
+            <!-- Page Trombinoscope -->
+            <div id="trombinoscope" class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title">👥 Trombinoscope des équipes</h2>
+                    <button id="addTeamBtn" class="btn" style="display: none;" onclick="showAddTeamForm()">
+                        ➕ Nouvelle équipe
+                    </button>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-card-content">
-                        <h3>Événements FAD'ARLES</h3>
-                        <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
-                    </div>
+
+                <div id="addTeamForm" class="card add-form">
+                    <h3>➕ Ajouter une nouvelle équipe</h3>
+                    <form onsubmit="addTeam(event)">
+                        <div class="form-group">
+                            <label>Nom de l'équipe :</label>
+                            <input type="text" id="teamName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description de l'équipe :</label>
+                            <textarea id="teamDescription" rows="3"></textarea>
+                        </div>
+                        <div class="item-actions">
+                            <button type="submit" class="btn">Créer l'équipe</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddTeamForm()">Annuler</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-card-content">
-                        <h3>Coin des Bonnes Affaires</h3>
-                        <p>Achetez, vendez et échangez entre collègues. Contactez directement les vendeurs par chat ou sur la terrasse.</p>
-                    </div>
+
+                <div id="teamsGrid" class="teams-grid"></div>
+            </div>
+
+            <!-- Page Anniversaires -->
+            <div id="anniversaire" class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title">🎂 Calendrier des anniversaires</h2>
+                    <button id="addBirthdayBtn" class="btn" style="display: none;" onclick="showAddBirthdayForm()">
+                        ➕ Ajouter un anniversaire
+                    </button>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-card-content">
-                        <h3>Organisation d'activités</h3>
-                        <p>Inscrivez-vous aux activités sportives et événements team building. Partagez vos photos !</p>
+
+                <div id="addBirthdayForm" class="card add-form">
+                    <h3>➕ Ajouter un anniversaire</h3>
+                    <form onsubmit="addBirthday(event)">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Prénom :</label>
+                                <input type="text" id="birthdayFirstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nom :</label>
+                                <input type="text" id="birthdayLastName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Date d'anniversaire :</label>
+                            <input type="date" id="birthdayDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Équipe :</label>
+                            <select id="birthdayTeam" required>
+                                <option value="">Sélectionner une équipe</option>
+                            </select>
+                        </div>
+                        <div class="item-actions">
+                            <button type="submit" class="btn">Ajouter l'anniversaire</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddBirthdayForm()">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h3 id="currentMonth"></h3>
+                        <div class="calendar-nav">
+                            <button class="btn btn-small" onclick="previousMonth()">← Précédent</button>
+                            <button class="btn btn-small" onclick="nextMonth()">Suivant →</button>
+                        </div>
                     </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+
+                <div id="birthdaysList" class="card">
+                    <h3>🎉 Anniversaires ce mois-ci</h3>
+                    <div id="monthlyBirthdays"></div>
                 </div>
             </div>
 
-            <!-- Ajout d'une section pour voir le footer -->
-            <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-top: 2rem; text-align: center;">
-                <h3 style="color: var(--macif-blue); margin-bottom: 1rem;">🚀 Bienvenue dans votre espace collaboratif</h3>
-                <p style="color: var(--dark-gray); line-height: 1.6;">
-                    Votre intranet MACIF Arles vous permet de rester connecté, 
-                    de suivre les actualités commerciales et de participer à la vie du CRC. 
-                    N'hésitez pas à explorer toutes les fonctionnalités disponibles !
-                </p>
-                <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                    💡 <strong>Besoins :</strong> N'hésitez pas à faire remonter vos besoins ou envies à votre Manager. 
-                </p>
-            </div>
-        </div>
+            <!-- Page FAD'ARLES -->
+            <div id="fadarles" class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title">🎉 Événements FAD'ARLES</h2>
+                    <button id="addFadBtn" class="btn" style="display: none;" onclick="showAddFadForm()">
+                        ➕ Nouvel événement
+                    </button>
+                </div>
 
-        <!-- Page Annonces Commerciales -->
-        <div id="annonces" class="page-content">
-            <div class="page-header">
-                <h2 class="page-title">📢 Annimation Commerciales</h2>
-                <button id="addAnnonceBtn" class="btn" style="display: none;" onclick="showAddAnnonceForm()">
-                    ➕ Nouvelle annonce
-                </button>
+                <div class="tabs">
+                    <button class="tab active" onclick="showFadTab('upcoming')">À venir</button>
+                    <button class="tab" onclick="showFadTab('past')">Passés</button>
+                </div>
+
+                <div id="addFadForm" class="card add-form">
+                    <h3>➕ Ajouter un événement FAD'ARLES</h3>
+                    <form onsubmit="addFadEvent(event)">
+                        <div class="form-group">
+                            <label>Titre de l'événement :</label>
+                            <input type="text" id="fadTitle" required>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Date :</label>
+                                <input type="date" id="fadDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Heure :</label>
+                                <input type="time" id="fadTime">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Lieu :</label>
+                            <input type="text" id="fadLocation" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description :</label>
+                            <textarea id="fadDescription" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Image illustrative (optionnelle) :</label>
+                            <div class="image-upload" onclick="document.getElementById('fadImage').click()">
+                                <p>📷 Cliquez pour ajouter une image à l'événement</p>
+                                <input type="file" id="fadImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'fadImagePreview')">
+                            </div>
+                            <img id="fadImagePreview" class="image-preview" style="display: none;">
+                        </div>
+                        <div class="item-actions">
+                            <button type="submit" class="btn">Ajouter l'événement</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddFadForm()">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="fadUpcoming" class="tab-content active">
+                    <div id="fadEventsList" class="items-grid"></div>
+                </div>
+
+                <div id="fadPast" class="tab-content">
+                    <div id="fadPastEventsList" class="items-grid"></div>
+                </div>
             </div>
 
-            <div class="filters">
-                <div class="filter-group">
-                    <label>Filtrer par statut :</label>
-                    <select id="annonceFilter" onchange="filterAnnonces()">
-                        <option value="all">Tous</option>
-                        <option value="a-venir">À venir</option>
-                        <option value="en-cours">En cours</option>
-                        <option value="termine">Terminé</option>
+            <!-- Page Galerie -->
+            <div id="galerie" class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title">📸 Galerie Photos</h2>
+                    <button id="addGalleryBtn" class="btn" style="display: none;" onclick="showAddGalleryForm()">
+                        ➕ Ajouter des photos
+                    </button>
+                </div>
+
+                <div id="addGalleryForm" class="card add-form">
+                    <h3>➕ Ajouter des photos à la galerie</h3>
+                    <form onsubmit="addGalleryPhotos(event)">
+                        <div class="form-group">
+                            <label>Événement/Occasion :</label>
+                            <input type="text" id="galleryEvent" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date :</label>
+                            <input type="date" id="galleryDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description :</label>
+                            <textarea id="galleryDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Photos :</label>
+                            <div class="image-upload" onclick="document.getElementById('galleryImages').click()">
+                                <p>📷 Cliquez pour sélectionner les photos (plusieurs fichiers possibles)</p>
+                                <input type="file" id="galleryImages" accept="image/*" multiple style="display: none;" onchange="previewGalleryImages(this)">
+                            </div>
+                            <div id="galleryPreview" class="image-gallery"></div>
+                        </div>
+                        <div class="item-actions">
+                            <button type="submit" class="btn">Ajouter à la galerie</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddGalleryForm()">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="gallery-filters">
+                    <select id="galleryFilter" onchange="filterGallery()">
+                        <option value="all">Tous les événements</option>
+                    </select>
+                    <select id="galleryYearFilter" onchange="filterGallery()">
+                        <option value="all">Toutes les années</option>
                     </select>
                 </div>
+
+                <div id="galleryPhotos" class="gallery-photos"></div>
             </div>
 
-            <div id="addAnnonceForm" class="card add-form">
-                <h3>➕ Ajouter une annimation commerciale</h3>
-                <form onsubmit="addAnnonceCommerciale(event)">
-                    <div class="form-group">
-                        <label>Titre de l'annonce :</label>
-                        <input type="text" id="newAnnonceTitre" required>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Date de début :</label>
-                            <input type="date" id="newAnnonceDebut" required>
+            <!-- Page Bonnes Affaires -->
+            <div id="bonnes-affaires" class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title">🛒 Coin des Bonnes Affaires</h2>
+                    <button class="btn" onclick="showAddAnnonceBAForm()">➕ Publier une annonce</button>
+                </div>
+
+                <div id="addAnnonceBAForm" class="card add-form">
+                    <h3>➕ Publier une annonce</h3>
+                    <form onsubmit="addAnnonce(event)">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Prénom :</label>
+                                <input type="text" id="annoncePrenom" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nom :</label>
+                                <input type="text" id="annonceNom" required>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label>Date de fin :</label>
-                            <input type="date" id="newAnnonceFin" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Description :</label>
-                        <textarea id="newAnnonceDescription" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Détails/Règles :</label>
-                        <textarea id="newAnnonceDetails" rows="6" placeholder="Détails complets, règles du challenge, conditions..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Liens de support externe (optionnel) :</label>
-                        <textarea id="newAnnonceLiens" rows="3" placeholder="Indiquez les liens vers Google Docs, supports externes, etc. (un par ligne)"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Image illustrative (optionnelle) :</label>
-                        <div class="image-upload" onclick="document.getElementById('newAnnonceImage').click()">
-                            <p>📷 Cliquez pour ajouter une image à votre annonce</p>
-                            <input type="file" id="newAnnonceImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'newAnnoncePreview')">
-                        </div>
-                        <img id="newAnnoncePreview" class="image-preview" style="display: none;">
-                    </div>
-                    <div class="form-group">
-                        <label>Statut :</label>
-                        <select id="newAnnonceStatut" required>
-                            <option value="a-venir">À venir</option>
-                            <option value="en-cours">En cours</option>
-                            <option value="termine">Terminé</option>
-                        </select>
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn">Ajouter l'annonce</button>
-                        <button type="button" class="btn btn-secondary" onclick="hideAddAnnonceForm()">Annuler</button>
-                    </div>
-                </form>
-            </div>
-
-            <div id="annoncesList" class="items-grid"></div>
-        </div>
-
-        <!-- Page FAD'ARLES -->
-        <div id="fadarles" class="page-content">
-            <div class="page-header">
-                <h2 class="page-title">🎉 Événements FAD'ARLES</h2>
-                <button id="addFadBtn" class="btn" style="display: none;" onclick="showAddFadForm()">
-                    ➕ Nouvel événement
-                </button>
-            </div>
-
-            <div class="tabs">
-                <button class="tab active" onclick="showFadTab('upcoming')">À venir</button>
-                <button class="tab" onclick="showFadTab('past')">Passés</button>
-            </div>
-
-            <div id="addFadForm" class="card add-form">
-                <h3>➕ Ajouter un événement FAD'ARLES</h3>
-                <form onsubmit="addFadEvent(event)">
-                    <div class="form-group">
-                        <label>Titre de l'événement :</label>
-                        <input type="text" id="fadTitle" required>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Date :</label>
-                            <input type="date" id="fadDate" required>
+                            <label>Email :</label>
+                            <input type="email" id="annonceEmail" required placeholder="votre.email@macif.fr">
                         </div>
                         <div class="form-group">
-                            <label>Heure :</label>
-                            <input type="time" id="fadTime">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Lieu :</label>
-                        <input type="text" id="fadLocation" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Description :</label>
-                        <textarea id="fadDescription" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Liens de support externe (optionnel) :</label>
-                        <textarea id="fadLiens" rows="3" placeholder="Indiquez les liens vers Google Docs, supports externes, etc. (un par ligne)"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Image illustrative (optionnelle) :</label>
-                        <div class="image-upload" onclick="document.getElementById('fadImage').click()">
-                            <p>📷 Cliquez pour ajouter une image à l'événement</p>
-                            <input type="file" id="fadImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'fadImagePreview')">
-                        </div>
-                        <img id="fadImagePreview" class="image-preview" style="display: none;">
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn">Ajouter l'événement</button>
-                        <button type="button" class="btn btn-secondary" onclick="hideAddFadForm()">Annuler</button>
-                    </div>
-                </form>
-            </div>
-
-            <div id="fadUpcoming" class="tab-content active">
-                <div id="fadEventsList" class="items-grid"></div>
-            </div>
-
-            <div id="fadPast" class="tab-content">
-                <div id="fadPastEventsList" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Page Bonnes Affaires -->
-        <div id="bonnes-affaires" class="page-content">
-            <div class="page-header">
-                <h2 class="page-title">🛒 Coin des Bonnes Affaires</h2>
-                <button class="btn" onclick="showAddAnnonceBAForm()">➕ Publier une annonce</button>
-            </div>
-
-            <div id="addAnnonceBAForm" class="card add-form">
-                <h3>➕ Publier une annonce</h3>
-                <form onsubmit="addAnnonce(event)">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Prénom :</label>
-                            <input type="text" id="annoncePrenom" required>
+                            <label>Titre de l'annonce :</label>
+                            <input type="text" id="annonceTitre" required>
                         </div>
                         <div class="form-group">
-                            <label>Nom :</label>
-                            <input type="text" id="annonceNom" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Email :</label>
-                        <input type="email" id="annonceEmail" required placeholder="votre.email@macif.fr">
-                    </div>
-                    <div class="form-group">
-                        <label>Titre de l'annonce :</label>
-                        <input type="text" id="annonceTitre" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Description :</label>
-                        <textarea id="annonceDescription" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Prix (optionnel) :</label>
-                        <input type="text" id="annoncePrix" placeholder="ex: 50€">
-                    </div>
-                    <div class="form-group">
-                        <label>Image (optionnelle) :</label>
-                        <div class="image-upload" onclick="document.getElementById('annonceImage').click()">
-                            <p>📷 Cliquez pour ajouter une image</p>
-                            <input type="file" id="annonceImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'annoncePreview')">
-                        </div>
-                        <img id="annoncePreview" class="image-preview" style="display: none;">
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn">Publier l'annonce</button>
-                        <button type="button" class="btn btn-secondary" onclick="hideAddAnnonceBAForm()">Annuler</button>
-                    </div>
-                </form>
-            </div>
-
-            <div id="annoncesBonnesAffairesList" class="items-grid"></div>
-        </div>
-
-        <!-- Page Activités -->
-        <div id="activites" class="page-content">
-            <div class="page-header">
-                <h2 class="page-title">⚽ Organisation d'activités</h2>
-                <button class="btn" onclick="showAddActivityForm()">➕ Créer une activité</button>
-            </div>
-
-            <div class="tabs">
-                <button class="tab active" onclick="showActivityTab('upcoming')">À venir</button>
-                <button class="tab" onclick="showActivityTab('past')">Passées</button>
-            </div>
-
-            <div id="addActivityForm" class="card add-form">
-                <h3>➕ Créer une activité</h3>
-                <form onsubmit="addActivity(event)">
-                    <div class="form-group">
-                        <label>Nom de l'activité :</label>
-                        <input type="text" id="activityName" required>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Date :</label>
-                            <input type="date" id="activityDate" required>
+                            <label>Description :</label>
+                            <textarea id="annonceDescription" rows="4" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Heure :</label>
-                            <input type="time" id="activityTime" required>
+                            <label>Prix (optionnel) :</label>
+                            <input type="text" id="annoncePrix" placeholder="ex: 50€">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Lieu :</label>
-                        <input type="text" id="activityLocation" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Nombre de places disponibles :</label>
-                        <input type="number" id="activityPlaces" min="1" max="50" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Description :</label>
-                        <textarea id="activityDescription" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Image illustrative (optionnelle) :</label>
-                        <div class="image-upload" onclick="document.getElementById('activityImage').click()">
-                            <p>📷 Cliquez pour ajouter une image à l'activité</p>
-                            <input type="file" id="activityImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'activityImagePreview')">
+                        <div class="form-group">
+                            <label>Image (optionnelle) :</label>
+                            <div class="image-upload" onclick="document.getElementById('annonceImage').click()">
+                                <p>📷 Cliquez pour ajouter une image</p>
+                                <input type="file" id="annonceImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'annoncePreview')">
+                            </div>
+                            <img id="annoncePreview" class="image-preview" style="display: none;">
                         </div>
-                        <img id="activityImagePreview" class="image-preview" style="display: none;">
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn">Créer l'activité</button>
-                        <button type="button" class="btn btn-secondary" onclick="hideAddActivityForm()">Annuler</button>
-                    </div>
-                </form>
+                        <div class="item-actions">
+                            <button type="submit" class="btn">Publier l'annonce</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddAnnonceBAForm()">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="annoncesBonnesAffairesList" class="items-grid"></div>
             </div>
 
-            <div id="activitiesUpcoming" class="tab-content active">
-                <div id="activitiesList" class="items-grid"></div>
-            </div>
+            <!-- Page Activités -->
+            <div id="activites" class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title">⚽ Organisation d'activités</h2>
+                    <button class="btn" onclick="showAddActivityForm()">➕ Créer une activité</button>
+                </div>
 
-            <div id="activitiesPast" class="tab-content">
-                <div id="activitiesPastList" class="items-grid"></div>
+                <div class="tabs">
+                    <button class="tab active" onclick="showActivityTab('upcoming')">À venir</button>
+                    <button class="tab" onclick="showActivityTab('past')">Passées</button>
+                </div>
+
+                <div id="addActivityForm" class="card add-form">
+                    <h3>➕ Créer une activité</h3>
+                    <form onsubmit="addActivity(event)">
+                        <div class="form-group">
+                            <label>Nom de l'activité :</label>
+                            <input type="text" id="activityName" required>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Date :</label>
+                                <input type="date" id="activityDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Heure :</label>
+                                <input type="time" id="activityTime" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Lieu :</label>
+                            <input type="text" id="activityLocation" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre de places disponibles :</label>
+                            <input type="number" id="activityPlaces" min="1" max="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description :</label>
+                            <textarea id="activityDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Image illustrative (optionnelle) :</label>
+                            <div class="image-upload" onclick="document.getElementById('activityImage').click()">
+                                <p>📷 Cliquez pour ajouter une image à l'activité</p>
+                                <input type="file" id="activityImage" accept="image/*" style="display: none;" onchange="previewImage(this, 'activityImagePreview')">
+                            </div>
+                            <img id="activityImagePreview" class="image-preview" style="display: none;">
+                        </div>
+                        <div class="item-actions">
+                            <button type="submit" class="btn">Créer l'activité</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddActivityForm()">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="activitiesUpcoming" class="tab-content active">
+                    <div id="activitiesList" class="items-grid"></div>
+                </div>
+
+                <div id="activitiesPast" class="tab-content">
+                    <div id="activitiesPastList" class="items-grid"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Variables globales pour la sécurité et la gestion des données
+        // Variables globales
         const USERS = {
-            'AdminFadarles': { password: 'Azertyuiop123', role: 'fadarles', name: 'Admin FAD\'ARLES' },
-            'AdminRe': { password: 'Azertyuiop123', role: 'annonces', name: 'Admin Réseaux' }
+            'AdminFadarles': { password: 'Azertyuiop123', role: 'fadarles', name: 'Admin FAD\'ARLES' }
         };
 
         let currentUser = null;
+        let currentCalendarDate = new Date();
 
-        // Initialisation au chargement de la page
+        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
             checkLoginStatus();
             displayAllContent();
+            displayCalendar();
         });
 
-        // Gestion de la navigation mobile
+        // Navigation mobile
         function toggleMobileMenu() {
             const navMenu = document.getElementById('navMenu');
             navMenu.classList.toggle('active');
         }
 
-        // Navigation entre les pages
+        // Navigation entre pages
         function showPage(pageId) {
-            // Masquer toutes les pages
-            const pages = document.querySelectorAll('.page-content');
-            pages.forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             
-            // Masquer tous les liens actifs
-            const links = document.querySelectorAll('.nav-link');
-            links.forEach(link => link.classList.remove('active'));
-            
-            // Afficher la page sélectionnée
             document.getElementById(pageId).classList.add('active');
-            
-            // Activer le lien correspondant
             document.querySelector(`.nav-link.${pageId}`).classList.add('active');
             
-            // Fermer le menu mobile
             document.getElementById('navMenu').classList.remove('active');
-            
-            // Actualiser le contenu selon les permissions
             updatePagePermissions();
         }
 
@@ -1659,76 +1593,23 @@
             document.body.classList.remove('modal-open');
         }
 
-        // Fermeture des modals en cliquant à l'extérieur
         window.onclick = function(event) {
             const loginModal = document.getElementById('loginModal');
             const detailModal = document.getElementById('detailModal');
             
-            if (event.target === loginModal) {
-                closeLoginModal();
-            }
-            if (event.target === detailModal) {
-                closeDetailModal();
-            }
+            if (event.target === loginModal) closeLoginModal();
+            if (event.target === detailModal) closeDetailModal();
         }
 
-        // Fonction pour convertir les liens en balises cliquables
-        function convertLinksToClickable(text) {
-            if (!text) return '';
-            
-            // Regex pour détecter les URLs
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            
-            return text.replace(urlRegex, function(url) {
-                return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
-            });
-        }
-
-        // Système d'authentification avec debug
+        // Authentification
         function handleLogin(event) {
             event.preventDefault();
             
             const username = sanitizeInput(document.getElementById('loginUsername').value);
             const password = document.getElementById('loginPassword').value;
-            
             const messageDiv = document.getElementById('loginMessage');
             
-            console.log('=== DEBUG CONNEXION ===');
-            console.log('Username saisi:', username);
-            console.log('Password saisi:', password);
-            console.log('Users disponibles:', Object.keys(USERS));
-            console.log('Test AdminFadarles:', USERS['AdminFadarles']);
-            console.log('Test AdminRe:', USERS['AdminRe']);
-            
-            // Test direct pour debug (à retirer en production)
-            if ((username === 'AdminFadarles' || username === 'AdminRe') && password === 'Azertyuiop123') {
-                console.log('✅ Connexion OK via test direct');
-                
-                currentUser = {
-                    username: username,
-                    role: username === 'AdminFadarles' ? 'fadarles' : 'annonces',
-                    name: username === 'AdminFadarles' ? 'Admin FAD\'ARLES' : 'Admin Réseaux'
-                };
-                
-                // Sauvegarder la session (avec fallback si localStorage ne marche pas)
-                try {
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    console.log('✅ Session sauvegardée dans localStorage');
-                } catch (e) {
-                    console.log('⚠️ localStorage non disponible, utilisation mémoire uniquement');
-                }
-                
-                updateUIAfterLogin();
-                closeLoginModal();
-                
-                showMessage('success', `✅ Connexion réussie ! Bienvenue ${currentUser.name}`);
-                return;
-            }
-            
-            // Test avec l'objet USERS original
             if (USERS[username] && USERS[username].password === password) {
-                console.log('✅ Connexion OK via USERS object');
-                
                 currentUser = {
                     username: username,
                     role: USERS[username].role,
@@ -1738,16 +1619,14 @@
                 try {
                     localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 } catch (e) {
-                    console.log('⚠️ localStorage non disponible');
+                    console.log('localStorage non disponible');
                 }
                 
                 updateUIAfterLogin();
                 closeLoginModal();
-                
                 showMessage('success', `✅ Connexion réussie ! Bienvenue ${currentUser.name}`);
             } else {
-                console.log('❌ Échec de connexion');
-                messageDiv.innerHTML = '<div class="message error">❌ Identifiants incorrects<br><small>Debug: ' + username + ' / ' + password + '</small></div>';
+                messageDiv.innerHTML = '<div class="message error">❌ Identifiants incorrects</div>';
                 setTimeout(() => messageDiv.innerHTML = '', 5000);
             }
         }
@@ -1755,7 +1634,6 @@
         function testLogin(username) {
             document.getElementById('loginUsername').value = username;
             document.getElementById('loginPassword').value = 'Azertyuiop123';
-            console.log('🧪 Test de connexion automatique pour:', username);
         }
 
         function checkLoginStatus() {
@@ -1764,10 +1642,8 @@
                 if (savedUser) {
                     currentUser = JSON.parse(savedUser);
                     updateUIAfterLogin();
-                    console.log('✅ Session restaurée:', currentUser);
                 }
             } catch (e) {
-                console.log('⚠️ Impossible de restaurer la session:', e);
                 localStorage.removeItem('currentUser');
             }
         }
@@ -1777,7 +1653,6 @@
                 document.getElementById('loginBanner').style.display = 'none';
                 document.getElementById('userInfo').style.display = 'flex';
                 document.getElementById('userWelcome').textContent = `👋 ${currentUser.name}`;
-                
                 updatePagePermissions();
             }
         }
@@ -1789,35 +1664,18 @@
             document.getElementById('loginBanner').style.display = 'block';
             document.getElementById('userInfo').style.display = 'none';
             
-            // Masquer les boutons d'administration
-            document.getElementById('addAnnonceBtn').style.display = 'none';
-            document.getElementById('addFadBtn').style.display = 'none';
-            
-            // Masquer les formulaires
             hideAllForms();
-            
-            // Actualiser l'affichage
             displayAllContent();
-            
             showMessage('info', '👋 Déconnexion réussie');
         }
 
         function updatePagePermissions() {
-            // Bouton ajout d'annonces (AdminRe seulement)
-            const addAnnonceBtn = document.getElementById('addAnnonceBtn');
-            if (currentUser && currentUser.role === 'annonces') {
-                addAnnonceBtn.style.display = 'block';
-            } else {
-                addAnnonceBtn.style.display = 'none';
-            }
+            const isAdmin = currentUser && currentUser.role === 'fadarles';
             
-            // Bouton ajout événements FAD (AdminFadarles seulement)
-            const addFadBtn = document.getElementById('addFadBtn');
-            if (currentUser && currentUser.role === 'fadarles') {
-                addFadBtn.style.display = 'block';
-            } else {
-                addFadBtn.style.display = 'none';
-            }
+            document.getElementById('addTeamBtn').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('addBirthdayBtn').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('addFadBtn').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('addGalleryBtn').style.display = isAdmin ? 'block' : 'none';
         }
 
         function hideAllForms() {
@@ -1826,283 +1684,184 @@
             });
         }
 
-        // Fonction de nettoyage des entrées
+        // Fonctions utilitaires
         function sanitizeInput(input) {
             return input.trim().replace(/[<>\"'&]/g, '');
         }
 
-        // GESTION DES FORMULAIRES
-        function showAddAnnonceForm() {
-            if (currentUser && currentUser.role === 'annonces') {
-                document.getElementById('addAnnonceForm').style.display = 'block';
+        function previewImage(input, previewId) {
+            const file = input.files[0];
+            const preview = document.getElementById(previewId);
+            
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Veuillez sélectionner un fichier image valide');
+                    input.value = '';
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Le fichier est trop volumineux (max 5MB)');
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
             }
         }
 
-        function hideAddAnnonceForm() {
-            document.getElementById('addAnnonceForm').style.display = 'none';
+        function formatDate(dateString) {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            };
+            return new Date(dateString).toLocaleDateString('fr-FR', options);
         }
 
-        function showAddFadForm() {
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        function showMessage(type, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = message;
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '100px';
+            messageDiv.style.right = '20px';
+            messageDiv.style.zIndex = '200000';
+            messageDiv.style.minWidth = '300px';
+            messageDiv.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            
+            document.body.appendChild(messageDiv);
+            setTimeout(() => messageDiv.remove(), 5000);
+        }
+
+        // GESTION DES ÉQUIPES
+        function showAddTeamForm() {
             if (currentUser && currentUser.role === 'fadarles') {
-                document.getElementById('addFadForm').style.display = 'block';
+                document.getElementById('addTeamForm').style.display = 'block';
             }
         }
 
-        function hideAddFadForm() {
-            document.getElementById('addFadForm').style.display = 'none';
+        function hideAddTeamForm() {
+            document.getElementById('addTeamForm').style.display = 'none';
         }
 
-        function showAddAnnonceBAForm() {
-            document.getElementById('addAnnonceBAForm').style.display = 'block';
-        }
-
-        function hideAddAnnonceBAForm() {
-            document.getElementById('addAnnonceBAForm').style.display = 'none';
-        }
-
-        function showAddActivityForm() {
-            document.getElementById('addActivityForm').style.display = 'block';
-        }
-
-        function hideAddActivityForm() {
-            document.getElementById('addActivityForm').style.display = 'none';
-        }
-
-        // SYSTÈME DE RÉACTIONS
-        function addReaction(contentType, contentId, reactionType) {
-            const reactions = getReactions();
-            const key = `${contentType}_${contentId}`;
-            
-            if (!reactions[key]) {
-                reactions[key] = {};
-            }
-            
-            if (!reactions[key][reactionType]) {
-                reactions[key][reactionType] = 0;
-            }
-            
-            reactions[key][reactionType]++;
-            localStorage.setItem('reactions', JSON.stringify(reactions));
-            
-            // Actualiser l'affichage selon le type de contenu
-            switch(contentType) {
-                case 'annonce':
-                    displayAnnoncesCommerciales();
-                    break;
-                case 'fad':
-                    displayFadEvents();
-                    displayFadPastEvents();
-                    break;
-                case 'activity':
-                    displayActivities();
-                    displayPastActivities();
-                    break;
-                case 'bonneaffaire':
-                    displayAnnonces();
-                    break;
-            }
-        }
-
-        function getReactions() {
-            try {
-                return JSON.parse(localStorage.getItem('reactions') || '{}');
-            } catch (e) {
-                console.error('Erreur lors du chargement des réactions:', e);
-                return {};
-            }
-        }
-
-        function getReactionCount(contentType, contentId, reactionType) {
-            const reactions = getReactions();
-            const key = `${contentType}_${contentId}`;
-            return reactions[key] && reactions[key][reactionType] ? reactions[key][reactionType] : 0;
-        }
-
-        function generateReactionsBar(contentType, contentId) {
-            const reactionTypes = [
-                { emoji: '👍', name: 'like' },
-                { emoji: '❤️', name: 'love' },
-                { emoji: '🎉', name: 'celebrate' },
-                { emoji: '🔥', name: 'fire' }
-            ];
-            
-            return `
-                <div class="reactions-bar">
-                    ${reactionTypes.map(reaction => {
-                        const count = getReactionCount(contentType, contentId, reaction.name);
-                        return `
-                            <button class="reaction-btn" onclick="addReaction('${contentType}', ${contentId}, '${reaction.name}')">
-                                <span>${reaction.emoji}</span>
-                                <span class="reaction-count">${count > 0 ? count : ''}</span>
-                            </button>
-                        `;
-                    }).join('')}
-                </div>
-            `;
-        }
-
-        // GESTION DES ANNONCES COMMERCIALES
-        function addAnnonceCommerciale(event) {
+        function addTeam(event) {
             event.preventDefault();
             
-            if (!currentUser || currentUser.role !== 'annonces') return;
+            if (!currentUser || currentUser.role !== 'fadarles') return;
             
-            const annonceData = {
+            const teamData = {
                 id: Date.now(),
-                titre: sanitizeInput(document.getElementById('newAnnonceTitre').value),
-                dateDebut: document.getElementById('newAnnonceDebut').value,
-                dateFin: document.getElementById('newAnnonceFin').value,
-                description: sanitizeInput(document.getElementById('newAnnonceDescription').value),
-                details: sanitizeInput(document.getElementById('newAnnonceDetails').value),
-                liens: sanitizeInput(document.getElementById('newAnnonceLiens').value),
-                image: document.getElementById('newAnnoncePreview').src !== window.location.href ? document.getElementById('newAnnoncePreview').src : null,
-                statut: document.getElementById('newAnnonceStatut').value,
-                createdAt: new Date().toISOString(),
-                createdBy: currentUser.username
+                name: sanitizeInput(document.getElementById('teamName').value),
+                description: sanitizeInput(document.getElementById('teamDescription').value),
+                members: [],
+                createdAt: new Date().toISOString()
             };
             
-            if (!annonceData.titre || !annonceData.dateDebut || !annonceData.dateFin || !annonceData.description) {
-                alert('Tous les champs obligatoires doivent être remplis');
-                return;
-            }
+            const teams = getTeams();
+            teams.push(teamData);
+            localStorage.setItem('teams', JSON.stringify(teams));
             
-            const annonces = getAnnoncesCommerciales();
-            annonces.unshift(annonceData);
-            localStorage.setItem('annoncesCommerciales', JSON.stringify(annonces));
+            document.getElementById('teamName').value = '';
+            document.getElementById('teamDescription').value = '';
             
-            // Réinitialiser le formulaire
-            document.getElementById('newAnnonceTitre').value = '';
-            document.getElementById('newAnnonceDebut').value = '';
-            document.getElementById('newAnnonceFin').value = '';
-            document.getElementById('newAnnonceDescription').value = '';
-            document.getElementById('newAnnonceDetails').value = '';
-            document.getElementById('newAnnonceLiens').value = '';
-            document.getElementById('newAnnonceImage').value = '';
-            document.getElementById('newAnnoncePreview').style.display = 'none';
-            
-            hideAddAnnonceForm();
-            displayAnnoncesCommerciales();
-            showMessage('success', '✅ Annonce ajoutée avec succès !');
+            hideAddTeamForm();
+            displayTeams();
+            updateBirthdayTeamOptions();
+            showMessage('success', '✅ Équipe créée avec succès !');
         }
 
-        function getAnnoncesCommerciales() {
+        function getTeams() {
             try {
-                return JSON.parse(localStorage.getItem('annoncesCommerciales') || '[]');
+                return JSON.parse(localStorage.getItem('teams') || '[]');
             } catch (e) {
-                console.error('Erreur lors du chargement des annonces:', e);
                 return [];
             }
         }
 
-        function displayAnnoncesCommerciales() {
-            const annoncesList = document.getElementById('annoncesList');
-            let annonces = getAnnoncesCommerciales();
+        function displayTeams() {
+            const teamsGrid = document.getElementById('teamsGrid');
+            let teams = getTeams();
             
-            // Ajouter des exemples si vide
-            if (annonces.length === 0) {
-                annonces = getDefaultAnnoncesCommerciales();
-                localStorage.setItem('annoncesCommerciales', JSON.stringify(annonces));
+            if (teams.length === 0) {
+                teams = getDefaultTeams();
+                localStorage.setItem('teams', JSON.stringify(teams));
             }
             
-            // Filtrer par statut
-            const filter = document.getElementById('annonceFilter') ? document.getElementById('annonceFilter').value : 'all';
-            if (filter !== 'all') {
-                annonces = annonces.filter(a => a.statut === filter);
-            }
-            
-            if (annonces.length === 0) {
-                annoncesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune annonce trouvée pour ce filtre.</p>';
-                return;
-            }
-            
-            annoncesList.innerHTML = annonces.map(annonce => `
-                <div class="item-card" onclick="showAnnonceDetails(${annonce.id})">
-                    <div class="item-header">
-                        <h3>${annonce.titre}</h3>
-                        <span class="status ${annonce.statut}">${getStatusLabel(annonce.statut)}</span>
+            teamsGrid.innerHTML = teams.map(team => `
+                <div class="team-card" onclick="showTeamDetails(${team.id})">
+                    <div class="team-header">
+                        <h3>${team.name}</h3>
+                        <p>${team.members.length} membre(s)</p>
                     </div>
-                    ${annonce.image ? `
-                        <div class="item-image-container">
-                            <img src="${annonce.image}" class="item-image" alt="Image de l'annonce">
-                            <div class="item-image-overlay"></div>
-                        </div>
-                    ` : ''}
-                    <div class="item-body">
-                        <div class="item-date">${formatDateRange(annonce.dateDebut, annonce.dateFin)}</div>
-                        <p>${truncateText(annonce.description, 150)}</p>
-                        ${currentUser && currentUser.role === 'annonces' ? `
+                    <div class="team-body">
+                        <p>${team.description || 'Aucune description'}</p>
+                        ${currentUser && currentUser.role === 'fadarles' ? `
                             <div class="item-actions">
-                                <button class="btn btn-small" onclick="event.stopPropagation(); editAnnonceStatus(${annonce.id})">
-                                    📝 Modifier statut
+                                <button class="btn btn-small" onclick="event.stopPropagation(); addMemberToTeam(${team.id})">
+                                    👤 Ajouter membre
                                 </button>
                             </div>
                         ` : ''}
-                        ${generateReactionsBar('annonce', annonce.id)}
                     </div>
                 </div>
             `).join('');
         }
 
-        function getDefaultAnnoncesCommerciales() {
+        function getDefaultTeams() {
             return [
-                {
-                    id: 1,
-                    titre: "🏆 J Sparks - Les Vacances d'Audrey",
-                    dateDebut: "2025-07-28",
-                    dateFin: "2025-08-02",
-                    description: "Durant ses vacances, Audrey rencontre plusieurs difficultés aidons la à survivre à chaque étape.",
-                    details: "RÈGLES DU CHALLENGE:\n\n🎯 OBJECTIFS:\n- Se surpasser chaque jour\n- Faire mieux que la veille\n\n🏆 RÉCOMPENSES:\n- Un trésor unique !\n\n📊 SUPPORT:\n- Macifapp.github.io\n\n",
-                    liens: "https://docs.google.com/spreadsheets/d/example123\nhttps://macifapp.github.io",
-                    statut: "en-cours",
-                    createdAt: new Date().toISOString(),
-                    createdBy: "AdminRe"
-                },
-                {
-                    id: 2,
-                    titre: "🎯 Formation Nouveaux Produits MACIF 2025",
-                    dateDebut: "2025-08-15",
-                    dateFin: "2025-08-15",
-                    description: "Session de formation obligatoire sur les nouveaux produits MACIF. Découvrez les innovations 2025 et les arguments de vente.",
-                    details: "PROGRAMME DE FORMATION:\n\n🕘 HORAIRES:\n9h00 - 17h00 (pause déjeuner 12h-13h)\n\n📍 LIEU:\nSalle de formation - CRC Arles\n2ème étage, salle Mistral\n\n📚 PROGRAMME:\n9h00-10h30: Nouveaux produits auto\n10h45-12h00: Évolutions habitation\n13h00-14h30: Produits numériques\n14h45-16h00: Arguments de vente\n16h00-17h00: Quiz et validation\n\n✅ OBLIGATOIRE:\nTous les conseillers commerciaux\nAttestation de formation délivrée\n\n📱 MATÉRIEL:\nOrdinateur portable fourni\nSupports remis en fin de session",
-                    liens: "https://docs.google.com/document/d/formation2025",
-                    statut: "termine",
-                    createdAt: new Date().toISOString(),
-                    createdBy: "AdminRe"
-                }
+                { id: 1, name: 'Équipe Commerciale', description: 'Conseillers commerciaux et chargés de clientèle', members: [] },
+                { id: 2, name: 'Équipe Support', description: 'Service client et assistance technique', members: [] },
+                { id: 3, name: 'Management', description: 'Direction et encadrement', members: [] },
+                { id: 4, name: 'Administration', description: 'Ressources humaines et administration', members: [] },
+                { id: 5, name: 'IT & Digital', description: 'Informatique et transformation digitale', members: [] }
             ];
         }
 
-        function showAnnonceDetails(id) {
-            const annonces = getAnnoncesCommerciales();
-            const annonce = annonces.find(a => a.id === id);
+        function showTeamDetails(teamId) {
+            const teams = getTeams();
+            const team = teams.find(t => t.id === teamId);
             
-            if (!annonce) return;
+            if (!team) return;
             
-            const liensSection = annonce.liens ? `
-                <div class="external-support">
-                    <h4>🔗 Supports externes</h4>
-                    <div class="content-with-links">${convertLinksToClickable(annonce.liens.replace(/\n/g, '<br>'))}</div>
-                </div>
-            ` : '';
+            const membersHtml = team.members.length > 0 ? 
+                team.members.map(member => `
+                    <div class="member-card">
+                        ${member.photo ? `<img src="${member.photo}" class="member-photo" alt="Photo de ${member.name}">` : 
+                          `<div class="member-photo" style="background: var(--macif-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">${member.name.split(' ').map(n => n[0]).join('')}</div>`}
+                        <div class="member-name">${member.name}</div>
+                        <div class="member-role">${member.role || 'Membre de l\'équipe'}</div>
+                        <div class="member-description">${member.description || ''}</div>
+                        ${currentUser && currentUser.role === 'fadarles' ? `
+                            <button class="btn btn-small btn-danger" onclick="removeMemberFromTeam(${teamId}, ${member.id})" style="margin-top: 0.5rem;">
+                                🗑️ Supprimer
+                            </button>
+                        ` : ''}
+                    </div>
+                `).join('') : 
+                '<p style="text-align: center; color: #666;">Aucun membre dans cette équipe</p>';
             
             const content = `
-                <h2>${annonce.titre}</h2>
-                <div style="margin: 1rem 0;">
-                    <span class="status ${annonce.statut}">${getStatusLabel(annonce.statut)}</span>
+                <h2>${team.name}</h2>
+                <p style="margin: 1rem 0;">${team.description}</p>
+                
+                <h3>Membres de l'équipe (${team.members.length})</h3>
+                <div class="members-grid">
+                    ${membersHtml}
                 </div>
-                <div class="item-date" style="margin: 1rem 0;">${formatDateRange(annonce.dateDebut, annonce.dateFin)}</div>
-                
-                <h3>📝 Description</h3>
-                <p style="margin-bottom: 2rem;">${annonce.description}</p>
-                
-                ${annonce.details ? `
-                    <h3>📋 Détails complets</h3>
-                    <div style="background: var(--light-gray); padding: 1.5rem; border-radius: 10px; white-space: pre-line; line-height: 1.6; margin-bottom: 2rem;">
-                        ${annonce.details}
-                    </div>
-                ` : ''}
-                
-                ${liensSection}
                 
                 <div style="margin-top: 2rem; text-align: center;">
                     <button class="btn" onclick="closeDetailModal()">Fermer</button>
@@ -2114,30 +1873,373 @@
             document.body.classList.add('modal-open');
         }
 
-        function editAnnonceStatus(id) {
-            const newStatus = prompt('Nouveau statut (a-venir, en-cours, termine):');
-            if (!newStatus || !['a-venir', 'en-cours', 'termine'].includes(newStatus)) {
-                alert('Statut invalide');
-                return;
-            }
+        function addMemberToTeam(teamId) {
+            if (!currentUser || currentUser.role !== 'fadarles') return;
             
-            const annonces = getAnnoncesCommerciales();
-            const annonce = annonces.find(a => a.id === id);
-            if (annonce) {
-                annonce.statut = newStatus;
-                localStorage.setItem('annoncesCommerciales', JSON.stringify(annonces));
-                displayAnnoncesCommerciales();
-                showMessage('success', '✅ Statut mis à jour !');
+            const name = prompt('Nom et prénom du membre :');
+            if (!name) return;
+            
+            const role = prompt('Rôle/Poste :') || 'Membre de l\'équipe';
+            const description = prompt('Description (optionnelle) :') || '';
+            
+            const teams = getTeams();
+            const team = teams.find(t => t.id === teamId);
+            
+            if (team) {
+                const member = {
+                    id: Date.now(),
+                    name: sanitizeInput(name),
+                    role: sanitizeInput(role),
+                    description: sanitizeInput(description),
+                    photo: null
+                };
+                
+                team.members.push(member);
+                localStorage.setItem('teams', JSON.stringify(teams));
+                displayTeams();
+                showMessage('success', '✅ Membre ajouté à l\'équipe !');
             }
         }
 
-        function filterAnnonces() {
-            displayAnnoncesCommerciales();
+        // GESTION DES ANNIVERSAIRES
+        function showAddBirthdayForm() {
+            if (currentUser && currentUser.role === 'fadarles') {
+                document.getElementById('addBirthdayForm').style.display = 'block';
+                updateBirthdayTeamOptions();
+            }
+        }
+
+        function hideAddBirthdayForm() {
+            document.getElementById('addBirthdayForm').style.display = 'none';
+        }
+
+        function updateBirthdayTeamOptions() {
+            const select = document.getElementById('birthdayTeam');
+            if (!select) return;
+            
+            const teams = getTeams();
+            select.innerHTML = '<option value="">Sélectionner une équipe</option>' +
+                teams.map(team => `<option value="${team.id}">${team.name}</option>`).join('');
+        }
+
+        function addBirthday(event) {
+            event.preventDefault();
+            
+            if (!currentUser || currentUser.role !== 'fadarles') return;
+            
+            const birthdayData = {
+                id: Date.now(),
+                firstName: sanitizeInput(document.getElementById('birthdayFirstName').value),
+                lastName: sanitizeInput(document.getElementById('birthdayLastName').value),
+                date: document.getElementById('birthdayDate').value,
+                teamId: parseInt(document.getElementById('birthdayTeam').value),
+                createdAt: new Date().toISOString()
+            };
+            
+            const birthdays = getBirthdays();
+            birthdays.push(birthdayData);
+            localStorage.setItem('birthdays', JSON.stringify(birthdays));
+            
+            document.getElementById('birthdayFirstName').value = '';
+            document.getElementById('birthdayLastName').value = '';
+            document.getElementById('birthdayDate').value = '';
+            document.getElementById('birthdayTeam').value = '';
+            
+            hideAddBirthdayForm();
+            displayCalendar();
+            displayMonthlyBirthdays();
+            showMessage('success', '✅ Anniversaire ajouté avec succès !');
+        }
+
+        function getBirthdays() {
+            try {
+                return JSON.parse(localStorage.getItem('birthdays') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function displayCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const currentMonth = document.getElementById('currentMonth');
+            
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            currentMonth.textContent = currentCalendarDate.toLocaleDateString('fr-FR', { 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay() + 1);
+            
+            const birthdays = getBirthdays();
+            const monthBirthdays = birthdays.filter(b => {
+                const bDate = new Date(b.date);
+                return bDate.getMonth() === month;
+            });
+            
+            const days = [];
+            const currentDate = new Date(startDate);
+            
+            for (let i = 0; i < 42; i++) {
+                const dayBirthdays = monthBirthdays.filter(b => {
+                    const bDate = new Date(b.date);
+                    return bDate.getDate() === currentDate.getDate();
+                });
+                
+                const isCurrentMonth = currentDate.getMonth() === month;
+                const isToday = currentDate.toDateString() === new Date().toDateString();
+                const hasBirthdays = dayBirthdays.length > 0;
+                
+                let dayClass = 'calendar-day';
+                if (!isCurrentMonth) dayClass += ' other-month';
+                if (isToday) dayClass += ' today';
+                if (hasBirthdays) dayClass += ' has-birthday';
+                
+                days.push(`
+                    <div class="${dayClass}">
+                        <span>${currentDate.getDate()}</span>
+                        ${hasBirthdays ? `<div class="birthday-indicator">${dayBirthdays.length}</div>` : ''}
+                    </div>
+                `);
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            calendarGrid.innerHTML = 
+                weekDays.map(day => `<div class="calendar-day" style="font-weight: bold; background: var(--macif-blue); color: white;">${day}</div>`).join('') +
+                days.join('');
+        }
+
+        function previousMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            displayCalendar();
+            displayMonthlyBirthdays();
+        }
+
+        function nextMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            displayCalendar();
+            displayMonthlyBirthdays();
+        }
+
+        function displayMonthlyBirthdays() {
+            const monthlyBirthdays = document.getElementById('monthlyBirthdays');
+            const birthdays = getBirthdays();
+            const teams = getTeams();
+            const month = currentCalendarDate.getMonth();
+            
+            const monthBirthdays = birthdays.filter(b => {
+                const bDate = new Date(b.date);
+                return bDate.getMonth() === month;
+            }).sort((a, b) => new Date(a.date).getDate() - new Date(b.date).getDate());
+            
+            if (monthBirthdays.length === 0) {
+                monthlyBirthdays.innerHTML = '<p style="color: #666;">Aucun anniversaire ce mois-ci.</p>';
+                return;
+            }
+            
+            monthlyBirthdays.innerHTML = monthBirthdays.map(birthday => {
+                const team = teams.find(t => t.id === birthday.teamId);
+                const date = new Date(birthday.date);
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--macif-light-blue); border-radius: 8px; margin-bottom: 0.5rem;">
+                        <div>
+                            <strong>${birthday.firstName} ${birthday.lastName}</strong>
+                            <div style="font-size: 0.9rem; color: #666;">
+                                ${date.getDate()} ${date.toLocaleDateString('fr-FR', { month: 'long' })} • ${team ? team.name : 'Équipe inconnue'}
+                            </div>
+                        </div>
+                        <div style="font-size: 1.5rem;">🎂</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // GESTION DE LA GALERIE
+        function showAddGalleryForm() {
+            if (currentUser && currentUser.role === 'fadarles') {
+                document.getElementById('addGalleryForm').style.display = 'block';
+            }
+        }
+
+        function hideAddGalleryForm() {
+            document.getElementById('addGalleryForm').style.display = 'none';
+        }
+
+        function previewGalleryImages(input) {
+            const preview = document.getElementById('galleryPreview');
+            const files = Array.from(input.files);
+            
+            preview.innerHTML = '';
+            
+            files.forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.width = '150px';
+                        img.style.height = '150px';
+                        img.style.objectFit = 'cover';
+                        img.style.borderRadius = '8px';
+                        preview.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function addGalleryPhotos(event) {
+            event.preventDefault();
+            
+            if (!currentUser || currentUser.role !== 'fadarles') return;
+            
+            const files = Array.from(document.getElementById('galleryImages').files);
+            if (files.length === 0) {
+                alert('Veuillez sélectionner au moins une photo');
+                return;
+            }
+            
+            const galleryData = {
+                id: Date.now(),
+                event: sanitizeInput(document.getElementById('galleryEvent').value),
+                date: document.getElementById('galleryDate').value,
+                description: sanitizeInput(document.getElementById('galleryDescription').value),
+                photos: [],
+                createdAt: new Date().toISOString()
+            };
+            
+            Promise.all(files.map(file => {
+                return new Promise((resolve) => {
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert(`Le fichier ${file.name} est trop volumineux (max 5MB)`);
+                        resolve(null);
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            })).then(results => {
+                galleryData.photos = results.filter(photo => photo !== null);
+                
+                const gallery = getGallery();
+                gallery.unshift(galleryData);
+                localStorage.setItem('gallery', JSON.stringify(gallery));
+                
+                document.getElementById('galleryEvent').value = '';
+                document.getElementById('galleryDate').value = '';
+                document.getElementById('galleryDescription').value = '';
+                document.getElementById('galleryImages').value = '';
+                document.getElementById('galleryPreview').innerHTML = '';
+                
+                hideAddGalleryForm();
+                displayGallery();
+                updateGalleryFilters();
+                showMessage('success', `✅ ${galleryData.photos.length} photo(s) ajoutée(s) à la galerie !`);
+            });
+        }
+
+        function getGallery() {
+            try {
+                return JSON.parse(localStorage.getItem('gallery') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function displayGallery() {
+            const galleryPhotos = document.getElementById('galleryPhotos');
+            const gallery = getGallery();
+            
+            const eventFilter = document.getElementById('galleryFilter').value;
+            const yearFilter = document.getElementById('galleryYearFilter').value;
+            
+            let filteredGallery = gallery;
+            
+            if (eventFilter !== 'all') {
+                filteredGallery = filteredGallery.filter(item => item.event === eventFilter);
+            }
+            
+            if (yearFilter !== 'all') {
+                filteredGallery = filteredGallery.filter(item => new Date(item.date).getFullYear().toString() === yearFilter);
+            }
+            
+            if (filteredGallery.length === 0) {
+                galleryPhotos.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1 / -1;">Aucune photo trouvée pour ce filtre.</p>';
+                return;
+            }
+            
+            const photosHtml = [];
+            filteredGallery.forEach(album => {
+                album.photos.forEach((photo, photoIndex) => {
+                    photosHtml.push(`
+                        <div class="photo-item" onclick="openPhotoModal('${photo}', '${album.event}', '${album.date}')">
+                            <img src="${photo}" alt="Photo de ${album.event}">
+                            <div class="photo-overlay">
+                                <h4>${album.event}</h4>
+                                <p>${formatDate(album.date)}</p>
+                                ${album.description ? `<p>${album.description}</p>` : ''}
+                                ${currentUser && currentUser.role === 'fadarles' ? `
+                                    <button class="btn btn-small btn-danger" onclick="event.stopPropagation(); deletePhoto(${album.id}, ${photoIndex})" style="margin-top: 0.5rem;">
+                                        🗑️ Supprimer
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `);
+                });
+            });
+            
+            galleryPhotos.innerHTML = photosHtml.join('');
+        }
+
+        function updateGalleryFilters() {
+            const gallery = getGallery();
+            const eventFilter = document.getElementById('galleryFilter');
+            const yearFilter = document.getElementById('galleryYearFilter');
+            
+            // Filtres événements
+            const events = [...new Set(gallery.map(item => item.event))];
+            eventFilter.innerHTML = '<option value="all">Tous les événements</option>' +
+                events.map(event => `<option value="${event}">${event}</option>`).join('');
+            
+            // Filtres années
+            const years = [...new Set(gallery.map(item => new Date(item.date).getFullYear()))];
+            yearFilter.innerHTML = '<option value="all">Toutes les années</option>' +
+                years.sort((a, b) => b - a).map(year => `<option value="${year}">${year}</option>`).join('');
+        }
+
+        function filterGallery() {
+            displayGallery();
+        }
+
+        function openPhotoModal(photoSrc, event, date) {
+            const content = `
+                <div style="text-align: center;">
+                    <h2>${event}</h2>
+                    <p style="margin-bottom: 2rem;">${formatDate(date)}</p>
+                    <img src="${photoSrc}" style="max-width: 100%; max-height: 60vh; border-radius: 10px;" alt="Photo">
+                    <div style="margin-top: 2rem;">
+                        <button class="btn" onclick="closeDetailModal()">Fermer</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detailContent').innerHTML = content;
+            document.getElementById('detailModal').style.display = 'block';
+            document.body.classList.add('modal-open');
         }
 
         // GESTION DES ÉVÉNEMENTS FAD'ARLES
         function showFadTab(tab) {
-            // Gestion des onglets
             document.querySelectorAll('#fadarles .tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('#fadarles .tab-content').forEach(tc => tc.classList.remove('active'));
             
@@ -2152,6 +2254,16 @@
             }
         }
 
+        function showAddFadForm() {
+            if (currentUser && currentUser.role === 'fadarles') {
+                document.getElementById('addFadForm').style.display = 'block';
+            }
+        }
+
+        function hideAddFadForm() {
+            document.getElementById('addFadForm').style.display = 'none';
+        }
+
         function addFadEvent(event) {
             event.preventDefault();
             
@@ -2164,7 +2276,6 @@
                 time: document.getElementById('fadTime').value,
                 location: sanitizeInput(document.getElementById('fadLocation').value),
                 description: sanitizeInput(document.getElementById('fadDescription').value),
-                liens: sanitizeInput(document.getElementById('fadLiens').value),
                 image: document.getElementById('fadImagePreview').src !== window.location.href ? document.getElementById('fadImagePreview').src : null,
                 createdAt: new Date().toISOString(),
                 createdBy: currentUser.username
@@ -2179,13 +2290,11 @@
             fadEvents.push(eventData);
             localStorage.setItem('fadEvents', JSON.stringify(fadEvents));
             
-            // Réinitialiser le formulaire
             document.getElementById('fadTitle').value = '';
             document.getElementById('fadDate').value = '';
             document.getElementById('fadTime').value = '';
             document.getElementById('fadLocation').value = '';
             document.getElementById('fadDescription').value = '';
-            document.getElementById('fadLiens').value = '';
             document.getElementById('fadImage').value = '';
             document.getElementById('fadImagePreview').style.display = 'none';
             
@@ -2194,12 +2303,19 @@
             showMessage('success', '✅ Événement ajouté avec succès !');
         }
 
+        function getFadEvents() {
+            try {
+                return JSON.parse(localStorage.getItem('fadEvents') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
         function displayFadEvents() {
             const eventsList = document.getElementById('fadEventsList');
             const events = getFadEvents();
             const today = new Date().toISOString().split('T')[0];
             
-            // Filtrer les événements à venir
             const upcomingEvents = events.filter(event => event.date >= today);
             
             if (upcomingEvents.length === 0) {
@@ -2207,7 +2323,6 @@
                 return;
             }
             
-            // Tri par date
             upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
             
             eventsList.innerHTML = upcomingEvents.map(event => `
@@ -2216,17 +2331,14 @@
                         <h3>${event.title}</h3>
                     </div>
                     ${event.image ? `
-                        <div class="item-image-container">
-                            <img src="${event.image}" class="item-image" alt="Image de l'événement">
-                            <div class="item-image-overlay"></div>
+                        <div style="margin: -1rem -1rem 1rem -1rem;">
+                            <img src="${event.image}" style="width: 100%; height: 200px; object-fit: cover;" alt="Image de l'événement">
                         </div>
                     ` : ''}
                     <div class="item-body">
                         <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
                         <p><strong>📍 Lieu :</strong> ${event.location}</p>
                         <p>${truncateText(event.description, 120)}</p>
-                        ${event.liens ? '<p style="color: var(--macif-blue); font-size: 0.9rem; margin-top: 0.5rem;">🔗 Supports disponibles - Cliquez pour voir</p>' : ''}
-                        ${generateReactionsBar('fad', event.id)}
                     </div>
                 </div>
             `).join('');
@@ -2237,7 +2349,6 @@
             const events = getFadEvents();
             const today = new Date().toISOString().split('T')[0];
             
-            // Filtrer les événements passés
             const pastEvents = events.filter(event => event.date < today);
             
             if (pastEvents.length === 0) {
@@ -2245,208 +2356,23 @@
                 return;
             }
             
-            // Tri par date décroissante (plus récent en premier)
             pastEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
             
             eventsList.innerHTML = pastEvents.map(event => `
                 <div class="item-card" onclick="showFadEventDetails(${event.id})">
                     <div class="item-header">
                         <h3>${event.title}</h3>
-                        <span class="status termine">Terminé</span>
+                        <span style="background: #28a745; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">Terminé</span>
                     </div>
                     ${event.image ? `
-                        <div class="item-image-container">
-                            <img src="${event.image}" class="item-image" alt="Image de l'événement">
-                            <div class="item-image-overlay"></div>
+                        <div style="margin: -1rem -1rem 1rem -1rem;">
+                            <img src="${event.image}" style="width: 100%; height: 200px; object-fit: cover;" alt="Image de l'événement">
                         </div>
                     ` : ''}
                     <div class="item-body">
                         <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
                         <p><strong>📍 Lieu :</strong> ${event.location}</p>
                         <p>${truncateText(event.description, 120)}</p>
-                        ${event.liens ? '<p style="color: var(--macif-blue); font-size: 0.9rem; margin-top: 0.5rem;">🔗 Supports disponibles - Cliquez pour voir</p>' : ''}
-                        ${generateReactionsBar('fad', event.id)}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function addActivity(event) {
-            event.preventDefault();
-            
-            const activityData = {
-                id: Date.now(),
-                name: sanitizeInput(document.getElementById('activityName').value),
-                date: document.getElementById('activityDate').value,
-                time: document.getElementById('activityTime').value,
-                location: sanitizeInput(document.getElementById('activityLocation').value),
-                maxPlaces: parseInt(document.getElementById('activityPlaces').value),
-                description: sanitizeInput(document.getElementById('activityDescription').value),
-                image: document.getElementById('activityImagePreview').src !== window.location.href ? document.getElementById('activityImagePreview').src : null,
-                participants: [],
-                photos: [],
-                status: 'a-venir',
-                createdAt: new Date().toISOString()
-            };
-            
-            if (!activityData.name || !activityData.date || !activityData.time || !activityData.location || !activityData.maxPlaces) {
-                alert('Tous les champs obligatoires doivent être remplis');
-                return;
-            }
-            
-            if (activityData.maxPlaces < 1 || activityData.maxPlaces > 50) {
-                alert('Le nombre de places doit être entre 1 et 50');
-                return;
-            }
-            
-            const activities = getActivities();
-            activities.push(activityData);
-            localStorage.setItem('activities', JSON.stringify(activities));
-            
-            // Réinitialiser le formulaire
-            document.getElementById('activityName').value = '';
-            document.getElementById('activityDate').value = '';
-            document.getElementById('activityTime').value = '';
-            document.getElementById('activityLocation').value = '';
-            document.getElementById('activityPlaces').value = '';
-            document.getElementById('activityDescription').value = '';
-            document.getElementById('activityImage').value = '';
-            document.getElementById('activityImagePreview').style.display = 'none';
-            
-            hideAddActivityForm();
-            displayActivities();
-            showMessage('success', '✅ Activité créée avec succès !');
-        }
-
-        function displayActivities() {
-            const activitiesList = document.getElementById('activitiesList');
-            const activities = getActivities();
-            const today = new Date().toISOString().split('T')[0];
-            
-            // Filtrer les activités à venir
-            const upcomingActivities = activities.filter(activity => activity.date >= today);
-            
-            if (upcomingActivities.length === 0) {
-                activitiesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune activité programmée pour le moment.</p>';
-                return;
-            }
-            
-            // Tri par date
-            upcomingActivities.sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            activitiesList.innerHTML = upcomingActivities.map(activity => {
-                const remainingPlaces = activity.maxPlaces - activity.participants.length;
-                const placesClass = remainingPlaces === 0 ? 'full' : remainingPlaces <= 2 ? 'low' : '';
-                
-                return `
-                    <div class="item-card">
-                        <div class="item-header">
-                            <h3>${activity.name}</h3>
-                            <span class="places-counter ${placesClass}">
-                                ${remainingPlaces > 0 ? `${remainingPlaces} places` : 'Complet'}
-                            </span>
-                        </div>
-                        ${activity.image ? `
-                            <div class="item-image-container">
-                                <img src="${activity.image}" class="item-image" alt="Image de l'activité">
-                                <div class="item-image-overlay"></div>
-                            </div>
-                        ` : ''}
-                        <div class="item-body">
-                            <div class="item-date">${formatDate(activity.date)} à ${activity.time}</div>
-                            <p><strong>📍 Lieu :</strong> ${activity.location}</p>
-                            ${activity.description ? `<p>${activity.description}</p>` : ''}
-                            
-                            ${activity.participants.length > 0 ? `
-                                <div style="margin: 1rem 0;">
-                                    <strong>Participants inscrits (${activity.participants.length}/${activity.maxPlaces}) :</strong>
-                                    <div style="margin: 0.5rem 0; display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                                        ${activity.participants.map(p => `<span style="background: var(--macif-light-blue); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">${p}</span>`).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
-                            
-                            <div class="item-actions">
-                                ${remainingPlaces > 0 ? 
-                                    `<button class="btn" onclick="joinActivity(${activity.id})">✅ S'inscrire</button>` :
-                                    `<button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">❌ Complet</button>`
-                                }
-                            </div>
-                            ${generateReactionsBar('activity', activity.id)}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function displayAnnonces() {
-            const annoncesList = document.getElementById('annoncesBonnesAffairesList');
-            const annonces = getAnnonces();
-            
-            if (annonces.length === 0) {
-                annoncesList.innerHTML = '<p style="text-align: center; color: #666;">Aucune annonce publiée pour le moment.</p>';
-                return;
-            }
-            
-            annoncesList.innerHTML = annonces.map(annonce => `
-                <div class="item-card">
-                    <div class="item-header">
-                        <h3>${annonce.titre}</h3>
-                        ${annonce.prix ? `<span style="color: var(--macif-orange); font-weight: bold;">${annonce.prix}</span>` : ''}
-                    </div>
-                    <div class="item-body">
-                        ${annonce.image && annonce.image !== window.location.href ? `<img src="${annonce.image}" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">` : ''}
-                        <p>${annonce.description}</p>
-                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
-                            <p style="margin: 0; color: #666; font-size: 0.9rem;">
-                                <strong>Contact :</strong> ${annonce.prenom} ${annonce.nom}<br>
-                                <a href="mailto:${annonce.email}?subject=Intéressé par: ${annonce.titre}" style="color: var(--macif-blue);">
-                                    📧 ${annonce.email}
-                                </a>
-                            </p>
-                            <small style="color: #999;">Publié le ${formatDate(annonce.createdAt.split('T')[0])}</small>
-                        </div>
-                        ${generateReactionsBar('bonneaffaire', annonce.id)}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getFadEvents() {
-            try {
-                return JSON.parse(localStorage.getItem('fadEvents') || '[]');
-            } catch (e) {
-                console.error('Erreur lors du chargement des événements FAD:', e);
-                return [];
-            }
-        }
-
-        function displayFadEvents() {
-            const eventsList = document.getElementById('fadEventsList');
-            const events = getFadEvents();
-            const today = new Date().toISOString().split('T')[0];
-            
-            // Filtrer les événements à venir
-            const upcomingEvents = events.filter(event => event.date >= today);
-            
-            if (upcomingEvents.length === 0) {
-                eventsList.innerHTML = '<p style="text-align: center; color: #666;">Aucun événement programmé pour le moment.</p>';
-                return;
-            }
-            
-            // Tri par date
-            upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            eventsList.innerHTML = upcomingEvents.map(event => `
-                <div class="item-card" onclick="showFadEventDetails(${event.id})">
-                    <div class="item-header">
-                        <h3>${event.title}</h3>
-                    </div>
-                    <div class="item-body">
-                        <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
-                        <p><strong>📍 Lieu :</strong> ${event.location}</p>
-                        <p>${truncateText(event.description, 120)}</p>
-                        ${event.liens ? '<p style="color: var(--macif-blue); font-size: 0.9rem; margin-top: 0.5rem;">🔗 Supports disponibles - Cliquez pour voir</p>' : ''}
                     </div>
                 </div>
             `).join('');
@@ -2457,13 +2383,6 @@
             const event = events.find(e => e.id === id);
             
             if (!event) return;
-            
-            const liensSection = event.liens ? `
-                <div class="external-support">
-                    <h4>🔗 Supports externes</h4>
-                    <div class="content-with-links">${convertLinksToClickable(event.liens.replace(/\n/g, '<br>'))}</div>
-                </div>
-            ` : '';
             
             const content = `
                 <h2>${event.title}</h2>
@@ -2477,8 +2396,6 @@
                     ${event.description}
                 </div>
                 
-                ${liensSection}
-                
                 <div style="margin-top: 2rem; text-align: center;">
                     <button class="btn" onclick="closeDetailModal()">Fermer</button>
                 </div>
@@ -2489,39 +2406,15 @@
             document.body.classList.add('modal-open');
         }
 
-        function displayFadPastEvents() {
-            const eventsList = document.getElementById('fadPastEventsList');
-            const events = getFadEvents();
-            const today = new Date().toISOString().split('T')[0];
-            
-            // Filtrer les événements passés
-            const pastEvents = events.filter(event => event.date < today);
-            
-            if (pastEvents.length === 0) {
-                eventsList.innerHTML = '<p style="text-align: center; color: #666;">Aucun événement passé.</p>';
-                return;
-            }
-            
-            // Tri par date décroissante (plus récent en premier)
-            pastEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            eventsList.innerHTML = pastEvents.map(event => `
-                <div class="item-card" onclick="showFadEventDetails(${event.id})">
-                    <div class="item-header">
-                        <h3>${event.title}</h3>
-                        <span class="status termine">Terminé</span>
-                    </div>
-                    <div class="item-body">
-                        <div class="item-date">${formatDate(event.date)} ${event.time ? `à ${event.time}` : ''}</div>
-                        <p><strong>📍 Lieu :</strong> ${event.location}</p>
-                        <p>${truncateText(event.description, 120)}</p>
-                        ${event.liens ? '<p style="color: var(--macif-blue); font-size: 0.9rem; margin-top: 0.5rem;">🔗 Supports disponibles - Cliquez pour voir</p>' : ''}
-                    </div>
-                </div>
-            `).join('');
+        // GESTION DES BONNES AFFAIRES
+        function showAddAnnonceBAForm() {
+            document.getElementById('addAnnonceBAForm').style.display = 'block';
         }
 
-        // GESTION DES BONNES AFFAIRES
+        function hideAddAnnonceBAForm() {
+            document.getElementById('addAnnonceBAForm').style.display = 'none';
+        }
+
         function addAnnonce(event) {
             event.preventDefault();
             
@@ -2547,7 +2440,6 @@
             annonces.unshift(annonceData);
             localStorage.setItem('annonces', JSON.stringify(annonces));
             
-            // Réinitialiser le formulaire
             document.getElementById('annoncePrenom').value = '';
             document.getElementById('annonceNom').value = '';
             document.getElementById('annonceEmail').value = '';
@@ -2560,8 +2452,6 @@
             hideAddAnnonceBAForm();
             displayAnnonces();
             
-            // Simuler l'envoi de l'email avec lien de suppression
-            const deleteLink = `${window.location.origin}${window.location.pathname}?delete=${annonceData.deleteToken}`;
             showMessage('success', `✅ Annonce publiée ! Un email a été envoyé à ${annonceData.email} avec le lien de suppression.`);
         }
 
@@ -2573,7 +2463,6 @@
             try {
                 return JSON.parse(localStorage.getItem('annonces') || '[]');
             } catch (e) {
-                console.error('Erreur lors du chargement des annonces:', e);
                 return [];
             }
         }
@@ -2626,6 +2515,14 @@
             }
         }
 
+        function showAddActivityForm() {
+            document.getElementById('addActivityForm').style.display = 'block';
+        }
+
+        function hideAddActivityForm() {
+            document.getElementById('addActivityForm').style.display = 'none';
+        }
+
         function addActivity(event) {
             event.preventDefault();
             
@@ -2637,6 +2534,7 @@
                 location: sanitizeInput(document.getElementById('activityLocation').value),
                 maxPlaces: parseInt(document.getElementById('activityPlaces').value),
                 description: sanitizeInput(document.getElementById('activityDescription').value),
+                image: document.getElementById('activityImagePreview').src !== window.location.href ? document.getElementById('activityImagePreview').src : null,
                 participants: [],
                 photos: [],
                 status: 'a-venir',
@@ -2657,13 +2555,14 @@
             activities.push(activityData);
             localStorage.setItem('activities', JSON.stringify(activities));
             
-            // Réinitialiser le formulaire
             document.getElementById('activityName').value = '';
             document.getElementById('activityDate').value = '';
             document.getElementById('activityTime').value = '';
             document.getElementById('activityLocation').value = '';
             document.getElementById('activityPlaces').value = '';
             document.getElementById('activityDescription').value = '';
+            document.getElementById('activityImage').value = '';
+            document.getElementById('activityImagePreview').style.display = 'none';
             
             hideAddActivityForm();
             displayActivities();
@@ -2674,7 +2573,6 @@
             try {
                 return JSON.parse(localStorage.getItem('activities') || '[]');
             } catch (e) {
-                console.error('Erreur lors du chargement des activités:', e);
                 return [];
             }
         }
@@ -2714,7 +2612,6 @@
             const activities = getActivities();
             const today = new Date().toISOString().split('T')[0];
             
-            // Filtrer les activités à venir
             const upcomingActivities = activities.filter(activity => activity.date >= today);
             
             if (upcomingActivities.length === 0) {
@@ -2722,7 +2619,6 @@
                 return;
             }
             
-            // Tri par date
             upcomingActivities.sort((a, b) => new Date(a.date) - new Date(b.date));
             
             activitiesList.innerHTML = upcomingActivities.map(activity => {
@@ -2737,6 +2633,11 @@
                                 ${remainingPlaces > 0 ? `${remainingPlaces} places` : 'Complet'}
                             </span>
                         </div>
+                        ${activity.image ? `
+                            <div style="margin: -1rem -1rem 1rem -1rem;">
+                                <img src="${activity.image}" style="width: 100%; height: 200px; object-fit: cover;" alt="Image de l'activité">
+                            </div>
+                        ` : ''}
                         <div class="item-body">
                             <div class="item-date">${formatDate(activity.date)} à ${activity.time}</div>
                             <p><strong>📍 Lieu :</strong> ${activity.location}</p>
@@ -2768,7 +2669,6 @@
             const activities = getActivities();
             const today = new Date().toISOString().split('T')[0];
             
-            // Filtrer les activités passées
             const pastActivities = activities.filter(activity => activity.date < today);
             
             if (pastActivities.length === 0) {
@@ -2776,14 +2676,13 @@
                 return;
             }
             
-            // Tri par date décroissante
             pastActivities.sort((a, b) => new Date(b.date) - new Date(a.date));
             
             activitiesList.innerHTML = pastActivities.map(activity => `
                 <div class="item-card">
                     <div class="item-header">
                         <h3>${activity.name}</h3>
-                        <span class="status termine">Terminée</span>
+                        <span style="background: #28a745; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">Terminée</span>
                     </div>
                     <div class="item-body">
                         <div class="item-date">${formatDate(activity.date)} à ${activity.time}</div>
@@ -2798,7 +2697,7 @@
                         
                         ${activity.photos && activity.photos.length > 0 ? `
                             <div class="image-gallery">
-                                ${activity.photos.map(photo => `<img src="${photo}" onclick="openImageModal('${photo}')" alt="Photo de l'activité">`).join('')}
+                                ${activity.photos.map(photo => `<img src="${photo}" onclick="openPhotoModal('${photo}', '${activity.name}', '${activity.date}')" alt="Photo de l'activité">`).join('')}
                             </div>
                         ` : ''}
                         
@@ -2849,87 +2748,23 @@
             input.click();
         }
 
-        // FONCTIONS UTILITAIRES
-        function previewImage(input, previewId) {
-            const file = input.files[0];
-            const preview = document.getElementById(previewId);
-            
-            if (file) {
-                if (!file.type.startsWith('image/')) {
-                    alert('Veuillez sélectionner un fichier image valide');
-                    input.value = '';
-                    return;
-                }
-                
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('Le fichier est trop volumineux (max 5MB)');
-                    input.value = '';
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                preview.style.display = 'none';
-            }
+        // FONCTION PRINCIPALE D'AFFICHAGE
+        function displayAllContent() {
+            displayTeams();
+            displayCalendar();
+            displayMonthlyBirthdays();
+            displayFadEvents();
+            displayFadPastEvents();
+            displayGallery();
+            updateGalleryFilters();
+            displayAnnonces();
+            displayActivities();
+            displayPastActivities();
+            updateBirthdayTeamOptions();
         }
 
-        function formatDate(dateString) {
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                weekday: 'long'
-            };
-            return new Date(dateString).toLocaleDateString('fr-FR', options);
-        }
-
-        function formatDateRange(start, end) {
-            if (start === end) {
-                return formatDate(start);
-            }
-            return `Du ${formatDate(start)} au ${formatDate(end)}`;
-        }
-
-        function getStatusLabel(status) {
-            const labels = {
-                'a-venir': 'À venir',
-                'en-cours': 'En cours',
-                'termine': 'Terminé'
-            };
-            return labels[status] || status;
-        }
-
-        function truncateText(text, maxLength) {
-            if (text.length <= maxLength) return text;
-            return text.substring(0, maxLength) + '...';
-        }
-
-        function showMessage(type, message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            messageDiv.innerHTML = message;
-            messageDiv.style.position = 'fixed';
-            messageDiv.style.top = '100px';
-            messageDiv.style.right = '20px';
-            messageDiv.style.zIndex = '200000';
-            messageDiv.style.minWidth = '300px';
-            messageDiv.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-            
-            document.body.appendChild(messageDiv);
-            
-            setTimeout(() => {
-                messageDiv.remove();
-            }, 5000);
-        }
-
-        // Chargement et affichage initial
+        // GESTION DES DONNÉES
         function loadData() {
-            // Vérifier les paramètres URL pour suppression d'annonce
             const urlParams = new URLSearchParams(window.location.search);
             const deleteToken = urlParams.get('delete');
             
@@ -2948,44 +2783,15 @@
                     annonces.splice(annonceIndex, 1);
                     localStorage.setItem('annonces', JSON.stringify(annonces));
                     showMessage('success', '✅ Annonce supprimée avec succès !');
-                    // Nettoyer l'URL
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }
             } else {
                 showMessage('error', '❌ Lien de suppression invalide ou expiré');
             }
         }
-
-        function displayAllContent() {
-            displayAnnoncesCommerciales();
-            displayFadEvents();
-            displayFadPastEvents();
-            displayAnnonces();
-            displayActivities();
-            displayPastActivities();
-        }
-
-        // Auto-mise à jour du statut des activités
-        setInterval(() => {
-            const activities = getActivities();
-            const today = new Date().toISOString().split('T')[0];
-            let updated = false;
-            
-            activities.forEach(activity => {
-                if (activity.date < today && activity.status !== 'termine') {
-                    activity.status = 'termine';
-                    updated = true;
-                }
-            });
-            
-            if (updated) {
-                localStorage.setItem('activities', JSON.stringify(activities));
-                displayAllContent();
-            }
-        }, 60000); // Toutes les minutes
     </script>
 
-    <!-- Footer simplifié -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-bottom">
