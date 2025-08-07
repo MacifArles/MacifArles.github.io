@@ -853,6 +853,16 @@
             border: 2px solid var(--macif-pink);
         }
 
+        .calendar-day.has-event {
+            background: linear-gradient(135deg, #E5F3FF, #F0F8FF);
+            border: 2px solid var(--macif-blue);
+        }
+
+        .calendar-day.has-both {
+            background: linear-gradient(135deg, #FFE5E5, #E5F3FF);
+            border: 2px solid var(--macif-purple);
+        }
+
         .birthday-indicator {
             background: var(--macif-pink);
             color: var(--white);
@@ -865,6 +875,35 @@
             font-size: 0.8rem;
             margin-top: 0.5rem;
         }
+
+        .event-indicator {
+            background: var(--macif-blue);
+            color: var(--white);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .indicators-container {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+
+        .event-type-reunion { background: #17A2B8; }
+        .event-type-formation { background: var(--macif-green); }
+        .event-type-conge { background: var(--macif-orange); }
+        .event-type-ferie { background: var(--macif-purple); }
+        .event-type-evenement { background: var(--macif-pink); }
+        .event-type-deadline { background: #DC3545; }
+        .event-type-autre { background: var(--dark-gray); }
 
         /* Galerie photos */
         .gallery-filters {
@@ -937,6 +976,141 @@
         /* Masquer les formulaires par défaut */
         .add-form {
             display: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--macif-blue) 0%, #0052A3 100%);
+            color: var(--white);
+            padding: 3rem 0 1rem 0;
+            margin-top: 2rem;
+            width: 100%;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-section h4 {
+            color: var(--macif-yellow);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section p {
+            margin: 0.5rem 0;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .footer-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .footer-stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: 10px;
+            min-width: 120px;
+        }
+
+        .footer-stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--macif-yellow);
+            display: block;
+        }
+
+        .footer-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-credits {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .footer-credit-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-logo {
+            position: absolute;
+            right: 2rem;
+            top: 1rem;
+            opacity: 0.1;
+            font-size: 3rem;
+        }
+
+        body.modal-open .footer {
+            display: none !important;
         }
 
         /* Responsive */
@@ -1021,6 +1195,24 @@
             .modal-body {
                 max-height: 70vh;
             }
+
+            .footer-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .footer-credits {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .footer-logo {
+                display: none;
+            }
         }
 
         /* Animations */
@@ -1037,38 +1229,6 @@
 
         .page-content.active {
             animation: slideIn 0.5s ease;
-        }
-
-        /* Footer */
-        .footer {
-            background: linear-gradient(135deg, var(--macif-blue) 0%, #0052A3 100%);
-            color: var(--white);
-            padding: 3rem 0 1rem 0;
-            margin-top: 2rem;
-            width: 100%;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding-top: 1.5rem;
-            text-align: center;
-        }
-
-        .footer-bottom p {
-            color: rgba(255, 255, 255, 0.8);
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        body.modal-open .footer {
-            display: none !important;
         }
     </style>
 </head>
@@ -1254,9 +1414,19 @@
             <div id="anniversaire" class="page-content">
                 <div class="page-header">
                     <h2 class="page-title">🎂 Calendrier des anniversaires</h2>
-                    <button id="addBirthdayBtn" class="btn" style="display: none;" onclick="showAddBirthdayForm()">
-                        ➕ Ajouter un anniversaire
-                    </button>
+                    <div style="display: flex; gap: 1rem;">
+                        <button id="addBirthdayBtn" class="btn" style="display: none;" onclick="showAddBirthdayForm()">
+                            ➕ Ajouter un anniversaire
+                        </button>
+                        <button id="addCalendarEventBtn" class="btn btn-secondary" style="display: none;" onclick="showAddCalendarEventForm()">
+                            📅 Ajouter un événement
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="showCalendarTab('anniversaires')">🎂 Anniversaires</button>
+                    <button class="tab" onclick="showCalendarTab('evenements')">📅 Événements</button>
                 </div>
 
                 <div id="addBirthdayForm" class="card add-form">
@@ -1289,20 +1459,81 @@
                     </form>
                 </div>
 
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <h3 id="currentMonth"></h3>
-                        <div class="calendar-nav">
-                            <button class="btn btn-small" onclick="previousMonth()">← Précédent</button>
-                            <button class="btn btn-small" onclick="nextMonth()">Suivant →</button>
+                <div id="addCalendarEventForm" class="card add-form">
+                    <h3>📅 Ajouter un événement au calendrier</h3>
+                    <form onsubmit="addCalendarEvent(event)">
+                        <div class="form-group">
+                            <label>Titre de l'événement :</label>
+                            <input type="text" id="calendarEventTitle" required>
                         </div>
-                    </div>
-                    <div class="calendar-grid" id="calendarGrid"></div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Date de début :</label>
+                                <input type="date" id="calendarEventStartDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Date de fin (optionnelle) :</label>
+                                <input type="date" id="calendarEventEndDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Type d'événement :</label>
+                            <select id="calendarEventType" required>
+                                <option value="">Sélectionner un type</option>
+                                <option value="reunion">🤝 Réunion</option>
+                                <option value="formation">📚 Formation</option>
+                                <option value="conge">🏖️ Congés</option>
+                                <option value="ferie">🎊 Jour férié</option>
+                                <option value="evenement">🎉 Événement spécial</option>
+                                <option value="deadline">⏰ Échéance importante</option>
+                                <option value="autre">📝 Autre</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description (optionnelle) :</label>
+                            <textarea id="calendarEventDescription" rows="3"></textarea>
+                        </div>
+                        <div class="item-actions">
+                            <button type="submit" class="btn">Ajouter l'événement</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddCalendarEventForm()">Annuler</button>
+                        </div>
+                    </form>
                 </div>
 
-                <div id="birthdaysList" class="card">
-                    <h3>🎉 Anniversaires ce mois-ci</h3>
-                    <div id="monthlyBirthdays"></div>
+                <div id="calendarTabAnniversaires" class="tab-content active">
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <h3 id="currentMonth"></h3>
+                            <div class="calendar-nav">
+                                <button class="btn btn-small" onclick="previousMonth()">← Précédent</button>
+                                <button class="btn btn-small" onclick="nextMonth()">Suivant →</button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                    </div>
+
+                    <div id="birthdaysList" class="card">
+                        <h3>🎉 Anniversaires ce mois-ci</h3>
+                        <div id="monthlyBirthdays"></div>
+                    </div>
+                </div>
+
+                <div id="calendarTabEvenements" class="tab-content">
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <h3 id="currentMonthEvents"></h3>
+                            <div class="calendar-nav">
+                                <button class="btn btn-small" onclick="previousMonthEvents()">← Précédent</button>
+                                <button class="btn btn-small" onclick="nextMonthEvents()">Suivant →</button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendarEventsGrid"></div>
+                    </div>
+
+                    <div id="eventsList" class="card">
+                        <h3>📅 Événements ce mois-ci</h3>
+                        <div id="monthlyEvents"></div>
+                    </div>
                 </div>
             </div>
 
@@ -1674,6 +1905,7 @@
             
             document.getElementById('addTeamBtn').style.display = isAdmin ? 'block' : 'none';
             document.getElementById('addBirthdayBtn').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('addCalendarEventBtn').style.display = isAdmin ? 'block' : 'none';
             document.getElementById('addFadBtn').style.display = isAdmin ? 'block' : 'none';
             document.getElementById('addGalleryBtn').style.display = isAdmin ? 'block' : 'none';
         }
@@ -1682,6 +1914,197 @@
             document.querySelectorAll('.add-form').forEach(form => {
                 form.style.display = 'none';
             });
+        }
+
+        // GESTION DES ONGLETS DU CALENDRIER
+        function showCalendarTab(tab) {
+            document.querySelectorAll('#anniversaire .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#anniversaire .tab-content').forEach(tc => tc.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            
+            if (tab === 'anniversaires') {
+                document.getElementById('calendarTabAnniversaires').classList.add('active');
+                displayCalendar();
+                displayMonthlyBirthdays();
+            } else {
+                document.getElementById('calendarTabEvenements').classList.add('active');
+                displayEventsCalendar();
+                displayMonthlyEvents();
+            }
+        }
+
+        // GESTION DES ÉVÉNEMENTS DU CALENDRIER
+        function showAddCalendarEventForm() {
+            if (currentUser && currentUser.role === 'fadarles') {
+                document.getElementById('addCalendarEventForm').style.display = 'block';
+            }
+        }
+
+        function hideAddCalendarEventForm() {
+            document.getElementById('addCalendarEventForm').style.display = 'none';
+        }
+
+        function addCalendarEvent(event) {
+            event.preventDefault();
+            
+            if (!currentUser || currentUser.role !== 'fadarles') return;
+            
+            const eventData = {
+                id: Date.now(),
+                title: sanitizeInput(document.getElementById('calendarEventTitle').value),
+                startDate: document.getElementById('calendarEventStartDate').value,
+                endDate: document.getElementById('calendarEventEndDate').value || null,
+                type: document.getElementById('calendarEventType').value,
+                description: sanitizeInput(document.getElementById('calendarEventDescription').value),
+                createdAt: new Date().toISOString(),
+                createdBy: currentUser.username
+            };
+            
+            const calendarEvents = getCalendarEvents();
+            calendarEvents.push(eventData);
+            localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
+            
+            document.getElementById('calendarEventTitle').value = '';
+            document.getElementById('calendarEventStartDate').value = '';
+            document.getElementById('calendarEventEndDate').value = '';
+            document.getElementById('calendarEventType').value = '';
+            document.getElementById('calendarEventDescription').value = '';
+            
+            hideAddCalendarEventForm();
+            displayEventsCalendar();
+            displayMonthlyEvents();
+            showMessage('success', '✅ Événement ajouté au calendrier !');
+        }
+
+        function getCalendarEvents() {
+            try {
+                return JSON.parse(localStorage.getItem('calendarEvents') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        let currentEventsCalendarDate = new Date();
+
+        function displayEventsCalendar() {
+            const calendarGrid = document.getElementById('calendarEventsGrid');
+            const currentMonth = document.getElementById('currentMonthEvents');
+            
+            const year = currentEventsCalendarDate.getFullYear();
+            const month = currentEventsCalendarDate.getMonth();
+            
+            currentMonth.textContent = currentEventsCalendarDate.toLocaleDateString('fr-FR', { 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay() + 1);
+            
+            const events = getCalendarEvents();
+            const monthEvents = events.filter(e => {
+                const eStartDate = new Date(e.startDate);
+                const eEndDate = e.endDate ? new Date(e.endDate) : eStartDate;
+                return (eStartDate.getMonth() === month && eStartDate.getFullYear() === year) ||
+                       (eEndDate.getMonth() === month && eEndDate.getFullYear() === year);
+            });
+            
+            const days = [];
+            const currentDate = new Date(startDate);
+            
+            for (let i = 0; i < 42; i++) {
+                const dayEvents = monthEvents.filter(e => {
+                    const eStartDate = new Date(e.startDate);
+                    const eEndDate = e.endDate ? new Date(e.endDate) : eStartDate;
+                    return currentDate >= eStartDate && currentDate <= eEndDate;
+                });
+                
+                const isCurrentMonth = currentDate.getMonth() === month;
+                const isToday = currentDate.toDateString() === new Date().toDateString();
+                const hasEvents = dayEvents.length > 0;
+                
+                let dayClass = 'calendar-day';
+                if (!isCurrentMonth) dayClass += ' other-month';
+                if (isToday) dayClass += ' today';
+                if (hasEvents) dayClass += ' has-event';
+                
+                days.push(`
+                    <div class="${dayClass}">
+                        <span>${currentDate.getDate()}</span>
+                        ${hasEvents ? `<div class="event-indicator">${dayEvents.length}</div>` : ''}
+                    </div>
+                `);
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            calendarGrid.innerHTML = 
+                weekDays.map(day => `<div class="calendar-day" style="font-weight: bold; background: var(--macif-blue); color: white;">${day}</div>`).join('') +
+                days.join('');
+        }
+
+        function previousMonthEvents() {
+            currentEventsCalendarDate.setMonth(currentEventsCalendarDate.getMonth() - 1);
+            displayEventsCalendar();
+            displayMonthlyEvents();
+        }
+
+        function nextMonthEvents() {
+            currentEventsCalendarDate.setMonth(currentEventsCalendarDate.getMonth() + 1);
+            displayEventsCalendar();
+            displayMonthlyEvents();
+        }
+
+        function displayMonthlyEvents() {
+            const monthlyEvents = document.getElementById('monthlyEvents');
+            const events = getCalendarEvents();
+            const month = currentEventsCalendarDate.getMonth();
+            const year = currentEventsCalendarDate.getFullYear();
+            
+            const monthEvents = events.filter(e => {
+                const eStartDate = new Date(e.startDate);
+                return eStartDate.getMonth() === month && eStartDate.getFullYear() === year;
+            }).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+            
+            if (monthEvents.length === 0) {
+                monthlyEvents.innerHTML = '<p style="color: #666;">Aucun événement ce mois-ci.</p>';
+                return;
+            }
+            
+            const eventTypeLabels = {
+                reunion: '🤝 Réunion',
+                formation: '📚 Formation',
+                conge: '🏖️ Congés',
+                ferie: '🎊 Jour férié',
+                evenement: '🎉 Événement spécial',
+                deadline: '⏰ Échéance importante',
+                autre: '📝 Autre'
+            };
+            
+            monthlyEvents.innerHTML = monthEvents.map(event => {
+                const startDate = new Date(event.startDate);
+                const endDate = event.endDate ? new Date(event.endDate) : null;
+                const dateText = endDate && endDate.getTime() !== startDate.getTime() ? 
+                    `Du ${startDate.getDate()} au ${endDate.getDate()} ${startDate.toLocaleDateString('fr-FR', { month: 'long' })}` :
+                    `${startDate.getDate()} ${startDate.toLocaleDateString('fr-FR', { month: 'long' })}`;
+                
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--light-gray); border-radius: 8px; margin-bottom: 0.5rem;">
+                        <div>
+                            <strong>${event.title}</strong>
+                            <div style="font-size: 0.9rem; color: #666;">
+                                ${dateText} • ${eventTypeLabels[event.type] || event.type}
+                            </div>
+                            ${event.description ? `<div style="font-size: 0.8rem; color: #888; margin-top: 0.25rem;">${event.description}</div>` : ''}
+                        </div>
+                        <div class="event-indicator event-type-${event.type}" style="font-size: 1.2rem;">📅</div>
+                    </div>
+                `;
+            }).join('');
         }
 
         // Fonctions utilitaires
@@ -1877,11 +2300,59 @@
         function addMemberToTeam(teamId) {
             if (!currentUser || currentUser.role !== 'fadarles') return;
             
-            const name = prompt('Nom et prénom du membre :');
-            if (!name) return;
+            const teams = getTeams();
+            const team = teams.find(t => t.id === teamId);
+            if (!team) return;
             
-            const role = prompt('Rôle/Poste :') || 'Membre de l\'équipe';
-            const description = prompt('Description (optionnelle) :') || '';
+            const content = `
+                <h2>➕ Ajouter un membre à l'équipe "${team.name}"</h2>
+                <form id="addMemberForm" onsubmit="submitNewMember(event, ${teamId})">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Prénom :</label>
+                            <input type="text" id="memberFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nom :</label>
+                            <input type="text" id="memberLastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Rôle/Poste :</label>
+                        <input type="text" id="memberRole" placeholder="ex: Conseiller Commercial" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description (optionnelle) :</label>
+                        <textarea id="memberDescription" rows="3" placeholder="Quelques mots sur le membre..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Photo du membre (optionnelle) :</label>
+                        <div class="image-upload" onclick="document.getElementById('memberPhoto').click()">
+                            <p>📷 Cliquez pour ajouter une photo du membre</p>
+                            <input type="file" id="memberPhoto" accept="image/*" style="display: none;" onchange="previewImage(this, 'memberPhotoPreview')">
+                        </div>
+                        <img id="memberPhotoPreview" class="image-preview" style="display: none;">
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn">✅ Ajouter le membre</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeDetailModal()">Annuler</button>
+                    </div>
+                </form>
+            `;
+            
+            document.getElementById('detailContent').innerHTML = content;
+            document.getElementById('detailModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+
+        function submitNewMember(event, teamId) {
+            event.preventDefault();
+            
+            const firstName = sanitizeInput(document.getElementById('memberFirstName').value);
+            const lastName = sanitizeInput(document.getElementById('memberLastName').value);
+            const role = sanitizeInput(document.getElementById('memberRole').value);
+            const description = sanitizeInput(document.getElementById('memberDescription').value);
+            const photoPreview = document.getElementById('memberPhotoPreview');
             
             const teams = getTeams();
             const team = teams.find(t => t.id === teamId);
@@ -1889,16 +2360,17 @@
             if (team) {
                 const member = {
                     id: Date.now(),
-                    name: sanitizeInput(name),
-                    role: sanitizeInput(role),
-                    description: sanitizeInput(description),
-                    photo: null
+                    name: `${firstName} ${lastName}`,
+                    role: role,
+                    description: description,
+                    photo: photoPreview.src && photoPreview.src !== window.location.href ? photoPreview.src : null
                 };
                 
                 team.members.push(member);
                 localStorage.setItem('teams', JSON.stringify(teams));
+                closeDetailModal();
                 displayTeams();
-                showMessage('success', '✅ Membre ajouté à l\'équipe !');
+                showMessage('success', `✅ ${firstName} ${lastName} a été ajouté(e) à l'équipe ${team.name} !`);
             }
         }
 
@@ -2754,6 +3226,8 @@
             displayTeams();
             displayCalendar();
             displayMonthlyBirthdays();
+            displayEventsCalendar();
+            displayMonthlyEvents();
             displayFadEvents();
             displayFadPastEvents();
             displayGallery();
@@ -2762,6 +3236,27 @@
             displayActivities();
             displayPastActivities();
             updateBirthdayTeamOptions();
+            updateFooterStats();
+        }
+
+        // MISE À JOUR DES STATISTIQUES DU FOOTER
+        function updateFooterStats() {
+            try {
+                const teams = getTeams();
+                const fadEvents = getFadEvents();
+                const gallery = getGallery();
+                const activities = getActivities();
+                
+                // Compter le nombre total de photos dans la galerie
+                const totalPhotos = gallery.reduce((total, album) => total + (album.photos ? album.photos.length : 0), 0);
+                
+                document.getElementById('footerTeams').textContent = teams.length;
+                document.getElementById('footerEvents').textContent = fadEvents.length;
+                document.getElementById('footerPhotos').textContent = totalPhotos;
+                document.getElementById('footerActivities').textContent = activities.length;
+            } catch (e) {
+                console.log('Erreur lors de la mise à jour des statistiques du footer');
+            }
         }
 
         // GESTION DES DONNÉES
@@ -2795,16 +3290,67 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
+            <div class="footer-logo">🏢</div>
+            
+            <div class="footer-info">
+                <div class="footer-section">
+                    <h4>🏢 MACIF Arles</h4>
+                    <p><strong>Centre de Relation Client Commercial</strong></p>
+                    <p>Votre assureur mutualiste de confiance</p>
+                    <p>Au service des sociétaires depuis 1960</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>💻 Intranet CRC</h4>
+                    <p>Plateforme collaborative interne</p>
+                    <p>Communication • Événements • Équipes</p>
+                    <p>Galerie photos • Bonnes affaires</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>🔐 Sécurité & Confidentialité</h4>
+                    <p>Accès restreint aux collaborateurs</p>
+                    <p>Données personnelles protégées</p>
+                    <p>Utilisation conforme RGPD</p>
+                </div>
+            </div>
+
+            <div class="footer-stats">
+                <div class="footer-stat">
+                    <span class="footer-stat-number" id="footerTeams">6</span>
+                    <div class="footer-stat-label">Équipes</div>
+                </div>
+                <div class="footer-stat">
+                    <span class="footer-stat-number" id="footerEvents">12</span>
+                    <div class="footer-stat-label">Événements</div>
+                </div>
+                <div class="footer-stat">
+                    <span class="footer-stat-number" id="footerPhotos">48</span>
+                    <div class="footer-stat-label">Photos</div>
+                </div>
+                <div class="footer-stat">
+                    <span class="footer-stat-number" id="footerActivities">8</span>
+                    <div class="footer-stat-label">Activités</div>
+                </div>
+            </div>
+            
             <div class="footer-bottom">
-                <p><strong>© 2025 Intranet MACIF Arles - Centre de Relation Client Commercial. Tous droits réservés.</strong></p>
-                <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">
-                    Plateforme interne réservée aux collaborateurs MACIF Arles • Données confidentielles • Designed By : <a href="mailto:cyril.antunes@macif.fr" style="color: var(--macif-yellow);">Les FadArles</a> • Created By : <a href="mailto:cyril.antunes@macif.fr" style="color: var(--macif-yellow);">Cyril ANTUNES</a>
-                </p>
+                <p><strong>© 2025 Intranet MACIF Arles - Centre de Relation Client Commercial</strong></p>
+                <p>Tous droits réservés • Utilisation interne uniquement</p>
+                
+                <div class="footer-credits">
+                    <div class="footer-credit-item">
+                        <strong>🎨 Design:</strong> Équipe FAD'ARLES
+                    </div>
+                    <div class="footer-credit-item">
+                        <strong>💻 Développement:</strong> Cyril ANTUNES
+                    </div>
+                    <div class="footer-credit-item">
+                        <strong>📅 Version:</strong> 2025.1
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
 </body>
 </html>
-
-
-
