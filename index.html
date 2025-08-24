@@ -633,24 +633,30 @@
         // ===============================================
         // AUTHENTIFICATION GOOGLE
         // ===============================================
-        async function signInWithGoogle() {
-            console.log('Tentative de connexion avec Google...');
-            
-            const { data, error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin
-                }
-            });
-            
-            if (error) {
-                console.error('Erreur de connexion:', error);
-                showMessage('error', '❌ Erreur de connexion : ' + error.message);
-                return;
+       async function signInWithGoogle() {
+    console.log('Tentative de connexion avec Google...');
+    
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin  // Utilise automatiquement l'URL actuelle
             }
-            
-            console.log('Redirection vers Google...');
+        });
+        
+        if (error) {
+            console.error('Erreur de connexion:', error);
+            showMessage('error', '❌ Erreur de connexion : ' + error.message);
+            return;
         }
+        
+        console.log('Redirection vers Google...');
+        
+    } catch (err) {
+        console.error('Exception:', err);
+        showMessage('error', '❌ Erreur technique : ' + err.message);
+    }
+}
 
         async function signOut() {
             console.log('Déconnexion...');
@@ -765,3 +771,4 @@
     </script>
 </body>
 </html>
+
