@@ -580,6 +580,346 @@
             border-radius: 15px;
             font-size: 0.9rem;
             font-weight: 700;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--macif-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .admin-tabs {
+            margin-top: 2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--light-gray);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--dark-gray);
+        }
+
+        .tab-btn.active {
+            background: var(--macif-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #e0e0e0;
+            transform: translateY(-1px);
+        }
+
+        .admin-tab-pane {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .admin-tab-pane.active {
+            display: block;
+        }
+
+        .tab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .tab-header h3 {
+            color: var(--macif-blue);
+            margin: 0;
+        }
+
+        .admin-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .admin-section h4 {
+            color: var(--macif-orange);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .form-inline {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-input {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            min-width: 250px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--macif-blue);
+        }
+
+        .form-textarea {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 1rem;
+        }
+
+        .form-grid .form-textarea {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-admin, .btn-admin-primary, .btn-admin-secondary, .btn-admin-danger {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-admin {
+            background: var(--light-gray);
+            color: var(--dark-gray);
+        }
+
+        .btn-admin:hover {
+            background: #e0e0e0;
+            transform: translateY(-1px);
+        }
+
+        .btn-admin-primary {
+            background: var(--macif-blue);
+            color: var(--white);
+        }
+
+        .btn-admin-primary:hover {
+            background: #0052A3;
+            transform: translateY(-2px);
+        }
+
+        .btn-admin-secondary {
+            background: var(--light-gray);
+            color: var(--dark-gray);
+        }
+
+        .btn-admin-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-admin-danger {
+            background: #dc3545;
+            color: var(--white);
+        }
+
+        .btn-admin-danger:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .admin-form {
+            background: var(--glass-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .users-list, .events-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .user-item, .event-item {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .user-info, .event-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details, .event-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name, .event-title {
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .user-email, .event-date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .user-role {
+            background: var(--macif-green);
+            color: var(--white);
+            padding: 0.25rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .user-role.admin {
+            background: var(--macif-orange);
+        }
+
+        .content-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .content-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .content-section:hover {
+            transform: translateY(-3px);
+        }
+
+        .content-section h4 {
+            color: var(--macif-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .content-section p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .system-info {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .info-value {
+            color: #666;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+            font-style: italic;
         }
 
         /* =========================== */
@@ -909,17 +1249,156 @@
                     <div class="admin-panel">
                         <div class="admin-header">
                             <h2 style="color: var(--macif-orange); margin: 0;">⚙️ Panneau d'administration</h2>
-                            <div class="admin-badge-large">MODE ADMIN</div>
+                            <div class="admin-badge-large">MODE ADMIN ACTIVÉ</div>
                         </div>
-                        <p>Interface d'administration pour gérer le contenu de l'intranet.</p>
-                        <p><strong>Fonctionnalités prévues :</strong></p>
-                        <ul>
-                            <li>🗂️ Gestion des données du trombinoscope</li>
-                            <li>🎂 Ajout/modification des anniversaires</li>
-                            <li>🎉 Création d'événements FAD'ARLES</li>
-                            <li>📸 Upload et organisation des photos</li>
-                            <li>👥 Gestion des utilisateurs et rôles</li>
-                        </ul>
+                        
+                        <!-- Statistiques rapides -->
+                        <div class="admin-stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">👥</div>
+                                <div class="stat-number" id="statsUsers">-</div>
+                                <div class="stat-label">Utilisateurs</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🎉</div>
+                                <div class="stat-number" id="statsEvents">-</div>
+                                <div class="stat-label">Événements</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">📸</div>
+                                <div class="stat-number" id="statsPhotos">-</div>
+                                <div class="stat-label">Photos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🛒</div>
+                                <div class="stat-number" id="statsAnnonces">-</div>
+                                <div class="stat-label">Annonces</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Onglets d'administration -->
+                        <div class="admin-tabs">
+                            <div class="tab-buttons">
+                                <button class="tab-btn active" onclick="showAdminTab('users')">👥 Utilisateurs</button>
+                                <button class="tab-btn" onclick="showAdminTab('events')">🎉 Événements</button>
+                                <button class="tab-btn" onclick="showAdminTab('content')">📝 Contenu</button>
+                                <button class="tab-btn" onclick="showAdminTab('settings')">⚙️ Paramètres</button>
+                            </div>
+                            
+                            <div class="tab-content">
+                                <!-- Onglet Utilisateurs -->
+                                <div id="admin-tab-users" class="admin-tab-pane active">
+                                    <div class="tab-header">
+                                        <h3>Gestion des utilisateurs</h3>
+                                        <button class="btn-admin" onclick="refreshUsersList()">🔄 Actualiser</button>
+                                    </div>
+                                    
+                                    <div class="admin-section">
+                                        <h4>Ajouter un administrateur</h4>
+                                        <div class="form-inline">
+                                            <input type="email" id="newAdminEmail" placeholder="Email de l'utilisateur" class="form-input">
+                                            <button class="btn-admin-primary" onclick="addNewAdmin()">Ajouter Admin</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="admin-section">
+                                        <h4>Liste des utilisateurs connectés</h4>
+                                        <div id="usersList" class="users-list">
+                                            <div class="loading">Chargement des utilisateurs...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Onglet Événements -->
+                                <div id="admin-tab-events" class="admin-tab-pane">
+                                    <div class="tab-header">
+                                        <h3>Gestion des événements FAD'ARLES</h3>
+                                        <button class="btn-admin" onclick="showCreateEventForm()">➕ Nouveau</button>
+                                    </div>
+                                    
+                                    <div id="createEventForm" class="admin-form" style="display: none;">
+                                        <h4>Créer un nouvel événement</h4>
+                                        <div class="form-grid">
+                                            <input type="text" id="eventTitle" placeholder="Titre de l'événement" class="form-input">
+                                            <input type="date" id="eventDate" class="form-input">
+                                            <input type="text" id="eventLocation" placeholder="Lieu" class="form-input">
+                                            <textarea id="eventDescription" placeholder="Description" class="form-textarea"></textarea>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button class="btn-admin-primary" onclick="createEvent()">Créer</button>
+                                            <button class="btn-admin-secondary" onclick="hideCreateEventForm()">Annuler</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="eventsList" class="events-list">
+                                        <div class="loading">Chargement des événements...</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Onglet Contenu -->
+                                <div id="admin-tab-content" class="admin-tab-pane">
+                                    <div class="tab-header">
+                                        <h3>Gestion du contenu</h3>
+                                    </div>
+                                    
+                                    <div class="content-sections">
+                                        <div class="content-section">
+                                            <h4>📸 Galerie</h4>
+                                            <p>Gérer les albums photos et uploads</p>
+                                            <button class="btn-admin" onclick="alert('Fonctionnalité en développement')">Gérer</button>
+                                        </div>
+                                        <div class="content-section">
+                                            <h4>🎂 Anniversaires</h4>
+                                            <p>Ajouter et modifier les dates d'anniversaire</p>
+                                            <button class="btn-admin" onclick="alert('Fonctionnalité en développement')">Gérer</button>
+                                        </div>
+                                        <div class="content-section">
+                                            <h4>👥 Trombinoscope</h4>
+                                            <p>Mettre à jour les profils des collaborateurs</p>
+                                            <button class="btn-admin" onclick="alert('Fonctionnalité en développement')">Gérer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Onglet Paramètres -->
+                                <div id="admin-tab-settings" class="admin-tab-pane">
+                                    <div class="tab-header">
+                                        <h3>Paramètres système</h3>
+                                    </div>
+                                    
+                                    <div class="admin-section">
+                                        <h4>Informations système</h4>
+                                        <div class="system-info">
+                                            <div class="info-row">
+                                                <span class="info-label">Version :</span>
+                                                <span class="info-value">1.0.0</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Supabase :</span>
+                                                <span class="info-value">Connecté ✅</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Environnement :</span>
+                                                <span class="info-value" id="currentEnv">-</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Dernière connexion :</span>
+                                                <span class="info-value" id="lastConnection">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="admin-section">
+                                        <h4>Actions administrateur</h4>
+                                        <div class="admin-actions">
+                                            <button class="btn-admin" onclick="exportData()">📊 Exporter données</button>
+                                            <button class="btn-admin" onclick="viewLogs()">📋 Voir logs</button>
+                                            <button class="btn-admin-danger" onclick="confirmResetData()">🗑️ Reset données (danger)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1084,6 +1563,8 @@
                 
                 if (isAdmin) {
                     showMessage('info', '🔥 Mode administrateur activé !');
+                    // Initialiser le panneau admin
+                    setTimeout(() => initializeAdminPanel(), 1000);
                 }
             } else {
                 currentUser = null;
@@ -1143,8 +1624,286 @@
         }
 
         // ===============================================
-        // INITIALISATION
+        // FONCTIONS ADMIN
         // ===============================================
+        
+        // Gestion des onglets admin
+        function showAdminTab(tabName) {
+            // Masquer tous les onglets
+            document.querySelectorAll('.admin-tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Afficher l'onglet sélectionné
+            const targetPane = document.getElementById(`admin-tab-${tabName}`);
+            const targetBtn = document.querySelector(`[onclick*="${tabName}"]`);
+            
+            if (targetPane) targetPane.classList.add('active');
+            if (targetBtn) targetBtn.classList.add('active');
+            
+            // Charger le contenu de l'onglet
+            loadTabContent(tabName);
+        }
+        
+        async function loadTabContent(tabName) {
+            switch (tabName) {
+                case 'users':
+                    await loadUsersList();
+                    break;
+                case 'events':
+                    await loadEventsList();
+                    break;
+                case 'settings':
+                    updateSystemInfo();
+                    break;
+            }
+        }
+        
+        // Statistiques admin
+        async function loadAdminStats() {
+            try {
+                // Compter les utilisateurs
+                const { data: users, error: usersError } = await supabaseClient
+                    .from('user_profiles')
+                    .select('id', { count: 'exact', head: true });
+                
+                document.getElementById('statsUsers').textContent = users || '0';
+                
+                // Compter les événements (si la table existe)
+                try {
+                    const { data: events, error: eventsError } = await supabaseClient
+                        .from('events_fadarles')
+                        .select('id', { count: 'exact', head: true });
+                    document.getElementById('statsEvents').textContent = events || '0';
+                } catch (e) {
+                    document.getElementById('statsEvents').textContent = '0';
+                }
+                
+                // Placeholder pour les autres stats
+                document.getElementById('statsPhotos').textContent = '0';
+                document.getElementById('statsAnnonces').textContent = '0';
+                
+            } catch (error) {
+                console.error('Erreur lors du chargement des stats:', error);
+            }
+        }
+        
+        // Gestion des utilisateurs
+        async function loadUsersList() {
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = '<div class="loading">Chargement des utilisateurs...</div>';
+            
+            try {
+                const { data: users, error } = await supabaseClient
+                    .from('user_profiles')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (users && users.length > 0) {
+                    usersList.innerHTML = users.map(user => `
+                        <div class="user-item">
+                            <div class="user-info">
+                                <img src="${user.avatar_url || '/api/placeholder/40/40'}" 
+                                     alt="${user.full_name}" class="user-avatar-small">
+                                <div class="user-details">
+                                    <div class="user-name">${user.full_name || 'Nom non défini'}</div>
+                                    <div class="user-email">${user.email}</div>
+                                </div>
+                                <div class="user-role ${user.role === 'fadarles' ? 'admin' : ''}">${user.role === 'fadarles' ? 'ADMIN' : 'USER'}</div>
+                            </div>
+                            <div class="user-actions">
+                                ${user.role !== 'fadarles' ? `<button class="btn-admin" onclick="promoteUser('${user.id}')">Promouvoir Admin</button>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    usersList.innerHTML = '<div class="loading">Aucun utilisateur trouvé</div>';
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des utilisateurs:', error);
+                usersList.innerHTML = '<div class="loading">Erreur lors du chargement</div>';
+            }
+        }
+        
+        async function addNewAdmin() {
+            const emailInput = document.getElementById('newAdminEmail');
+            const email = emailInput.value.trim().toLowerCase();
+            
+            if (!email || !email.includes('@')) {
+                showMessage('error', '❌ Veuillez saisir un email valide');
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('admin_accounts')
+                    .insert({
+                        email: email,
+                        added_by: currentUser.id,
+                        created_at: new Date().toISOString()
+                    });
+                
+                if (error) throw error;
+                
+                showMessage('success', `✅ ${email} ajouté comme administrateur`);
+                emailInput.value = '';
+                
+                // Actualiser la liste des utilisateurs
+                await loadUsersList();
+                
+            } catch (error) {
+                console.error('Erreur lors de l\'ajout admin:', error);
+                if (error.code === '23505') { // Contrainte unique violation
+                    showMessage('error', '⚠️ Cet email est déjà administrateur');
+                } else {
+                    showMessage('error', `❌ Erreur: ${error.message}`);
+                }
+            }
+        }
+        
+        function refreshUsersList() {
+            loadUsersList();
+            showMessage('info', '🔄 Liste des utilisateurs actualisée');
+        }
+        
+        // Gestion des événements
+        async function loadEventsList() {
+            const eventsList = document.getElementById('eventsList');
+            eventsList.innerHTML = '<div class="loading">Chargement des événements...</div>';
+            
+            try {
+                const { data: events, error } = await supabaseClient
+                    .from('events_fadarles')
+                    .select('*')
+                    .order('date_event', { ascending: false });
+                
+                if (error && error.code !== '42P01') throw error; // Ignore table doesn't exist
+                
+                if (events && events.length > 0) {
+                    eventsList.innerHTML = events.map(event => `
+                        <div class="event-item">
+                            <div class="event-info">
+                                <div class="event-details">
+                                    <div class="event-title">${event.title}</div>
+                                    <div class="event-date">${new Date(event.date_event).toLocaleDateString('fr-FR')}</div>
+                                </div>
+                            </div>
+                            <div class="event-actions">
+                                <button class="btn-admin" onclick="editEvent('${event.id}')">Modifier</button>
+                                <button class="btn-admin-danger" onclick="deleteEvent('${event.id}')">Supprimer</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    eventsList.innerHTML = '<div class="loading">Aucun événement créé</div>';
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des événements:', error);
+                eventsList.innerHTML = '<div class="loading">La table événements n\'existe pas encore</div>';
+            }
+        }
+        
+        function showCreateEventForm() {
+            document.getElementById('createEventForm').style.display = 'block';
+        }
+        
+        function hideCreateEventForm() {
+            document.getElementById('createEventForm').style.display = 'none';
+            // Réinitialiser le formulaire
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventLocation').value = '';
+            document.getElementById('eventDescription').value = '';
+        }
+        
+        async function createEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const location = document.getElementById('eventLocation').value.trim();
+            const description = document.getElementById('eventDescription').value.trim();
+            
+            if (!title || !date) {
+                showMessage('error', '❌ Titre et date sont obligatoires');
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('events_fadarles')
+                    .insert({
+                        title: title,
+                        date_event: date,
+                        location: location,
+                        description: description,
+                        created_by: currentUser.id,
+                        created_at: new Date().toISOString()
+                    });
+                
+                if (error) throw error;
+                
+                showMessage('success', '✅ Événement créé avec succès');
+                hideCreateEventForm();
+                await loadEventsList();
+                await loadAdminStats(); // Mettre à jour les stats
+                
+            } catch (error) {
+                console.error('Erreur lors de la création de l\'événement:', error);
+                if (error.code === '42P01') {
+                    showMessage('error', '⚠️ La table événements n\'existe pas. Contactez l\'administrateur système.');
+                } else {
+                    showMessage('error', `❌ Erreur: ${error.message}`);
+                }
+            }
+        }
+        
+        // Fonctions système
+        function updateSystemInfo() {
+            document.getElementById('currentEnv').textContent = window.location.hostname;
+            document.getElementById('lastConnection').textContent = new Date().toLocaleString('fr-FR');
+        }
+        
+        function exportData() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                user: currentUser.email,
+                stats: {
+                    users: document.getElementById('statsUsers').textContent,
+                    events: document.getElementById('statsEvents').textContent
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `macif-intranet-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showMessage('success', '📊 Données exportées avec succès');
+        }
+        
+        function viewLogs() {
+            console.log('=== LOGS SYSTÈME MACIF INTRANET ===');
+            console.log('Utilisateur connecté:', currentUser);
+            console.log('Statut admin:', isAdmin);
+            console.log('URL Supabase:', SUPABASE_URL);
+            console.log('Timestamp:', new Date().toISOString());
+            showMessage('info', '📋 Logs affichés dans la console (F12)');
+        }
+        
+        function confirmResetData() {
+            if (confirm('⚠️ ATTENTION : Cette action supprimera TOUTES les données. Êtes-vous sûr ?')) {
+                if (confirm('🚨 DERNIÈRE CHANCE : Cette action est IRRÉVERSIBLE !')) {
+                    showMessage('error', '🛑 Fonction désactivée pour éviter les accidents');
+                }
+            }
+        }
         document.addEventListener('DOMContentLoaded', function() {
             console.log('=== INITIALISATION APPLICATION ===');
             console.log('URL:', window.location.href);
