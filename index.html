@@ -144,10 +144,12 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            border-radius: 25px;
         }
 
         .login-banner:hover {
             background: linear-gradient(45deg, #0052A3, #7C3AED);
+            transform: translateY(-2px);
         }
 
         .user-welcome {
@@ -403,6 +405,17 @@
             border: 1px solid #BEE5EB;
         }
 
+        /* Debug info */
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .navbar {
@@ -479,7 +492,7 @@
                 <div class="macif-logo">
                     <img src="data:image/png;base64,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" alt="MACIF Logo">
                 </div>
-                <div class="logo-text"></div>
+                <div class="logo-text">INTRANET ARLES</div>
             </a>
             
             <div class="mobile-toggle" onclick="toggleMobileMenu()">
@@ -570,6 +583,12 @@
                     </div>
                 </div>
 
+                <!-- Informations de debug -->
+                <div class="debug-info">
+                    <h4>🔍 Informations de connexion :</h4>
+                    <div id="debugInfo">En attente...</div>
+                </div>
+
                 <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-top: 2rem; text-align: center;">
                     <h3 style="color: var(--macif-blue); margin-bottom: 1rem;">🚀 Bienvenue dans votre espace collaboratif</h3>
                     <p style="color: var(--dark-gray); line-height: 1.6;">
@@ -583,35 +602,47 @@
                 </div>
             </div>
 
-            <!-- Autres pages seront ajoutées ici après test -->
+            <!-- Autres pages -->
             <div id="trombinoscope" class="page-content">
-                <h2>👥 Trombinoscope - En cours de développement</h2>
-                <p>Cette section sera bientôt disponible avec la connexion Supabase.</p>
+                <div class="card">
+                    <h2>👥 Trombinoscope</h2>
+                    <p>Cette section sera bientôt disponible avec toutes les équipes du CRC Arles !</p>
+                </div>
             </div>
 
             <div id="anniversaire" class="page-content">
-                <h2>🎂 Anniversaires - En cours de développement</h2>
-                <p>Cette section sera bientôt disponible avec la connexion Supabase.</p>
+                <div class="card">
+                    <h2>🎂 Calendrier des anniversaires</h2>
+                    <p>Cette section affichera le calendrier des anniversaires de tous les collaborateurs.</p>
+                </div>
             </div>
 
             <div id="fadarles" class="page-content">
-                <h2>🎉 FAD'ARLES - En cours de développement</h2>
-                <p>Cette section sera bientôt disponible avec la connexion Supabase.</p>
+                <div class="card">
+                    <h2>🎉 Événements FAD'ARLES</h2>
+                    <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
+                </div>
             </div>
 
             <div id="galerie" class="page-content">
-                <h2>📸 Galerie - En cours de développement</h2>
-                <p>Cette section sera bientôt disponible avec la connexion Supabase.</p>
+                <div class="card">
+                    <h2>📸 Galerie Photos</h2>
+                    <p>Albums photos des événements et moments partagés au CRC.</p>
+                </div>
             </div>
 
             <div id="bonnes-affaires" class="page-content">
-                <h2>🛒 Bonnes Affaires - En cours de développement</h2>
-                <p>Cette section sera bientôt disponible avec la connexion Supabase.</p>
+                <div class="card">
+                    <h2>🛒 Coin des Bonnes Affaires</h2>
+                    <p>Plateforme d'échange entre collègues - achat, vente, échange d'objets.</p>
+                </div>
             </div>
 
             <div id="activites" class="page-content">
-                <h2>⚽ Activités - En cours de développement</h2>
-                <p>Cette section sera bientôt disponible avec la connexion Supabase.</p>
+                <div class="card">
+                    <h2>⚽ Organisation d'activités</h2>
+                    <p>Créez et participez aux activités sportives et événements team building.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -625,50 +656,87 @@
         const SUPABASE_URL = 'https://ifbnsnhtrbqcxzpsihzy.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm5zbmh0cmJxY3h6cHNpaHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMjUyMzcsImV4cCI6MjA3MTYwMTIzN30.8H9R8rwyPFgODQdDMK5Wgru0XVoc5xN58dGUD2pAW70';
         
+        // Initialisation correcte de Supabase
         const { createClient } = supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let currentUser = null;
 
         // ===============================================
-        // AUTHENTIFICATION GOOGLE
+        // DEBUG INFO
         // ===============================================
-       async function signInWithGoogle() {
-    console.log('Tentative de connexion avec Google...');
-    
-    try {
-        const { data, error } = await supabaseClient.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: window.location.origin  // Utilise automatiquement l'URL actuelle
-            }
-        });
-        
-        if (error) {
-            console.error('Erreur de connexion:', error);
-            showMessage('error', '❌ Erreur de connexion : ' + error.message);
-            return;
+        function updateDebugInfo() {
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.innerHTML = `
+                <strong>URL actuelle:</strong> ${window.location.href}<br>
+                <strong>URL Supabase:</strong> ${SUPABASE_URL}<br>
+                <strong>Utilisateur:</strong> ${currentUser ? currentUser.email + ' (' + (currentUser.role || 'user') + ')' : 'Non connecté'}<br>
+                <strong>Timestamp:</strong> ${new Date().toLocaleString()}
+            `;
         }
-        
-        console.log('Redirection vers Google...');
-        
-    } catch (err) {
-        console.error('Exception:', err);
-        showMessage('error', '❌ Erreur technique : ' + err.message);
-    }
-}
+
+        // ===============================================
+        // AUTHENTIFICATION GOOGLE - VERSION CORRIGÉE
+        // ===============================================
+        async function signInWithGoogle() {
+            console.log('=== TENTATIVE DE CONNEXION GOOGLE ===');
+            console.log('URL actuelle:', window.location.href);
+            console.log('URL Supabase:', SUPABASE_URL);
+            
+            try {
+                // Détecter l'URL correcte selon l'environnement
+                let redirectURL;
+                if (window.location.hostname === 'macif-arles-github-io.vercel.app') {
+                    redirectURL = 'https://macif-arles-github-io.vercel.app/';
+                } else if (window.location.hostname === 'macifarles.github.io') {
+                    redirectURL = 'https://macifarles.github.io/';
+                } else {
+                    redirectURL = window.location.origin;
+                }
+                
+                console.log('URL de redirection utilisée:', redirectURL);
+                
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: redirectURL
+                    }
+                });
+                
+                if (error) {
+                    console.error('=== ERREUR SUPABASE ===');
+                    console.error('Code:', error.code);
+                    console.error('Message:', error.message);
+                    console.error('Détails complets:', error);
+                    
+                    showMessage('error', `❌ Erreur de connexion: ${error.message}`);
+                    return;
+                }
+                
+                console.log('=== REDIRECTION VERS GOOGLE EN COURS ===');
+                console.log('Données:', data);
+                
+            } catch (err) {
+                console.error('=== EXCEPTION JAVASCRIPT ===');
+                console.error('Erreur:', err);
+                console.error('Stack:', err.stack);
+                showMessage('error', `❌ Erreur technique: ${err.message}`);
+            }
+        }
 
         async function signOut() {
-            console.log('Déconnexion...');
+            console.log('=== DÉCONNEXION ===');
             
             const { error } = await supabaseClient.auth.signOut();
             if (error) {
                 console.error('Erreur de déconnexion:', error);
+                showMessage('error', `❌ Erreur de déconnexion: ${error.message}`);
                 return;
             }
             
             currentUser = null;
             updateUIAfterLogout();
+            updateDebugInfo();
             showMessage('info', '👋 Déconnexion réussie');
         }
 
@@ -676,21 +744,30 @@
         // GESTION DES SESSIONS
         // ===============================================
         supabaseClient.auth.onAuthStateChange(async (event, session) => {
-            console.log('Changement d\'authentification:', event, session);
+            console.log('=== CHANGEMENT D\'AUTHENTIFICATION ===');
+            console.log('Événement:', event);
+            console.log('Session:', session);
             
             if (session && session.user) {
                 currentUser = session.user;
                 
-                // Vérifier si l'utilisateur existe dans notre base
-                const { data: userProfile, error } = await supabaseClient
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('id', currentUser.id)
-                    .single();
-                
-                if (userProfile) {
-                    currentUser.role = userProfile.role;
-                    currentUser.profile = userProfile;
+                try {
+                    // Vérifier si l'utilisateur existe dans notre base
+                    const { data: userProfile, error } = await supabaseClient
+                        .from('user_profiles')
+                        .select('*')
+                        .eq('id', currentUser.id)
+                        .single();
+                    
+                    if (error) {
+                        console.log('Profil utilisateur non trouvé, sera créé automatiquement');
+                    } else {
+                        currentUser.role = userProfile.role;
+                        currentUser.profile = userProfile;
+                        console.log('Profil utilisateur chargé:', userProfile);
+                    }
+                } catch (err) {
+                    console.log('Erreur lors de la récupération du profil:', err);
                 }
                 
                 updateUIAfterLogin();
@@ -699,21 +776,32 @@
                 currentUser = null;
                 updateUIAfterLogout();
             }
+            
+            updateDebugInfo();
         });
 
         function updateUIAfterLogin() {
+            console.log('=== MISE À JOUR UI APRÈS CONNEXION ===');
+            console.log('Utilisateur:', currentUser);
+            
             document.getElementById('loginBanner').style.display = 'none';
             document.getElementById('userInfo').style.display = 'flex';
-            document.getElementById('userWelcome').textContent = `👋 ${currentUser.user_metadata?.full_name || currentUser.email}`;
             
-            // Afficher les boutons admin si c'est un admin
+            const welcomeName = currentUser.user_metadata?.full_name || 
+                               currentUser.user_metadata?.name || 
+                               currentUser.email.split('@')[0];
+            
+            document.getElementById('userWelcome').textContent = `👋 ${welcomeName}`;
+            
+            // Afficher les infos admin si c'est un admin
             if (currentUser.role === 'fadarles') {
-                console.log('Utilisateur admin détecté');
-                // Ici on ajoutera plus tard les boutons d'administration
+                console.log('🔥 Utilisateur admin détecté !');
+                showMessage('info', '🔥 Vous avez les droits administrateur !');
             }
         }
 
         function updateUIAfterLogout() {
+            console.log('=== MISE À JOUR UI APRÈS DÉCONNEXION ===');
             document.getElementById('loginBanner').style.display = 'block';
             document.getElementById('userInfo').style.display = 'none';
         }
@@ -758,17 +846,24 @@
         // INITIALISATION
         // ===============================================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Application initialisée');
-            console.log('Supabase configuré avec URL:', SUPABASE_URL);
+            console.log('=== INITIALISATION APPLICATION ===');
+            console.log('URL:', window.location.href);
+            console.log('Hostname:', window.location.hostname);
+            console.log('Supabase URL:', SUPABASE_URL);
+            console.log('Client Supabase créé:', !!supabaseClient);
+            
+            updateDebugInfo();
             
             // Vérifier la session au chargement
             supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                console.log('Session au démarrage:', session);
                 if (session) {
-                    console.log('Session existante trouvée');
+                    console.log('Session existante trouvée, utilisateur:', session.user.email);
+                } else {
+                    console.log('Aucune session existante');
                 }
             });
         });
     </script>
 </body>
 </html>
-
