@@ -625,7 +625,8 @@
         const SUPABASE_URL = 'https://ifbnsnhtrbqcxzpsihzy.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm5zbmh0cmJxY3h6cHNpaHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMjUyMzcsImV4cCI6MjA3MTYwMTIzN30.8H9R8rwyPFgODQdDMK5Wgru0XVoc5xN58dGUD2pAW70';
         
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let currentUser = null;
 
@@ -635,7 +636,7 @@
         async function signInWithGoogle() {
             console.log('Tentative de connexion avec Google...');
             
-            const { data, error } = await supabase.auth.signInWithOAuth({
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
                     redirectTo: window.location.origin
@@ -654,7 +655,7 @@
         async function signOut() {
             console.log('Déconnexion...');
             
-            const { error } = await supabase.auth.signOut();
+            const { error } = await supabaseClient.auth.signOut();
             if (error) {
                 console.error('Erreur de déconnexion:', error);
                 return;
@@ -668,14 +669,14 @@
         // ===============================================
         // GESTION DES SESSIONS
         // ===============================================
-        supabase.auth.onAuthStateChange(async (event, session) => {
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
             console.log('Changement d\'authentification:', event, session);
             
             if (session && session.user) {
                 currentUser = session.user;
                 
                 // Vérifier si l'utilisateur existe dans notre base
-                const { data: userProfile, error } = await supabase
+                const { data: userProfile, error } = await supabaseClient
                     .from('user_profiles')
                     .select('*')
                     .eq('id', currentUser.id)
@@ -755,7 +756,7 @@
             console.log('Supabase configuré avec URL:', SUPABASE_URL);
             
             // Vérifier la session au chargement
-            supabase.auth.getSession().then(({ data: { session } }) => {
+            supabaseClient.auth.getSession().then(({ data: { session } }) => {
                 if (session) {
                     console.log('Session existante trouvée');
                 }
