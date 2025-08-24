@@ -19,37 +19,154 @@
             --macif-green: #06D6A0;
             --macif-pink: #FF8FA3;
             --macif-purple: #8B5CF6;
+            --macif-teal: #17A2B8;
             --white: #FFFFFF;
             --light-gray: #F5F5F5;
             --dark-gray: #333333;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
             --shadow: 0 4px 15px rgba(0,0,0,0.1);
             --shadow-hover: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--macif-light-blue) 0%, #FFE5E5 100%);
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--macif-light-blue) 0%, #FFE5E5 30%, #E6F3FF 70%, #F0F8FF 100%);
             min-height: 100vh;
             color: var(--dark-gray);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(6, 214, 160, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* =========================== */
+        /* PAGE DE LOGIN */
+        /* =========================== */
+        .login-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(20px);
         }
 
-        .main-content {
-            flex: 1;
+        .login-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 3rem 2.5rem;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Header et Navigation */
-        .header {
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0,102,204,0.1), transparent);
+            animation: rotate 10s linear infinite;
+        }
+
+        .login-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,102,204,0.3);
+        }
+
+        .login-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--macif-blue);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--macif-blue), var(--macif-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-subtitle {
+            color: var(--dark-gray);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .google-login-btn {
             background: var(--white);
-            box-shadow: var(--shadow);
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .google-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* =========================== */
+        /* HEADER ET NAVIGATION */
+        /* =========================== */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
         .navbar {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -61,47 +178,47 @@
             display: flex;
             align-items: center;
             text-decoration: none;
-            gap: 0.5rem;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .logo-img {
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-container {
             width: 60px;
             height: 60px;
-            background: var(--macif-blue);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-weight: bold;
-            font-size: 1.5rem;
-            position: relative;
+            border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,102,204,0.3);
+            transition: all 0.3s ease;
         }
 
-        .macif-logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            overflow: hidden;
+        .logo:hover .logo-container {
+            box-shadow: 0 12px 30px rgba(0,102,204,0.4);
+            transform: rotate(5deg);
         }
 
-        .macif-logo img {
+        .logo-container img {
             width: 100%;
             height: 100%;
             object-fit: contain;
         }
 
         .logo-text {
-            font-size: 1.3rem;
-            font-weight: bold;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: var(--macif-blue);
+            text-shadow: 0 2px 4px rgba(0,102,204,0.1);
         }
 
         .nav-menu {
             display: flex;
             list-style: none;
             gap: 0.5rem;
+            align-items: center;
         }
 
         .nav-item {
@@ -109,110 +226,166 @@
         }
 
         .nav-link {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             padding: 0.75rem 1.5rem;
             text-decoration: none;
-            color: var(--dark-gray);
+            color: var(--white);
             border-radius: 25px;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .nav-link:hover, .nav-link.active {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
         }
 
-        .nav-link.accueil { background: var(--macif-blue); color: var(--white); }
-        .nav-link.trombinoscope { background: var(--macif-orange); color: var(--white); }
-        .nav-link.anniversaire { background: var(--macif-green); color: var(--dark-gray); }
-        .nav-link.fadarles { background: var(--macif-yellow); color: var(--white); }
-        .nav-link.galerie { background: var(--macif-pink); color: var(--white); }
-        .nav-link.bonnes-affaires { background: var(--macif-purple); color: var(--white); }
-        .nav-link.activites { background: #17A2B8; color: var(--white); }
+        .nav-link:hover::before {
+            left: 100%;
+        }
 
-        .user-info {
+        .nav-link .emoji {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover .emoji {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-size: 1rem;
+        }
+
+        .nav-link.trombinoscope { 
+            background: linear-gradient(135deg, var(--macif-orange), #FF8A65);
+        }
+        .nav-link.anniversaire { 
+            background: linear-gradient(135deg, var(--macif-green), #4DB6AC);
+        }
+        .nav-link.fadarles { 
+            background: linear-gradient(135deg, var(--macif-yellow), #FFB74D);
+            color: var(--dark-gray);
+        }
+        .nav-link.galerie { 
+            background: linear-gradient(135deg, var(--macif-pink), #F48FB1);
+        }
+        .nav-link.bonnes-affaires { 
+            background: linear-gradient(135deg, var(--macif-purple), #9575CD);
+        }
+        .nav-link.activites { 
+            background: linear-gradient(135deg, var(--macif-teal), #4FC3F7);
+        }
+        .nav-link.admin-panel {
+            background: linear-gradient(135deg, #FF5722, #FF8A65);
+        }
+
+        .user-section {
             display: flex;
             align-items: center;
             gap: 1rem;
-        }
-
-        .login-banner {
-            background: linear-gradient(45deg, var(--macif-blue), var(--macif-purple));
-            color: var(--white);
-            padding: 0.75rem 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 25px;
-        }
-
-        .login-banner:hover {
-            background: linear-gradient(45deg, #0052A3, #7C3AED);
-            transform: translateY(-2px);
-        }
-
-        .user-welcome {
-            background: var(--macif-green);
-            color: var(--white);
-            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--macif-blue);
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .admin-badge {
+            background: var(--macif-orange);
+            color: var(--white);
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
         .logout-btn {
             background: var(--macif-orange);
             color: var(--white);
-            padding: 0.5rem 1rem;
             border: none;
-            border-radius: 20px;
+            border-radius: 15px;
+            padding: 0.5rem 1rem;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
 
         .logout-btn:hover {
             background: #E55A2B;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
-        .mobile-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
+        /* =========================== */
+        /* CONTENU PRINCIPAL */
+        /* =========================== */
+        .main-content {
+            flex: 1;
         }
 
-        .mobile-toggle span {
-            width: 25px;
-            height: 3px;
-            background: var(--macif-blue);
-            margin: 3px 0;
-            transition: 0.3s;
-        }
-
-        /* Container principal */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 2rem 1rem 2rem;
+            padding: 2rem;
         }
 
         .page-content {
             display: none;
+            animation: fadeIn 0.6s ease;
         }
 
         .page-content.active {
             display: block;
         }
 
-        /* Hero section */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================== */
+        /* HERO SECTION */
+        /* =========================== */
         .hero {
             text-align: center;
-            padding: 3rem 0;
-            background: var(--white);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
+            padding: 4rem 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
         }
@@ -224,13 +397,8 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(0,102,204,0.1) 0%, transparent 50%);
+            background: conic-gradient(from 0deg, transparent, rgba(0,102,204,0.1), transparent, rgba(255,107,53,0.1), transparent);
             animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         .hero-content {
@@ -239,46 +407,54 @@
         }
 
         .hero h1 {
-            font-size: 2.5rem;
-            color: var(--macif-blue);
+            font-size: 3rem;
+            font-weight: 700;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--macif-blue), var(--macif-orange));
+            background: linear-gradient(45deg, var(--macif-blue), var(--macif-orange), var(--macif-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientShift 4s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--dark-gray);
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
+            opacity: 0.9;
+            line-height: 1.6;
         }
 
+        /* =========================== */
+        /* GRILLE DE FONCTIONNALITÉS */
+        /* =========================== */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
 
         .feature-card {
-            background: var(--white);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 1px solid var(--glass-border);
             padding: 0;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            min-height: 280px;
+            min-height: 300px;
             display: flex;
             align-items: flex-end;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-hover);
+            cursor: pointer;
         }
 
         .feature-card::before {
@@ -291,38 +467,48 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            transition: transform 0.4s ease;
             z-index: 1;
         }
 
+        .feature-card:hover::before {
+            transform: scale(1.1);
+        }
+
         .feature-card:nth-child(1)::before {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1553484771-371a605b060b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1553484771-371a605b060b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
 
         .feature-card:nth-child(2)::before {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
 
         .feature-card:nth-child(3)::before {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
 
         .feature-card:nth-child(4)::before {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
 
         .feature-card:nth-child(5)::before {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
         }
 
         .feature-card:nth-child(6)::before {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
         .feature-card-content {
             position: relative;
             z-index: 2;
             color: var(--white);
-            padding: 2rem;
+            padding: 2.5rem;
             width: 100%;
             background: linear-gradient(transparent, rgba(0,0,0,0.8));
         }
@@ -330,128 +516,155 @@
         .feature-card h3 {
             color: var(--white);
             margin-bottom: 1rem;
-            font-size: 1.4rem;
-            font-weight: bold;
+            font-size: 1.5rem;
+            font-weight: 700;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .feature-card p {
             color: rgba(255, 255, 255, 0.95);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .feature-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-            z-index: 3;
-        }
-
-        .feature-card:hover::after {
-            left: 100%;
-        }
-
-        /* Cards communes */
+        /* =========================== */
+        /* CARDS COMMUNES */
+        /* =========================== */
         .card {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            margin-bottom: 2rem;
             transition: all 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        .card h3 {
+        .card h2 {
             color: var(--macif-blue);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 700;
         }
 
-        /* Messages */
+        /* =========================== */
+        /* PANNEAU ADMIN */
+        /* =========================== */
+        .admin-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .admin-badge-large {
+            background: linear-gradient(135deg, var(--macif-orange), #FF8A65);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* =========================== */
+        /* MESSAGES */
+        /* =========================== */
         .message {
-            padding: 1rem;
-            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid;
         }
 
         .message.success {
-            background: #D4EDDA;
+            background: rgba(212, 237, 218, 0.9);
             color: #155724;
-            border: 1px solid #C3E6CB;
+            border-color: rgba(195, 230, 203, 0.5);
         }
 
         .message.error {
-            background: #F8D7DA;
+            background: rgba(248, 215, 218, 0.9);
             color: #721C24;
-            border: 1px solid #F5C6CB;
+            border-color: rgba(245, 198, 203, 0.5);
         }
 
         .message.info {
-            background: #D1ECF1;
+            background: rgba(209, 236, 241, 0.9);
             color: #0C5460;
-            border: 1px solid #BEE5EB;
+            border-color: rgba(190, 229, 235, 0.5);
         }
 
-        /* Debug info */
+        /* =========================== */
+        /* DEBUG INFO */
+        /* =========================== */
         .debug-info {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
             margin: 2rem 0;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             font-size: 0.9rem;
         }
 
-        /* Responsive */
+        /* =========================== */
+        /* ANIMATIONS */
+        /* =========================== */
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* =========================== */
+        /* RESPONSIVE */
+        /* =========================== */
+        @media (max-width: 1200px) {
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
             .navbar {
-                padding: 1rem;
                 flex-direction: column;
                 gap: 1rem;
-            }
-
-            .nav-menu {
-                flex-direction: column;
-                gap: 0.5rem;
-                width: 100%;
-            }
-
-            .nav-link {
-                text-align: center;
                 padding: 1rem;
             }
 
-            .mobile-toggle {
-                display: flex;
-                position: absolute;
-                right: 1rem;
-                top: 1rem;
-            }
-
             .nav-menu {
-                display: none;
-            }
-
-            .nav-menu.active {
-                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .container {
@@ -460,188 +673,254 @@
 
             .features-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                min-height: 250px;
             }
         }
 
-        /* Animations */
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        @media (max-width: 480px) {
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
 
-        .page-content.active {
-            animation: slideIn 0.5s ease;
+            .nav-link {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .login-container {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div id="loginBanner" class="login-banner" onclick="signInWithGoogle()" style="display: block;">
-            🔐 Se connecter avec Google pour accéder aux fonctionnalités 🔐
+    <!-- Page de Login -->
+    <div id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="login-content">
+                <div class="login-logo">
+                    <img src="data:image/png;base64,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" alt="MACIF">
+                </div>
+                <h1 class="login-title">MACIF ARLES</h1>
+                <p class="login-subtitle">Intranet CRC Commercial</p>
+                <button class="google-login-btn" onclick="signInWithGoogle()">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Se connecter avec Google
+                </button>
+            </div>
         </div>
-        
-        <nav class="navbar">
-            <a href="#" class="logo" onclick="showPage('accueil')">
-                <div class="macif-logo">
-                    <img src="data:image/png;base64,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" alt="MACIF Logo">
-                </div>
-                <div class="logo-text">INTRANET ARLES</div>
-            </a>
-            
-            <div class="mobile-toggle" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            
-            <ul class="nav-menu" id="navMenu">
-                <li class="nav-item">
-                    <a href="#" class="nav-link accueil active" onclick="showPage('accueil')">🏠 Accueil</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link trombinoscope" onclick="showPage('trombinoscope')">👥 Trombinoscope</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link anniversaire" onclick="showPage('anniversaire')">🎂 Anniversaires</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link fadarles" onclick="showPage('fadarles')">🎉 FAD'ARLES</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link galerie" onclick="showPage('galerie')">📸 Galerie</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link bonnes-affaires" onclick="showPage('bonnes-affaires')">🛒 Bonnes Affaires</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link activites" onclick="showPage('activites')">⚽ Activités</a>
-                </li>
-            </ul>
+    </div>
 
-            <div class="user-info" id="userInfo" style="display: none;">
-                <span class="user-welcome" id="userWelcome"></span>
-                <button class="logout-btn" onclick="signOut()">Déconnexion</button>
-            </div>
-        </nav>
-    </header>
-
-    <div class="main-content">
-        <div class="container">
-            <!-- Page Accueil -->
-            <div id="accueil" class="page-content active">
-                <div class="hero">
-                    <div class="hero-content">
-                        <h1>Bienvenue sur l'Intranet</h1>
-                        <p>CRC Commercial Arles - MACIF<br>
-                        Votre plateforme de communication interne centralisée</p>
+    <!-- Application principale -->
+    <div id="mainApp" class="main-app" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <a href="#" class="logo" onclick="showPage('dashboard')">
+                    <div class="logo-container">
+                        <img src="data:image/png;base64,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" alt="MACIF Logo">
                     </div>
-                </div>
+                    <div class="logo-text">INTRANET ARLES</div>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link trombinoscope" onclick="showPage('trombinoscope')">
+                            <span class="emoji">👥</span>Trombinoscope
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link anniversaire" onclick="showPage('anniversaire')">
+                            <span class="emoji">🎂</span>Anniversaires
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link fadarles" onclick="showPage('fadarles')">
+                            <span class="emoji">🎉</span>FAD'ARLES
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link galerie" onclick="showPage('galerie')">
+                            <span class="emoji">📸</span>Galerie
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link bonnes-affaires" onclick="showPage('bonnes-affaires')">
+                            <span class="emoji">🛒</span>Bonnes Affaires
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link activites" onclick="showPage('activites')">
+                            <span class="emoji">⚽</span>Activités
+                        </a>
+                    </li>
+                    <li class="nav-item" id="adminNavItem" style="display: none;">
+                        <a href="#" class="nav-link admin-panel" onclick="showPage('admin-panel')">
+                            <span class="emoji">⚙️</span>Administration
+                        </a>
+                    </li>
+                </ul>
 
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-card-content">
-                            <h3>Trombinoscope</h3>
-                            <p>Découvrez les équipes du CRC Arles, leurs membres et leurs rôles dans l'entreprise.</p>
+                <div class="user-section">
+                    <img id="userAvatar" class="user-avatar" src="" alt="">
+                    <div>
+                        <div id="userName" class="user-name"></div>
+                        <div id="adminBadge" class="admin-badge" style="display: none;">ADMIN</div>
+                    </div>
+                    <button class="logout-btn" onclick="signOut()">Déconnexion</button>
+                </div>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="container">
+                <!-- Page Dashboard -->
+                <div id="dashboard" class="page-content active">
+                    <div class="hero">
+                        <div class="hero-content">
+                            <h1>Bienvenue sur l'Intranet</h1>
+                            <p>CRC Commercial Arles - MACIF<br>
+                            Votre plateforme de communication interne centralisée</p>
                         </div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-card-content">
-                            <h3>Anniversaires</h3>
-                            <p>Consultez le calendrier des anniversaires et ne manquez plus aucune célébration !</p>
+
+                    <div class="features-grid">
+                        <div class="feature-card" onclick="showPage('trombinoscope')">
+                            <div class="feature-card-content">
+                                <h3>👥 Trombinoscope</h3>
+                                <p>Découvrez les équipes du CRC Arles, leurs membres et leurs rôles dans l'entreprise.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card" onclick="showPage('anniversaire')">
+                            <div class="feature-card-content">
+                                <h3>🎂 Anniversaires</h3>
+                                <p>Consultez le calendrier des anniversaires et ne manquez plus aucune célébration !</p>
+                            </div>
+                        </div>
+                        <div class="feature-card" onclick="showPage('fadarles')">
+                            <div class="feature-card-content">
+                                <h3>🎉 Événements FAD'ARLES</h3>
+                                <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card" onclick="showPage('galerie')">
+                            <div class="feature-card-content">
+                                <h3>📸 Galerie Photos</h3>
+                                <p>Parcourez les albums photos des événements et partagez vos souvenirs !</p>
+                            </div>
+                        </div>
+                        <div class="feature-card" onclick="showPage('bonnes-affaires')">
+                            <div class="feature-card-content">
+                                <h3>🛒 Coin des Bonnes Affaires</h3>
+                                <p>Achetez, vendez et échangez entre collègues. Contactez directement les vendeurs.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card" onclick="showPage('activites')">
+                            <div class="feature-card-content">
+                                <h3>⚽ Organisation d'activités</h3>
+                                <p>Inscrivez-vous aux activités sportives et événements team building.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-card-content">
-                            <h3>Événements FAD'ARLES</h3>
-                            <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
-                        </div>
+
+                    <!-- Informations de debug -->
+                    <div class="debug-info">
+                        <h4>🔍 Informations de connexion :</h4>
+                        <div id="debugInfo">En attente...</div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-card-content">
-                            <h3>Galerie Photos</h3>
-                            <p>Parcourez les albums photos des événements et partagez vos souvenirs !</p>
-                        </div>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-card-content">
-                            <h3>Coin des Bonnes Affaires</h3>
-                            <p>Achetez, vendez et échangez entre collègues. Contactez directement les vendeurs.</p>
-                        </div>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-card-content">
-                            <h3>Organisation d'activités</h3>
-                            <p>Inscrivez-vous aux activités sportives et événements team building.</p>
-                        </div>
+
+                    <div class="card">
+                        <h3 style="color: var(--macif-blue); margin-bottom: 1rem;">🚀 Bienvenue dans votre espace collaboratif</h3>
+                        <p style="color: var(--dark-gray); line-height: 1.6;">
+                            Votre intranet MACIF Arles vous permet de rester connecté, 
+                            de découvrir vos collègues, de suivre les événements et de participer à la vie du CRC. 
+                            N'hésitez pas à explorer toutes les fonctionnalités disponibles !
+                        </p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                            💡 <strong>Besoins :</strong> N'hésitez pas à faire remonter vos besoins ou envies à votre Manager. 
+                        </p>
                     </div>
                 </div>
 
-                <!-- Informations de debug -->
-                <div class="debug-info">
-                    <h4>🔍 Informations de connexion :</h4>
-                    <div id="debugInfo">En attente...</div>
+                <!-- Autres pages -->
+                <div id="trombinoscope" class="page-content">
+                    <div class="card">
+                        <h2>👥 Trombinoscope</h2>
+                        <p>Cette section sera bientôt disponible avec toutes les équipes du CRC Arles !</p>
+                    </div>
                 </div>
 
-                <div style="background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); margin-top: 2rem; text-align: center;">
-                    <h3 style="color: var(--macif-blue); margin-bottom: 1rem;">🚀 Bienvenue dans votre espace collaboratif</h3>
-                    <p style="color: var(--dark-gray); line-height: 1.6;">
-                        Votre intranet MACIF Arles vous permet de rester connecté, 
-                        de découvrir vos collègues, de suivre les événements et de participer à la vie du CRC. 
-                        N'hésitez pas à explorer toutes les fonctionnalités disponibles !
-                    </p>
-                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                        💡 <strong>Besoins :</strong> N'hésitez pas à faire remonter vos besoins ou envies à votre Manager. 
-                    </p>
+                <div id="anniversaire" class="page-content">
+                    <div class="card">
+                        <h2>🎂 Calendrier des anniversaires</h2>
+                        <p>Cette section affichera le calendrier des anniversaires de tous les collaborateurs.</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Autres pages -->
-            <div id="trombinoscope" class="page-content">
-                <div class="card">
-                    <h2>👥 Trombinoscope</h2>
-                    <p>Cette section sera bientôt disponible avec toutes les équipes du CRC Arles !</p>
+                <div id="fadarles" class="page-content">
+                    <div class="card">
+                        <h2>🎉 Événements FAD'ARLES</h2>
+                        <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div id="anniversaire" class="page-content">
-                <div class="card">
-                    <h2>🎂 Calendrier des anniversaires</h2>
-                    <p>Cette section affichera le calendrier des anniversaires de tous les collaborateurs.</p>
+                <div id="galerie" class="page-content">
+                    <div class="card">
+                        <h2>📸 Galerie Photos</h2>
+                        <p>Albums photos des événements et moments partagés au CRC.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div id="fadarles" class="page-content">
-                <div class="card">
-                    <h2>🎉 Événements FAD'ARLES</h2>
-                    <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
+                <div id="bonnes-affaires" class="page-content">
+                    <div class="card">
+                        <h2>🛒 Coin des Bonnes Affaires</h2>
+                        <p>Plateforme d'échange entre collègues - achat, vente, échange d'objets.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div id="galerie" class="page-content">
-                <div class="card">
-                    <h2>📸 Galerie Photos</h2>
-                    <p>Albums photos des événements et moments partagés au CRC.</p>
+                <div id="activites" class="page-content">
+                    <div class="card">
+                        <h2>⚽ Organisation d'activités</h2>
+                        <p>Créez et participez aux activités sportives et événements team building.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div id="bonnes-affaires" class="page-content">
-                <div class="card">
-                    <h2>🛒 Coin des Bonnes Affaires</h2>
-                    <p>Plateforme d'échange entre collègues - achat, vente, échange d'objets.</p>
-                </div>
-            </div>
-
-            <div id="activites" class="page-content">
-                <div class="card">
-                    <h2>⚽ Organisation d'activités</h2>
-                    <p>Créez et participez aux activités sportives et événements team building.</p>
+                <!-- Panneau d'administration -->
+                <div id="admin-panel" class="page-content">
+                    <div class="admin-panel">
+                        <div class="admin-header">
+                            <h2 style="color: var(--macif-orange); margin: 0;">⚙️ Panneau d'administration</h2>
+                            <div class="admin-badge-large">MODE ADMIN</div>
+                        </div>
+                        <p>Interface d'administration pour gérer le contenu de l'intranet.</p>
+                        <p><strong>Fonctionnalités prévues :</strong></p>
+                        <ul>
+                            <li>🗂️ Gestion des données du trombinoscope</li>
+                            <li>🎂 Ajout/modification des anniversaires</li>
+                            <li>🎉 Création d'événements FAD'ARLES</li>
+                            <li>📸 Upload et organisation des photos</li>
+                            <li>👥 Gestion des utilisateurs et rôles</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -656,35 +935,63 @@
         const SUPABASE_URL = 'https://ifbnsnhtrbqcxzpsihzy.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm5zbmh0cmJxY3h6cHNpaHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMjUyMzcsImV4cCI6MjA3MTYwMTIzN30.8H9R8rwyPFgODQdDMK5Wgru0XVoc5xN58dGUD2pAW70';
         
-        // Initialisation correcte de Supabase
         const { createClient } = supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let currentUser = null;
+        let isAdmin = false;
+
+        // ===============================================
+        // GESTION DES PAGES
+        // ===============================================
+        function showLoginPage() {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function showMainApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+
+        function showPage(pageId) {
+            // Masquer toutes les pages
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            
+            // Afficher la page demandée
+            document.getElementById(pageId).classList.add('active');
+            
+            // Mettre à jour le lien actif dans la navigation
+            const navLink = document.querySelector(`.nav-link.${pageId}`);
+            if (navLink) {
+                navLink.classList.add('active');
+            }
+        }
 
         // ===============================================
         // DEBUG INFO
         // ===============================================
         function updateDebugInfo() {
             const debugDiv = document.getElementById('debugInfo');
-            debugDiv.innerHTML = `
-                <strong>URL actuelle:</strong> ${window.location.href}<br>
-                <strong>URL Supabase:</strong> ${SUPABASE_URL}<br>
-                <strong>Utilisateur:</strong> ${currentUser ? currentUser.email + ' (' + (currentUser.role || 'user') + ')' : 'Non connecté'}<br>
-                <strong>Timestamp:</strong> ${new Date().toLocaleString()}
-            `;
+            if (debugDiv) {
+                debugDiv.innerHTML = `
+                    <strong>URL actuelle:</strong> ${window.location.href}<br>
+                    <strong>URL Supabase:</strong> ${SUPABASE_URL}<br>
+                    <strong>Utilisateur:</strong> ${currentUser ? currentUser.email + ' (' + (isAdmin ? 'admin' : 'user') + ')' : 'Non connecté'}<br>
+                    <strong>Mode admin:</strong> ${isAdmin ? 'Activé 🔥' : 'Désactivé'}<br>
+                    <strong>Timestamp:</strong> ${new Date().toLocaleString()}
+                `;
+            }
         }
 
         // ===============================================
-        // AUTHENTIFICATION GOOGLE - VERSION CORRIGÉE
+        // AUTHENTIFICATION
         // ===============================================
         async function signInWithGoogle() {
             console.log('=== TENTATIVE DE CONNEXION GOOGLE ===');
-            console.log('URL actuelle:', window.location.href);
-            console.log('URL Supabase:', SUPABASE_URL);
             
             try {
-                // Détecter l'URL correcte selon l'environnement
                 let redirectURL;
                 if (window.location.hostname === 'macif-arles-github-io.vercel.app') {
                     redirectURL = 'https://macif-arles-github-io.vercel.app/';
@@ -694,7 +1001,7 @@
                     redirectURL = window.location.origin;
                 }
                 
-                console.log('URL de redirection utilisée:', redirectURL);
+                console.log('URL de redirection:', redirectURL);
                 
                 const { data, error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
@@ -704,22 +1011,15 @@
                 });
                 
                 if (error) {
-                    console.error('=== ERREUR SUPABASE ===');
-                    console.error('Code:', error.code);
-                    console.error('Message:', error.message);
-                    console.error('Détails complets:', error);
-                    
+                    console.error('Erreur Supabase:', error);
                     showMessage('error', `❌ Erreur de connexion: ${error.message}`);
                     return;
                 }
                 
-                console.log('=== REDIRECTION VERS GOOGLE EN COURS ===');
-                console.log('Données:', data);
+                console.log('Redirection vers Google...');
                 
             } catch (err) {
-                console.error('=== EXCEPTION JAVASCRIPT ===');
-                console.error('Erreur:', err);
-                console.error('Stack:', err.stack);
+                console.error('Exception:', err);
                 showMessage('error', `❌ Erreur technique: ${err.message}`);
             }
         }
@@ -735,9 +1035,32 @@
             }
             
             currentUser = null;
-            updateUIAfterLogout();
-            updateDebugInfo();
+            isAdmin = false;
+            showLoginPage();
             showMessage('info', '👋 Déconnexion réussie');
+        }
+
+        // ===============================================
+        // VÉRIFICATION ADMIN
+        // ===============================================
+        async function checkAdminStatus(userEmail) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('admin_accounts')
+                    .select('*')
+                    .eq('email', userEmail)
+                    .single();
+                
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Erreur vérification admin:', error);
+                    return false;
+                }
+                
+                return !!data;
+            } catch (err) {
+                console.error('Exception vérification admin:', err);
+                return false;
+            }
         }
 
         // ===============================================
@@ -751,77 +1074,52 @@
             if (session && session.user) {
                 currentUser = session.user;
                 
-                try {
-                    // Vérifier si l'utilisateur existe dans notre base
-                    const { data: userProfile, error } = await supabaseClient
-                        .from('user_profiles')
-                        .select('*')
-                        .eq('id', currentUser.id)
-                        .single();
-                    
-                    if (error) {
-                        console.log('Profil utilisateur non trouvé, sera créé automatiquement');
-                    } else {
-                        currentUser.role = userProfile.role;
-                        currentUser.profile = userProfile;
-                        console.log('Profil utilisateur chargé:', userProfile);
-                    }
-                } catch (err) {
-                    console.log('Erreur lors de la récupération du profil:', err);
-                }
+                // Vérifier le statut admin
+                isAdmin = await checkAdminStatus(currentUser.email);
+                console.log('Statut admin:', isAdmin);
                 
                 updateUIAfterLogin();
+                showMainApp();
                 showMessage('success', `✅ Connexion réussie ! Bienvenue ${currentUser.user_metadata?.full_name || currentUser.email}`);
+                
+                if (isAdmin) {
+                    showMessage('info', '🔥 Mode administrateur activé !');
+                }
             } else {
                 currentUser = null;
-                updateUIAfterLogout();
+                isAdmin = false;
+                showLoginPage();
             }
             
             updateDebugInfo();
         });
 
         function updateUIAfterLogin() {
-            console.log('=== MISE À JOUR UI APRÈS CONNEXION ===');
-            console.log('Utilisateur:', currentUser);
+            // Mise à jour des informations utilisateur
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            const adminBadge = document.getElementById('adminBadge');
+            const adminNavItem = document.getElementById('adminNavItem');
             
-            document.getElementById('loginBanner').style.display = 'none';
-            document.getElementById('userInfo').style.display = 'flex';
-            
-            const welcomeName = currentUser.user_metadata?.full_name || 
-                               currentUser.user_metadata?.name || 
-                               currentUser.email.split('@')[0];
-            
-            document.getElementById('userWelcome').textContent = `👋 ${welcomeName}`;
-            
-            // Afficher les infos admin si c'est un admin
-            if (currentUser.role === 'fadarles') {
-                console.log('🔥 Utilisateur admin détecté !');
-                showMessage('info', '🔥 Vous avez les droits administrateur !');
+            if (userName) {
+                userName.textContent = currentUser.user_metadata?.full_name || 
+                                     currentUser.user_metadata?.name || 
+                                     currentUser.email.split('@')[0];
             }
-        }
-
-        function updateUIAfterLogout() {
-            console.log('=== MISE À JOUR UI APRÈS DÉCONNEXION ===');
-            document.getElementById('loginBanner').style.display = 'block';
-            document.getElementById('userInfo').style.display = 'none';
-        }
-
-        // ===============================================
-        // NAVIGATION
-        // ===============================================
-        function toggleMobileMenu() {
-            const navMenu = document.getElementById('navMenu');
-            navMenu.classList.toggle('active');
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             
-            document.getElementById(pageId).classList.add('active');
-            document.querySelector(`.nav-link.${pageId}`).classList.add('active');
+            if (userAvatar && currentUser.user_metadata?.avatar_url) {
+                userAvatar.src = currentUser.user_metadata.avatar_url;
+            }
             
-            document.getElementById('navMenu').classList.remove('active');
+            // Affichage du badge admin
+            if (adminBadge && isAdmin) {
+                adminBadge.style.display = 'block';
+            }
+            
+            // Affichage de l'onglet admin
+            if (adminNavItem && isAdmin) {
+                adminNavItem.style.display = 'block';
+            }
         }
 
         // ===============================================
@@ -832,11 +1130,13 @@
             messageDiv.className = `message ${type}`;
             messageDiv.innerHTML = message;
             messageDiv.style.position = 'fixed';
-            messageDiv.style.top = '100px';
+            messageDiv.style.top = '20px';
             messageDiv.style.right = '20px';
             messageDiv.style.zIndex = '200000';
             messageDiv.style.minWidth = '300px';
-            messageDiv.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            messageDiv.style.maxWidth = '500px';
+            messageDiv.style.boxShadow = '0 8px 32px rgba(31, 38, 135, 0.37)';
+            messageDiv.style.backdropFilter = 'blur(10px)';
             
             document.body.appendChild(messageDiv);
             setTimeout(() => messageDiv.remove(), 5000);
@@ -848,17 +1148,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('=== INITIALISATION APPLICATION ===');
             console.log('URL:', window.location.href);
-            console.log('Hostname:', window.location.hostname);
-            console.log('Supabase URL:', SUPABASE_URL);
-            console.log('Client Supabase créé:', !!supabaseClient);
+            console.log('Supabase configuré');
             
+            // Afficher la page de login par défaut
+            showLoginPage();
             updateDebugInfo();
             
-            // Vérifier la session au chargement
+            // Vérifier la session existante
             supabaseClient.auth.getSession().then(({ data: { session } }) => {
                 console.log('Session au démarrage:', session);
                 if (session) {
-                    console.log('Session existante trouvée, utilisateur:', session.user.email);
+                    console.log('Session existante trouvée');
                 } else {
                     console.log('Aucune session existante');
                 }
