@@ -828,14 +828,61 @@
                 <div id="bonnes-affaires" class="page-content">
                     <div class="card">
                         <h2>🛒 Coin des Bonnes Affaires</h2>
-                        <p>Plateforme d'échange entre collègues - achat, vente, échange d'objets.</p>
+                        <button class="btn-primary" style="margin-bottom: 1rem;" onclick="showCreateOfferForm()">Créer une annonce</button>
+                        
+                        <div id="createOfferForm" class="admin-form" style="display: none; margin-bottom: 2rem;">
+                            <h4>Nouvelle annonce</h4>
+                            <div class="form-grid">
+                                <input type="text" id="offerTitle" placeholder="Titre de l'annonce" class="form-input">
+                                <input type="number" id="offerPrice" placeholder="Prix" class="form-input">
+                                <select id="offerCategory" class="form-input">
+                                    <option value="">Catégorie</option>
+                                    <option value="electronique">Électronique</option>
+                                    <option value="mobilier">Mobilier</option>
+                                    <option value="vetements">Vêtements</option>
+                                    <option value="vehicule">Véhicule</option>
+                                    <option value="autre">Autre</option>
+                                </select>
+                                <input type="url" id="offerImageUrl" placeholder="URL de l'image" class="form-input">
+                                <textarea id="offerDescription" placeholder="Description" class="form-textarea"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn-primary" onclick="createOffer()">Publier</button>
+                                <button class="btn-secondary" onclick="hideCreateOfferForm()">Annuler</button>
+                            </div>
+                        </div>
+                        
+                        <div id="offersList">
+                            <div class="loading">Chargement des annonces...</div>
+                        </div>
                     </div>
                 </div>
 
                 <div id="activites" class="page-content">
                     <div class="card">
                         <h2>⚽ Organisation d'activités</h2>
-                        <p>Créez et participez aux activités sportives et événements team building.</p>
+                        <button class="btn-primary" style="margin-bottom: 1rem;" onclick="showCreateActivityForm()">Organiser une activité</button>
+                        
+                        <div id="createActivityForm" class="admin-form" style="display: none; margin-bottom: 2rem;">
+                            <h4>Nouvelle activité</h4>
+                            <div class="form-grid">
+                                <input type="text" id="activityTitle" placeholder="Nom de l'activité" class="form-input">
+                                <input type="date" id="activityDate" placeholder="Date" class="form-input">
+                                <input type="time" id="activityTime" placeholder="Heure" class="form-input">
+                                <input type="text" id="activityDuration" placeholder="Durée" class="form-input">
+                                <input type="text" id="activityLocation" placeholder="Lieu" class="form-input">
+                                <input type="number" id="activityMaxParticipants" placeholder="Nombre max de participants" class="form-input">
+                                <textarea id="activityDescription" placeholder="Description" class="form-textarea"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn-primary" onclick="createActivity()">Créer l'activité</button>
+                                <button class="btn-secondary" onclick="hideCreateActivityForm()">Annuler</button>
+                            </div>
+                        </div>
+                        
+                        <div id="activitiesList">
+                            <div class="loading">Chargement des activités...</div>
+                        </div>
                     </div>
                 </div>
 
@@ -874,63 +921,34 @@
                         <!-- Onglets d'administration -->
                         <div class="admin-tabs">
                             <div class="tab-buttons">
-                                <button class="tab-btn active" onclick="showAdminTab('debug')">🔧 Debug</button>
-                                <button class="tab-btn" onclick="showAdminTab('users')">👥 Utilisateurs</button>
+                                <button class="tab-btn active" onclick="showAdminTab('users')">👥 Utilisateurs</button>
                                 <button class="tab-btn" onclick="showAdminTab('events')">🎉 Événements</button>
-                                <button class="tab-btn" onclick="showAdminTab('settings')">⚙️ Paramètres</button>
+                                <button class="tab-btn" onclick="showAdminTab('gallery')">📸 Galerie</button>
+                                <button class="tab-btn" onclick="showAdminTab('birthdays')">🎂 Anniversaires</button>
                             </div>
                             
                             <div class="tab-content">
-                                <!-- Onglet Debug -->
-                                <div id="admin-tab-debug" class="admin-tab-pane active">
-                                    <div class="admin-form">
-                                        <h4>⚠️ Problème identifié : Permissions RLS Supabase</h4>
-                                        <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                                            <p><strong>Diagnostic :</strong> Votre requête renvoie un tableau vide mais sans erreur. Cela indique que les politiques RLS (Row Level Security) de Supabase bloquent l'accès aux données de la table admin_accounts.</p>
-                                        </div>
-                                        
-                                        <div style="background: #d1ecf1; border: 1px solid #bee5eb; padding: 1rem; border-radius: 8px;">
-                                            <h5>📋 Solution étape par étape :</h5>
-                                            <ol style="margin: 1rem 0; padding-left: 1.5rem;">
-                                                <li>Connectez-vous à votre <a href="https://supabase.com/dashboard" target="_blank" style="color: var(--primary-blue);">tableau de bord Supabase</a></li>
-                                                <li>Allez dans "Table Editor" → "admin_accounts"</li>
-                                                <li>Cliquez sur "RLS" puis "New Policy"</li>
-                                                <li>Choisissez "Enable read access for authenticated users only"</li>
-                                                <li>Ou créez une politique personnalisée :</li>
-                                            </ol>
-                                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px; font-family: monospace; margin: 0.5rem 0;">
-                                                <strong>Politique SQL suggérée :</strong><br>
-                                                CREATE POLICY "Allow authenticated read admin_accounts"<br>
-                                                ON public.admin_accounts FOR SELECT<br>
-                                                TO authenticated<br>
-                                                USING (true);
-                                            </div>
-                                        </div>
-                                        <button class="btn-primary" onclick="testSupabasePermissions()">Tester après correction</button>
-                                    </div>
-                                    
-                                    <div class="admin-form">
-                                        <h4>Diagnostic des permissions Supabase</h4>
-                                        <div id="permissionTest">
-                                            <p>Test en cours...</p>
-                                        </div>
-                                        <button class="btn-secondary" onclick="testSupabasePermissions()">Relancer le test</button>
-                                    </div>
-                                    
-                                    <div class="admin-form">
-                                        <h4>Test d'accès admin_accounts</h4>
-                                        <div id="adminTestResult"></div>
-                                        <button class="btn-secondary" onclick="testAdminAccess()">Tester l'accès</button>
-                                    </div>
-                                </div>
-                                
                                 <!-- Onglet Utilisateurs -->
-                                <div id="admin-tab-users" class="admin-tab-pane">
+                                <div id="admin-tab-users" class="admin-tab-pane active">
                                     <div class="admin-form">
                                         <h4>Ajouter un administrateur</h4>
                                         <div style="display: flex; gap: 1rem; align-items: center;">
                                             <input type="email" id="newAdminEmail" placeholder="Email de l'utilisateur" class="form-input">
-                                            <button class="btn-primary" onclick="addNewAdmin()">Ajouter</button>
+                                            <button class="btn-primary" onclick="addNewAdmin()">Ajouter Admin</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="admin-form">
+                                        <h4>Modifier les informations utilisateur</h4>
+                                        <div class="form-grid">
+                                            <select id="userSelect" class="form-input" onchange="loadUserData()">
+                                                <option value="">Sélectionner un utilisateur</option>
+                                            </select>
+                                            <input type="text" id="userTeam" placeholder="Équipe" class="form-input">
+                                            <input type="date" id="userBirthday" placeholder="Date de naissance" class="form-input">
+                                            <input type="url" id="userPhotoUrl" placeholder="URL de la photo" class="form-input">
+                                            <input type="file" id="userPhotoFile" accept="image/*" class="form-input">
+                                            <button class="btn-primary" onclick="updateUserInfo()">Mettre à jour</button>
                                         </div>
                                     </div>
                                     
@@ -941,16 +959,26 @@
                                 
                                 <!-- Onglet Événements -->
                                 <div id="admin-tab-events" class="admin-tab-pane">
-                                    <div class="admin-form" id="createEventForm">
+                                    <div class="admin-form">
                                         <h4>Créer un nouvel événement</h4>
                                         <div class="form-grid">
-                                            <input type="text" id="eventTitle" placeholder="Titre de l'événement" class="form-input">
-                                            <input type="date" id="eventDate" class="form-input">
+                                            <input type="text" id="eventTitle" placeholder="Nom de l'événement" class="form-input">
+                                            <input type="date" id="eventStartDate" placeholder="Date de début" class="form-input">
+                                            <input type="date" id="eventEndDate" placeholder="Date de fin (optionnel)" class="form-input">
+                                            <input type="time" id="eventTime" placeholder="Heure" class="form-input">
                                             <input type="text" id="eventLocation" placeholder="Lieu" class="form-input">
+                                            <input type="text" id="eventDuration" placeholder="Durée" class="form-input">
+                                            <input type="url" id="eventImageUrl" placeholder="URL de l'image" class="form-input">
+                                            <input type="file" id="eventImageFile" accept="image/*" class="form-input">
                                             <textarea id="eventDescription" placeholder="Description" class="form-textarea"></textarea>
+                                            <select id="eventStatus" class="form-input">
+                                                <option value="2">À venir</option>
+                                                <option value="1">En cours</option>
+                                                <option value="3">Terminé</option>
+                                            </select>
                                         </div>
                                         <div class="form-actions">
-                                            <button class="btn-primary" onclick="createEvent()">Créer</button>
+                                            <button class="btn-primary" onclick="createEvent()">Créer l'événement</button>
                                             <button class="btn-secondary" onclick="clearEventForm()">Effacer</button>
                                         </div>
                                     </div>
@@ -960,24 +988,39 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Onglet Paramètres -->
-                                <div id="admin-tab-settings" class="admin-tab-pane">
+                                <!-- Onglet Galerie -->
+                                <div id="admin-tab-gallery" class="admin-tab-pane">
                                     <div class="admin-form">
-                                        <h4>Informations système</h4>
-                                        <div style="display: grid; gap: 0.5rem;">
-                                            <div style="display: flex; justify-content: space-between;">
-                                                <span>Version:</span>
-                                                <span>1.0.0</span>
-                                            </div>
-                                            <div style="display: flex; justify-content: space-between;">
-                                                <span>Supabase:</span>
-                                                <span id="supabaseConnectionStatus">Test...</span>
-                                            </div>
-                                            <div style="display: flex; justify-content: space-between;">
-                                                <span>URL:</span>
-                                                <span id="currentUrl">-</span>
-                                            </div>
+                                        <h4>Ajouter des photos à la galerie</h4>
+                                        <div class="form-grid">
+                                            <input type="text" id="galleryTitle" placeholder="Titre de l'album" class="form-input">
+                                            <select id="galleryEventId" class="form-input">
+                                                <option value="">Lié à un événement (optionnel)</option>
+                                            </select>
+                                            <input type="url" id="galleryImageUrl" placeholder="URL de l'image" class="form-input">
+                                            <input type="file" id="galleryImageFile" accept="image/*" multiple class="form-input">
+                                            <textarea id="galleryDescription" placeholder="Description" class="form-textarea"></textarea>
                                         </div>
+                                        <div class="form-actions">
+                                            <button class="btn-primary" onclick="addGalleryPhotos()">Ajouter les photos</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="galleryList">
+                                        <div class="loading">Chargement de la galerie...</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Onglet Anniversaires -->
+                                <div id="admin-tab-birthdays" class="admin-tab-pane">
+                                    <div class="admin-form">
+                                        <h4>Gestion des anniversaires</h4>
+                                        <p>Les anniversaires sont automatiquement synchronisés avec les dates de naissance des utilisateurs.</p>
+                                        <button class="btn-primary" onclick="generateBirthdayCalendar()">Générer le calendrier</button>
+                                    </div>
+                                    
+                                    <div id="birthdaysList">
+                                        <div class="loading">Chargement des anniversaires...</div>
                                     </div>
                                 </div>
                             </div>
@@ -1320,22 +1363,467 @@
             if (targetPane) targetPane.classList.add('active');
             if (targetBtn) targetBtn.classList.add('active');
             
-            if (tabName === 'settings') {
-                document.getElementById('currentUrl').textContent = window.location.hostname;
-                document.getElementById('supabaseConnectionStatus').textContent = '✅ Connecté';
+            loadTabContent(tabName);
+        }
+        
+        async function loadTabContent(tabName) {
+            switch (tabName) {
+                case 'users':
+                    await loadUsersList();
+                    await loadUsersForSelect();
+                    break;
+                case 'events':
+                    await loadEventsList();
+                    break;
+                case 'gallery':
+                    await loadGalleryList();
+                    await loadEventsForGallery();
+                    break;
+                case 'birthdays':
+                    await loadBirthdaysList();
+                    break;
             }
         }
-
-        function initializeAdminPanel() {
-            console.log('Initialisation du panneau admin');
-            testSupabasePermissions();
+        
+        async function loadUsersList() {
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = '<div class="loading">Chargement des utilisateurs...</div>';
+            
+            try {
+                const { data: users, error } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .order('name', { ascending: true });
+                
+                if (error) throw error;
+                
+                if (users && users.length > 0) {
+                    usersList.innerHTML = users.map(user => `
+                        <div class="user-item">
+                            <div class="user-info">
+                                <img src="${user.photo_url || '/api/placeholder/40/40'}" 
+                                     alt="${user.name}" class="user-avatar-small">
+                                <div class="user-details">
+                                    <div class="user-name">${user.name} ${user.lastname}</div>
+                                    <div class="user-email">${user.email}</div>
+                                    <div class="user-team">Équipe: ${user.teams || 'Non définie'}</div>
+                                    <div class="user-birthday">Né le: ${user.birthday ? new Date(user.birthday).toLocaleDateString('fr-FR') : 'Non défini'}</div>
+                                </div>
+                                <div class="user-role ${user.admin ? 'admin' : ''}">${user.admin ? 'ADMIN' : 'USER'}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    usersList.innerHTML = '<div class="loading">Aucun utilisateur trouvé</div>';
+                }
+            } catch (error) {
+                console.error('Erreur chargement utilisateurs:', error);
+                usersList.innerHTML = '<div class="loading">Erreur lors du chargement</div>';
+            }
+        }
+        
+        async function loadUsersForSelect() {
+            try {
+                const { data: users, error } = await supabaseClient
+                    .from('users')
+                    .select('id, name, lastname, email')
+                    .order('name', { ascending: true });
+                
+                if (error) throw error;
+                
+                const userSelect = document.getElementById('userSelect');
+                userSelect.innerHTML = '<option value="">Sélectionner un utilisateur</option>';
+                
+                if (users) {
+                    users.forEach(user => {
+                        userSelect.innerHTML += `<option value="${user.id}">${user.name} ${user.lastname} (${user.email})</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Erreur chargement select utilisateurs:', error);
+            }
+        }
+        
+        async function loadUserData() {
+            const userId = document.getElementById('userSelect').value;
+            if (!userId) return;
+            
+            try {
+                const { data: user, error } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+                
+                if (error) throw error;
+                
+                if (user) {
+                    document.getElementById('userTeam').value = user.teams || '';
+                    document.getElementById('userBirthday').value = user.birthday || '';
+                    document.getElementById('userPhotoUrl').value = user.photo_url || '';
+                }
+            } catch (error) {
+                console.error('Erreur chargement données utilisateur:', error);
+            }
+        }
+        
+        async function updateUserInfo() {
+            const userId = document.getElementById('userSelect').value;
+            if (!userId) {
+                showMessage('error', 'Veuillez sélectionner un utilisateur');
+                return;
+            }
+            
+            const team = document.getElementById('userTeam').value.trim();
+            const birthday = document.getElementById('userBirthday').value;
+            const photoUrl = document.getElementById('userPhotoUrl').value.trim();
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('users')
+                    .update({
+                        teams: team,
+                        birthday: birthday,
+                        photo_url: photoUrl,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', userId);
+                
+                if (error) throw error;
+                
+                showMessage('success', 'Informations utilisateur mises à jour');
+                await loadUsersList();
+                
+                // Clear form
+                document.getElementById('userTeam').value = '';
+                document.getElementById('userBirthday').value = '';
+                document.getElementById('userPhotoUrl').value = '';
+                document.getElementById('userSelect').value = '';
+                
+            } catch (error) {
+                console.error('Erreur mise à jour utilisateur:', error);
+                showMessage('error', `Erreur: ${error.message}`);
+            }
+        }
+        
+        async function addNewAdmin() {
+            const emailInput = document.getElementById('newAdminEmail');
+            const email = emailInput.value.trim().toLowerCase();
+            
+            if (!email || !email.includes('@')) {
+                showMessage('error', 'Veuillez saisir un email valide');
+                return;
+            }
+            
+            try {
+                // Ajouter à admin_accounts
+                const { error: adminError } = await supabaseClient
+                    .from('admin_accounts')
+                    .insert({
+                        email: email,
+                        created_at: new Date().toISOString()
+                    });
+                
+                if (adminError && adminError.code !== '23505') throw adminError;
+                
+                // Mettre à jour le statut admin dans users si l'utilisateur existe
+                const { error: userError } = await supabaseClient
+                    .from('users')
+                    .update({ admin: true })
+                    .eq('email', email);
+                
+                showMessage('success', `${email} ajouté comme administrateur`);
+                emailInput.value = '';
+                await loadUsersList();
+                
+            } catch (error) {
+                console.error('Erreur ajout admin:', error);
+                if (error.code === '23505') {
+                    showMessage('error', 'Cet email est déjà administrateur');
+                } else {
+                    showMessage('error', `Erreur: ${error.message}`);
+                }
+            }
+        }
+        
+        async function createEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            const startDate = document.getElementById('eventStartDate').value;
+            const endDate = document.getElementById('eventEndDate').value;
+            const time = document.getElementById('eventTime').value;
+            const location = document.getElementById('eventLocation').value.trim();
+            const duration = document.getElementById('eventDuration').value.trim();
+            const imageUrl = document.getElementById('eventImageUrl').value.trim();
+            const description = document.getElementById('eventDescription').value.trim();
+            const status = document.getElementById('eventStatus').value;
+            
+            if (!title || !startDate) {
+                showMessage('error', 'Nom et date de début sont obligatoires');
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('activities')
+                    .insert({
+                        name: title,
+                        activity_date: startDate,
+                        end_date: endDate || null,
+                        activity_time: time,
+                        duration: duration,
+                        location: location,
+                        image_url: imageUrl,
+                        description: description,
+                        status: parseInt(status),
+                        created_by: currentUser.id,
+                        participants: [],
+                        created_at: new Date().toISOString()
+                    });
+                
+                if (error) throw error;
+                
+                showMessage('success', 'Événement créé avec succès');
+                clearEventForm();
+                await loadEventsList();
+                await loadAdminStats();
+                
+            } catch (error) {
+                console.error('Erreur création événement:', error);
+                showMessage('error', `Erreur: ${error.message}`);
+            }
+        }
+        
+        async function loadEventsList() {
+            const eventsList = document.getElementById('eventsList');
+            eventsList.innerHTML = '<div class="loading">Chargement des événements...</div>';
+            
+            try {
+                const { data: events, error } = await supabaseClient
+                    .from('activities')
+                    .select('*')
+                    .order('activity_date', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (events && events.length > 0) {
+                    eventsList.innerHTML = events.map(event => `
+                        <div class="event-item">
+                            <div class="event-info">
+                                <div class="event-details">
+                                    <div class="event-title">${event.name}</div>
+                                    <div class="event-date">${new Date(event.activity_date).toLocaleDateString('fr-FR')} ${event.activity_time ? 'à ' + event.activity_time : ''}</div>
+                                    <div class="event-location">${event.location || ''}</div>
+                                    <div class="event-status">Status: ${event.status === 1 ? 'En cours' : event.status === 2 ? 'À venir' : 'Terminé'}</div>
+                                </div>
+                            </div>
+                            <div class="event-actions">
+                                <button class="btn-secondary" onclick="editEvent('${event.id}')">Modifier</button>
+                                <button class="btn-danger" onclick="deleteEvent('${event.id}')">Supprimer</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    eventsList.innerHTML = '<div class="loading">Aucun événement créé</div>';
+                }
+            } catch (error) {
+                console.error('Erreur chargement événements:', error);
+                eventsList.innerHTML = '<div class="loading">Erreur lors du chargement</div>';
+            }
+        }
+        
+        // Fonctions pour tous les utilisateurs
+        function showCreateOfferForm() {
+            document.getElementById('createOfferForm').style.display = 'block';
+        }
+        
+        function hideCreateOfferForm() {
+            document.getElementById('createOfferForm').style.display = 'none';
+            clearOfferForm();
+        }
+        
+        function clearOfferForm() {
+            document.getElementById('offerTitle').value = '';
+            document.getElementById('offerPrice').value = '';
+            document.getElementById('offerCategory').value = '';
+            document.getElementById('offerImageUrl').value = '';
+            document.getElementById('offerDescription').value = '';
+        }
+        
+        async function createOffer() {
+            const title = document.getElementById('offerTitle').value.trim();
+            const price = document.getElementById('offerPrice').value;
+            const category = document.getElementById('offerCategory').value;
+            const imageUrl = document.getElementById('offerImageUrl').value.trim();
+            const description = document.getElementById('offerDescription').value.trim();
+            
+            if (!title || !price || !description) {
+                showMessage('error', 'Titre, prix et description sont obligatoires');
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('offers')
+                    .insert({
+                        title: title,
+                        price: parseFloat(price),
+                        category: category,
+                        image_url: imageUrl,
+                        description: description,
+                        seller_id: currentUser.id,
+                        seller_name: currentUser.user_metadata?.full_name || currentUser.email,
+                        created_at: new Date().toISOString()
+                    });
+                
+                if (error) throw error;
+                
+                showMessage('success', 'Annonce publiée avec succès');
+                hideCreateOfferForm();
+                await loadOffersList();
+                
+            } catch (error) {
+                console.error('Erreur création annonce:', error);
+                showMessage('error', `Erreur: ${error.message}`);
+            }
+        }
+        
+        function showCreateActivityForm() {
+            document.getElementById('createActivityForm').style.display = 'block';
+        }
+        
+        function hideCreateActivityForm() {
+            document.getElementById('createActivityForm').style.display = 'none';
+            clearActivityForm();
+        }
+        
+        function clearActivityForm() {
+            document.getElementById('activityTitle').value = '';
+            document.getElementById('activityDate').value = '';
+            document.getElementById('activityTime').value = '';
+            document.getElementById('activityDuration').value = '';
+            document.getElementById('activityLocation').value = '';
+            document.getElementById('activityMaxParticipants').value = '';
+            document.getElementById('activityDescription').value = '';
+        }
+        
+        async function createActivity() {
+            const title = document.getElementById('activityTitle').value.trim();
+            const date = document.getElementById('activityDate').value;
+            const time = document.getElementById('activityTime').value;
+            const duration = document.getElementById('activityDuration').value.trim();
+            const location = document.getElementById('activityLocation').value.trim();
+            const maxParticipants = document.getElementById('activityMaxParticipants').value;
+            const description = document.getElementById('activityDescription').value.trim();
+            
+            if (!title || !date || !description) {
+                showMessage('error', 'Nom, date et description sont obligatoires');
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('activities')
+                    .insert({
+                        name: title,
+                        activity_date: date,
+                        activity_time: time,
+                        duration: duration,
+                        location: location,
+                        max_participants: maxParticipants ? parseInt(maxParticipants) : null,
+                        description: description,
+                        status: 2, // À venir
+                        created_by: currentUser.id,
+                        organizer_name: currentUser.user_metadata?.full_name || currentUser.email,
+                        participants: [],
+                        created_at: new Date().toISOString()
+                    });
+                
+                if (error) throw error;
+                
+                showMessage('success', 'Activité créée avec succès');
+                hideCreateActivityForm();
+                await loadActivitiesList();
+                
+            } catch (error) {
+                console.error('Erreur création activité:', error);
+                showMessage('error', `Erreur: ${error.message}`);
+            }
         }
 
         function clearEventForm() {
             document.getElementById('eventTitle').value = '';
-            document.getElementById('eventDate').value = '';
+            document.getElementById('eventStartDate').value = '';
+            document.getElementById('eventEndDate').value = '';
+            document.getElementById('eventTime').value = '';
             document.getElementById('eventLocation').value = '';
+            document.getElementById('eventDuration').value = '';
+            document.getElementById('eventImageUrl').value = '';
             document.getElementById('eventDescription').value = '';
+            document.getElementById('eventStatus').value = '2';
+        }
+
+        function initializeAdminPanel() {
+            console.log('Initialisation du panneau admin');
+            loadAdminStats();
+        }
+
+        async function loadAdminStats() {
+            try {
+                // Compter les utilisateurs
+                const { count: usersCount } = await supabaseClient
+                    .from('users')
+                    .select('*', { count: 'exact', head: true });
+                
+                // Compter les événements
+                const { count: eventsCount } = await supabaseClient
+                    .from('activities')
+                    .select('*', { count: 'exact', head: true });
+                
+                document.getElementById('statsUsers').textContent = usersCount || '0';
+                document.getElementById('statsEvents').textContent = eventsCount || '0';
+                document.getElementById('statsPhotos').textContent = '0';
+                document.getElementById('statsAnnonces').textContent = '0';
+                
+            } catch (error) {
+                console.error('Erreur chargement stats:', error);
+            }
+        }
+
+        // Stubs pour les fonctions manquantes
+        async function loadOffersList() {
+            // À implémenter selon vos besoins
+        }
+
+        async function loadActivitiesList() {
+            // À implémenter selon vos besoins
+        }
+
+        async function loadGalleryList() {
+            // À implémenter selon vos besoins
+        }
+
+        async function loadEventsForGallery() {
+            // À implémenter selon vos besoins
+        }
+
+        async function loadBirthdaysList() {
+            // À implémenter selon vos besoins
+        }
+
+        async function addGalleryPhotos() {
+            // À implémenter selon vos besoins
+        }
+
+        async function generateBirthdayCalendar() {
+            // À implémenter selon vos besoins
+        }
+
+        async function editEvent(id) {
+            // À implémenter selon vos besoins
+        }
+
+        async function deleteEvent(id) {
+            // À implémenter selon vos besoins
         }
 
         // Initialisation
