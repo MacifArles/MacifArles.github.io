@@ -119,7 +119,7 @@
             border-color: var(--primary-blue);
         }
 
-        /* Header sobre */
+        /* Header avec deux niveaux */
         .header {
             background: var(--white);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
@@ -128,13 +128,23 @@
             z-index: 1000;
         }
 
-        .navbar {
+        .top-bar {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1rem 2rem;
+            padding: 0.75rem 2rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 2rem;
         }
 
         .logo {
@@ -874,17 +884,43 @@
                                 <!-- Onglet Debug -->
                                 <div id="admin-tab-debug" class="admin-tab-pane active">
                                     <div class="admin-form">
+                                        <h4>⚠️ Problème identifié : Permissions RLS Supabase</h4>
+                                        <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                            <p><strong>Diagnostic :</strong> Votre requête renvoie un tableau vide mais sans erreur. Cela indique que les politiques RLS (Row Level Security) de Supabase bloquent l'accès aux données de la table admin_accounts.</p>
+                                        </div>
+                                        
+                                        <div style="background: #d1ecf1; border: 1px solid #bee5eb; padding: 1rem; border-radius: 8px;">
+                                            <h5>📋 Solution étape par étape :</h5>
+                                            <ol style="margin: 1rem 0; padding-left: 1.5rem;">
+                                                <li>Connectez-vous à votre <a href="https://supabase.com/dashboard" target="_blank" style="color: var(--primary-blue);">tableau de bord Supabase</a></li>
+                                                <li>Allez dans "Table Editor" → "admin_accounts"</li>
+                                                <li>Cliquez sur "RLS" puis "New Policy"</li>
+                                                <li>Choisissez "Enable read access for authenticated users only"</li>
+                                                <li>Ou créez une politique personnalisée :</li>
+                                            </ol>
+                                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px; font-family: monospace; margin: 0.5rem 0;">
+                                                <strong>Politique SQL suggérée :</strong><br>
+                                                CREATE POLICY "Allow authenticated read admin_accounts"<br>
+                                                ON public.admin_accounts FOR SELECT<br>
+                                                TO authenticated<br>
+                                                USING (true);
+                                            </div>
+                                        </div>
+                                        <button class="btn-primary" onclick="testSupabasePermissions()">Tester après correction</button>
+                                    </div>
+                                    
+                                    <div class="admin-form">
                                         <h4>Diagnostic des permissions Supabase</h4>
                                         <div id="permissionTest">
                                             <p>Test en cours...</p>
                                         </div>
-                                        <button class="btn-primary" onclick="testSupabasePermissions()">Tester les permissions</button>
+                                        <button class="btn-secondary" onclick="testSupabasePermissions()">Relancer le test</button>
                                     </div>
                                     
                                     <div class="admin-form">
                                         <h4>Test d'accès admin_accounts</h4>
                                         <div id="adminTestResult"></div>
-                                        <button class="btn-primary" onclick="testAdminAccess()">Tester l'accès</button>
+                                        <button class="btn-secondary" onclick="testAdminAccess()">Tester l'accès</button>
                                     </div>
                                 </div>
                                 
