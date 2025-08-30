@@ -73,6 +73,12 @@ function initializeElements() {
     elements.messageContainer = document.getElementById('message-container');
     elements.debugInfo = document.getElementById('debug-content');
     elements.supabaseStatus = document.getElementById('supabase-status');
+
+// Masquer le modal au démarrage
+    const modal = document.getElementById('user-registration-modal');
+    if (modal) {
+        modal.classList.add('modal-overlay--hidden');
+    }
 }
 
 /**
@@ -80,7 +86,7 @@ function initializeElements() {
  * @returns {void}
  */
 function setupEventListeners() {
-    // Authentification
+    // Authentification existante
     if (elements.googleLoginBtn) {
         elements.googleLoginBtn.addEventListener('click', signInWithGoogle);
     }
@@ -89,14 +95,17 @@ function setupEventListeners() {
         elements.logoutBtn.addEventListener('click', signOut);
     }
     
-    // Navigation
+    // Navigation existante
     setupNavigationListeners();
     
-    // Formulaires
+    // Formulaires existants
     setupFormListeners();
     
-    // Administration
+    // Administration existante
     setupAdminListeners();
+    
+    // Nouveau: enregistrement des utilisateurs
+    setupUserRegistrationListeners();
     
     // Gestion des sessions Supabase
     supabaseClient.auth.onAuthStateChange(handleAuthStateChange);
@@ -1195,6 +1204,208 @@ async function promoteToAdmin() {
         console.error('Erreur promotion admin:', error);
         showMessage('error', `Erreur: ${error.message}`);
     }
+
+/**
+ * Vérifie si l'utilisateur existe dans la table users personnalisée
+ * @param {string} userEmail - Email de l'utilisateur
+ * @returns {Promise<boolean>}
+ */
+async function checkUserExists(userEmail) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .select('id')
+            .eq('email', userEmail.toLowerCase().trim())
+            .single();
+        
+        if (error && error.code !== 'PGRST116') {
+            console.error('Erreur vérification utilisateur:', error);
+            return false;
+        }
+        
+        return data !== null;
+        
+    } catch (err) {
+        console.error('Exception vérification utilisateur:', err);
+        return false;
+    }
+}
+
+/**
+ * Affiche le modal d'enregistrement pour les nouveaux utilisateurs
+ * @returns {void}
+ */
+function showUserRegistrationModal() {
+    const modal = document.getElementById('user-registration-modal');
+    if (modal) {
+        modal.classList.remove('modal-overlay--hidden');
+        
+        // Focus sur le premier champ
+        const firstInput = modal.querySelector('input[type="date"]');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+    }
+}
+
+/**
+ * Masque le modal d'enregistrement
+ * @returns {void}
+ */
+function hideUserRegistrationModal() {
+    const modal = document.getElementById('user-registration-modal');
+    if (modal) {
+        modal.classList.add('modal-overlay--hidden');
+    }
+}
+
+/**
+ * Crée un nouvel utilisateur dans la table users personnalisée
+ * @param {Object} userData - Données de l'utilisateur
+ * @returns {Promise<boolean>}
+ */
+async function createNewUser(userData) {
+    try {
+        const { error } = await supabaseClient
+            .from('users')
+            .insert({
+                id: currentUser.id,
+                email: currentUser.email.toLowerCase().trim(),
+                name: userData.name,
+                lastname: userData.lastname,
+                birthday: userData.birthday,
+                teams: userData.team,
+                photo_url: currentUser.user_metadata?.avatar_url,
+                is_admin: false,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            });
+        
+        if (error) {
+            console.error('Erreur création utilisateur:', error);
+            showMessage('error', `Erreur lors de la création du profil: ${error.message}`);
+            return false;
+        }
+        
+        return true;
+        
+    } catch (err) {
+        console.error('Exception création utilisateur:', err);
+        showMessage('error', 'Erreur technique lors de la création du profil');
+        return false;
+    }
+}
+
+/**
+ * Traite une session utilisateur avec vérification d'existence
+ * @param {Object} session - Session utilisateur
+ * @returns {Promise<void>}
+ */
+async function handleUserSession(session) {
+    currentUser = session.user;
+    console.log('Utilisateur connecté:', currentUser.email);
+    
+    // Vérifier si l'utilisateur existe dans notre table users
+    const userExists = await checkUserExists(currentUser.email);
+    
+    if (!userExists) {
+        console.log('Nouvel utilisateur détecté, affichage du modal d\'enregistrement');
+        showUserRegistrationModal();
+        return; // Ne pas continuer le processus de connexion
+    }
+    
+    // Continuer le processus normal de connexion
+    await continueLoginProcess();
+}
+
+/**
+ * Continue le processus de connexion après vérification/création de l'utilisateur
+ * @returns {Promise<void>}
+ */
+async function continueLoginProcess() {
+    // Vérification du statut administrateur
+    setTimeout(async () => {
+        isAdmin = await checkAdminStatus(currentUser.email);
+        console.log('Statut admin final:', isAdmin);
+        
+        await updateUserInterface();
+        
+        if (isAdmin) {
+            showMessage('success', 'Mode administrateur activé');
+            setTimeout(initializeAdminPanel, 500);
+        }
+    }, 500);
+    
+    await updateUserInterface();
+    showMainApp();
+    
+    const displayName = currentUser.user_metadata?.full_name || currentUser.email;
+    showMessage('success', `Connexion réussie ! Bienvenue ${displayName}`);
+}
+
+/**
+ * Configure les écouteurs pour l'enregistrement des nouveaux utilisateurs
+ * @returns {void}
+ */
+function setupUserRegistrationListeners() {
+    const registrationForm = document.getElementById('user-registration-form');
+    
+    if (registrationForm) {
+        registrationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showMessage('error', 'Erreur: aucun utilisateur connecté');
+                return;
+            }
+            
+            // Extraire les données du formulaire
+            const formData = new FormData(e.target);
+            const birthday = formData.get('birthday');
+            const team = formData.get('team');
+            
+            // Valider les données
+            if (!birthday || !team) {
+                showMessage('error', 'Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+            
+            // Extraire nom et prénom du profil Google
+            const fullName = currentUser.user_metadata?.full_name || '';
+            const nameParts = fullName.split(' ');
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+            
+            // Créer l'utilisateur
+            const userData = {
+                name: firstName,
+                lastname: lastName,
+                birthday: birthday,
+                team: team
+            };
+            
+            const success = await createNewUser(userData);
+            
+            if (success) {
+                hideUserRegistrationModal();
+                showMessage('success', 'Profil créé avec succès ! Bienvenue dans l\'intranet MACIF Arles');
+                await continueLoginProcess();
+            }
+        });
+    }
+    
+    // Empêcher la fermeture du modal en cliquant à l'extérieur
+    const modal = document.getElementById('user-registration-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            // Ne fermer que si on clique sur l'overlay, pas sur le contenu
+            if (e.target === modal) {
+                // Afficher un message d'information plutôt que de fermer
+                showMessage('info', 'Veuillez compléter votre profil pour accéder à l\'intranet');
+            }
+        });
+    }
+}
 }
 
 // ===== INITIALISATION DE L'APPLICATION =====
