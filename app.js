@@ -697,40 +697,75 @@ function setupUserRegistrationListeners() {
     if (registrationForm) {
         registrationForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            console.log('=== SOUMISSION FORMULAIRE ENREGISTREMENT ===');
+            console.log('=== SOUMISSION FORMULAIRE ENREGISTREMENT (PLEINE PAGE) ===');
             
             if (!currentUser) {
                 showMessage('error', 'Erreur: aucun utilisateur connecté');
                 return;
             }
             
-            const formData = new FormData(e.target);
-            const birthday = formData.get('birthday');
-            const team = formData.get('team');
+            // Désactiver le bouton de soumission pendant le traitement
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Création en cours...';
             
-            if (!birthday || !team) {
-                showMessage('error', 'Veuillez remplir tous les champs obligatoires');
-                return;
+            try {
+                const formData = new FormData(e.target);
+                const birthday = formData.get('birthday');
+                const team = formData.get('team');
+                
+                if (!birthday || !team) {
+                    showMessage('error', 'Veuillez remplir tous les champs obligatoires');
+                    return;
+                }
+                
+                const fullName = currentUser.user_metadata?.full_name || '';
+                const nameParts = fullName.split(' ');
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || '';
+                
+                const userData = {
+                    name: firstName,
+                    lastname: lastName,
+                    birthday: birthday,
+                    team: team
+                };
+                
+                const success = await createNewUser(userData);
+                
+                if (success) {
+                    showMessage('success', 'Profil créé avec succès ! Bienvenue dans l\'intranet MACIF Arles');
+                    
+                    // Attendre un peu pour que l'utilisateur voie le message de succès
+                    setTimeout(async () => {
+                        // Masquer le formulaire d'enregistrement
+                        hideUserRegistrationModal();
+                        
+                        // Procéder à la connexion complète
+                        await continueLoginProcess();
+                    }, 1500);
+                } else {
+                    showMessage('error', 'Erreur lors de la création du profil');
+                }
+                
+            } catch (error) {
+                console.error('Erreur lors de la soumission du formulaire:', error);
+                showMessage('error', 'Erreur technique lors de la création du profil');
+            } finally {
+                // Réactiver le bouton
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             }
-            
-            const fullName = currentUser.user_metadata?.full_name || '';
-            const nameParts = fullName.split(' ');
-            const firstName = nameParts[0] || '';
-            const lastName = nameParts.slice(1).join(' ') || '';
-            
-            const userData = {
-                name: firstName,
-                lastname: lastName,
-                birthday: birthday,
-                team: team
-            };
-            
-            const success = await createNewUser(userData);
-            
-            if (success) {
-                hideUserRegistrationModal();
-                showMessage('success', 'Profil créé avec succès !');
-                await continueLoginProcess();
+        });
+    }
+    
+    // Empêcher la fermeture accidentelle du formulaire
+    const modal = document.getElementById('user-registration-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                showMessage('info', 'Veuillez compléter votre profil pour accéder à l\'intranet');
             }
         });
     }
