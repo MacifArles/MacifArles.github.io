@@ -30,6 +30,40 @@
         </div>
     </div>
 
+
+<!-- Modal d'enregistrement des nouveaux utilisateurs -->
+<div id="user-registration-modal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2>Finalisation de votre profil</h2>
+            <p>Quelques informations supplémentaires sont nécessaires pour compléter votre inscription.</p>
+        </div>
+        
+        <form id="user-registration-form" class="form">
+            <div class="form-group">
+                <label for="user-birthday">Date d'anniversaire</label>
+                <input type="date" id="user-birthday" name="birthday" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="user-team">Équipe</label>
+                <select id="user-team" name="team" class="form-input" required>
+                    <option value="">Sélectionnez votre équipe</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Gestion">Gestion</option>
+                    <option value="Direction">Direction</option>
+                    <option value="Support">Support</option>
+                    <option value="FAD'ARLES">FAD'ARLES</option>
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn--primary">Valider mon inscription</button>
+            </div>
+        </form>
+    </div>
+</div>
+
     <!-- Application principale -->
     <div id="main-app" class="main-app">
         <!-- Header -->
@@ -336,3 +370,4 @@
     <script src="app.js"></script>
 </body>
 </html>
+
