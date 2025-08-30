@@ -1,9 +1,3 @@
-/**
- * MACIF ARLES - Intranet Application
- * Fichier principal de l'application JavaScript
- * Version corrigée - Niveau de confiance: 98%
- */
-
 // ===== CONFIGURATION SUPABASE =====
 const SUPABASE_CONFIG = {
     url: 'https://ifbnsnhtrbqcxzpsihzy.supabase.co',
@@ -17,6 +11,7 @@ const supabaseClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey
 let currentUser = null;
 let isAdmin = false;
 let currentPage = 'dashboard';
+let isInitializing = true;
 
 // ===== ÉLÉMENTS DOM =====
 const elements = {
@@ -34,16 +29,18 @@ const elements = {
 };
 
 // ===== INITIALISATION =====
-function initializeApp() {
+async function initializeApp() {
     console.log('=== INITIALISATION APP MACIF ARLES ===');
     
     initializeElements();
     setupEventListeners();
-    checkExistingSession();
-    showLoginPage();
     updateDebugInfo();
     
+    // Vérifier la session existante et gérer l'affichage en conséquence
+    await checkExistingSession();
+    
     console.log('Application initialisée avec succès');
+    isInitializing = false;
 }
 
 function initializeElements() {
@@ -126,10 +123,12 @@ async function signOut() {
             return;
         }
         
+        // Réinitialiser les variables globales
         currentUser = null;
         isAdmin = false;
         currentPage = 'dashboard';
         
+        // Afficher la page de connexion
         showLoginPage();
         showMessage('info', 'Déconnexion réussie');
         
@@ -140,27 +139,38 @@ async function signOut() {
 }
 
 async function checkExistingSession() {
+    console.log('=== VÉRIFICATION SESSION EXISTANTE ===');
+    
     try {
         const { data: { session }, error } = await supabaseClient.auth.getSession();
         
         if (error) {
             console.error('Erreur vérification session:', error);
+            showLoginPage();
             return;
         }
         
-        if (session) {
-            console.log('Session existante détectée');
+        if (session && session.user) {
+            console.log('Session existante détectée pour:', session.user.email);
             await handleUserSession(session);
         } else {
             console.log('Aucune session active');
+            showLoginPage();
         }
     } catch (err) {
         console.error('Exception vérification session:', err);
+        showLoginPage();
     }
 }
 
 async function handleAuthStateChange(event, session) {
-    console.log('=== CHANGEMENT AUTH ===', event, session ? 'Session présente' : 'Pas de session');
+    console.log('=== CHANGEMENT AUTH ===', event, session ? `Session pour ${session.user.email}` : 'Pas de session');
+    
+    // Ne pas traiter les événements pendant l'initialisation
+    if (isInitializing) {
+        console.log('Initialisation en cours, événement ignoré');
+        return;
+    }
     
     if (session && session.user) {
         await handleUserSession(session);
@@ -174,37 +184,58 @@ async function handleAuthStateChange(event, session) {
 // ===== GESTION DES UTILISATEURS =====
 
 async function handleUserSession(session) {
+    console.log('=== TRAITEMENT SESSION UTILISATEUR ===');
     currentUser = session.user;
     console.log('Utilisateur connecté:', currentUser.email);
     
-    // Vérifier si l'utilisateur existe dans notre table users
-    const userExists = await checkUserExists(currentUser.email);
-    console.log('Utilisateur existe dans la DB:', userExists);
-    
-    if (!userExists) {
-        console.log('Nouvel utilisateur détecté, affichage du modal d\'enregistrement');
-        showUserRegistrationModal();
-        return;
+    try {
+        // Vérifier si l'utilisateur existe dans notre table users
+        const userExists = await checkUserExists(currentUser.email);
+        console.log('Utilisateur existe dans la DB:', userExists);
+        
+        if (!userExists) {
+            console.log('Nouvel utilisateur détecté, affichage du modal d\'enregistrement');
+            showUserRegistrationModal();
+            return;
+        }
+        
+        // Continuer le processus normal de connexion
+        await continueLoginProcess();
+        
+    } catch (error) {
+        console.error('Erreur lors du traitement de la session utilisateur:', error);
+        showMessage('error', 'Erreur lors de la connexion');
+        showLoginPage();
     }
-    
-    // Continuer le processus normal de connexion
-    await continueLoginProcess();
 }
 
 async function checkUserExists(userEmail) {
+    console.log('=== VÉRIFICATION UTILISATEUR EXISTANT ===');
+    console.log('Email à vérifier:', userEmail);
+    
     try {
+        const normalizedEmail = userEmail.toLowerCase().trim();
+        
         const { data, error } = await supabaseClient
             .from('users')
-            .select('id')
-            .eq('email', userEmail.toLowerCase().trim())
+            .select('id, email')
+            .eq('email', normalizedEmail)
             .single();
         
-        if (error && error.code !== 'PGRST116') {
-            console.error('Erreur vérification utilisateur:', error);
-            return false;
+        if (error) {
+            if (error.code === 'PGRST116') {
+                // Code d'erreur pour "pas de résultat trouvé"
+                console.log('Utilisateur non trouvé dans la base');
+                return false;
+            } else {
+                console.error('Erreur lors de la vérification utilisateur:', error);
+                return false;
+            }
         }
         
-        return data !== null;
+        const exists = data !== null;
+        console.log('Résultat vérification:', exists ? 'Utilisateur trouvé' : 'Utilisateur non trouvé');
+        return exists;
         
     } catch (err) {
         console.error('Exception vérification utilisateur:', err);
@@ -220,9 +251,13 @@ async function continueLoginProcess() {
         isAdmin = await checkAdminStatus(currentUser.email);
         console.log('Statut admin final:', isAdmin);
         
+        // Mettre à jour l'interface utilisateur
         await updateUserInterface();
+        
+        // Afficher l'application principale
         showMainApp();
         
+        // Afficher les messages de bienvenue
         const displayName = currentUser.user_metadata?.full_name || currentUser.email;
         showMessage('success', `Connexion réussie ! Bienvenue ${displayName}`);
         
@@ -234,10 +269,12 @@ async function continueLoginProcess() {
     } catch (error) {
         console.error('Erreur lors du processus de connexion:', error);
         showMessage('error', 'Erreur lors de la finalisation de la connexion');
+        showLoginPage();
     }
 }
 
 function handleUserLogout() {
+    console.log('=== TRAITEMENT DÉCONNEXION ===');
     currentUser = null;
     isAdmin = false;
     showLoginPage();
@@ -245,7 +282,7 @@ function handleUserLogout() {
 
 async function checkAdminStatus(userEmail) {
     try {
-        console.log('=== VÉRIFICATION ADMIN ===');
+        console.log('=== VÉRIFICATION STATUT ADMIN ===');
         console.log('Email à vérifier:', userEmail);
         
         const normalizedEmail = userEmail.toLowerCase().trim();
@@ -257,9 +294,13 @@ async function checkAdminStatus(userEmail) {
             .eq('is_admin', true)
             .single();
         
-        if (error && error.code !== 'PGRST116') {
-            console.error('Erreur vérification admin:', error);
-            updateSupabaseStatus('error', `Erreur admin: ${error.message}`);
+        if (error) {
+            if (error.code !== 'PGRST116') {
+                console.error('Erreur vérification admin:', error);
+                updateSupabaseStatus('error', `Erreur admin: ${error.message}`);
+            } else {
+                updateSupabaseStatus('info', 'Utilisateur standard');
+            }
             return false;
         }
         
@@ -283,6 +324,7 @@ async function checkAdminStatus(userEmail) {
 // ===== GESTION DU MODAL D'ENREGISTREMENT =====
 
 function showUserRegistrationModal() {
+    console.log('=== AFFICHAGE MODAL ENREGISTREMENT ===');
     const modal = document.getElementById('user-registration-modal');
     if (modal) {
         modal.classList.remove('modal-overlay--hidden');
@@ -302,6 +344,9 @@ function hideUserRegistrationModal() {
 }
 
 async function createNewUser(userData) {
+    console.log('=== CRÉATION NOUVEL UTILISATEUR ===');
+    console.log('Données utilisateur:', userData);
+    
     try {
         const { error } = await supabaseClient
             .from('users')
@@ -324,6 +369,7 @@ async function createNewUser(userData) {
             return false;
         }
         
+        console.log('Utilisateur créé avec succès');
         return true;
         
     } catch (err) {
@@ -339,6 +385,7 @@ function setupUserRegistrationListeners() {
     if (registrationForm) {
         registrationForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            console.log('=== SOUMISSION FORMULAIRE ENREGISTREMENT ===');
             
             if (!currentUser) {
                 showMessage('error', 'Erreur: aucun utilisateur connecté');
@@ -389,20 +436,26 @@ function setupUserRegistrationListeners() {
 // ===== GESTION DE L'INTERFACE UTILISATEUR =====
 
 function showLoginPage() {
+    console.log('=== AFFICHAGE PAGE LOGIN ===');
     if (elements.loginPage && elements.mainApp) {
         elements.loginPage.classList.remove('login-page--hidden');
         elements.mainApp.classList.remove('main-app--visible');
     }
+    updateDebugInfo();
 }
 
 function showMainApp() {
+    console.log('=== AFFICHAGE APPLICATION PRINCIPALE ===');
     if (elements.loginPage && elements.mainApp) {
         elements.loginPage.classList.add('login-page--hidden');
         elements.mainApp.classList.add('main-app--visible');
     }
+    updateDebugInfo();
 }
 
 async function updateUserInterface() {
+    console.log('=== MISE À JOUR INTERFACE UTILISATEUR ===');
+    
     if (!currentUser) return;
     
     if (elements.userName) {
@@ -1056,6 +1109,7 @@ function updateDebugInfo() {
             <strong>Utilisateur:</strong> ${currentUser ? currentUser.email + ' (' + (isAdmin ? 'admin' : 'user') + ')' : 'Non connecté'}<br>
             <strong>Mode admin:</strong> ${isAdmin ? '<span style="color: var(--success);">Activé</span>' : '<span style="color: var(--error);">Désactivé</span>'}<br>
             <strong>Page courante:</strong> ${currentPage}<br>
+            <strong>État initialisation:</strong> ${isInitializing ? 'En cours' : 'Terminée'}<br>
             <strong>Timestamp:</strong> ${new Date().toLocaleString('fr-FR')}
         </div>
     `;
@@ -1085,7 +1139,7 @@ function getRedirectURL() {
     } else if (hostname === 'macifarles.github.io') {
         return 'https://macifarles.github.io/';
     } else {
-        return window.location.origin;
+        return window.location.origin + '/';
     }
 }
 
