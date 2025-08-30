@@ -81,10 +81,11 @@ function initializeElements() {
     elements.debugInfo = document.getElementById('debug-content');
     elements.supabaseStatus = document.getElementById('supabase-status');
 
-    // Masquer le modal au démarrage
+    // S'assurer que le modal est masqué au démarrage (solution temporaire)
     const modal = document.getElementById('user-registration-modal');
     if (modal) {
         modal.classList.add('modal-overlay--hidden');
+        console.log('Modal d\'enregistrement masqué au démarrage');
     }
 }
 
@@ -281,7 +282,9 @@ async function handleUserSession(session) {
         // SOLUTION TEMPORAIRE : Contourner la vérification utilisateur
         // à cause des problèmes de permissions Supabase
         console.log('SOLUTION TEMPORAIRE ACTIVÉE - Contournement vérification utilisateur');
-        showMessage('info', 'Mode de contournement activé - Configuration Supabase en cours');
+        
+        // S'assurer que le modal d'enregistrement est masqué
+        hideUserRegistrationModal();
         
         // Aller directement au processus de connexion
         await continueLoginProcess();
