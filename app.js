@@ -1,7 +1,7 @@
 /**
  * MACIF ARLES - Intranet Application
  * Fichier principal de l'application JavaScript
- * Niveau de confiance: 95%
+ * Version corrigée - Niveau de confiance: 98%
  */
 
 // ===== CONFIGURATION SUPABASE =====
@@ -34,33 +34,18 @@ const elements = {
 };
 
 // ===== INITIALISATION =====
-/**
- * Initialise l'application au chargement du DOM
- * @returns {void}
- */
 function initializeApp() {
     console.log('=== INITIALISATION APP MACIF ARLES ===');
     
-    // Récupération des éléments DOM
     initializeElements();
-    
-    // Configuration des écouteurs d'événements
     setupEventListeners();
-    
-    // Vérification de la session existante
     checkExistingSession();
-    
-    // Affichage initial
     showLoginPage();
     updateDebugInfo();
     
     console.log('Application initialisée avec succès');
 }
 
-/**
- * Récupère et stocke les références aux éléments DOM
- * @returns {void}
- */
 function initializeElements() {
     elements.loginPage = document.getElementById('login-page');
     elements.mainApp = document.getElementById('main-app');
@@ -74,19 +59,14 @@ function initializeElements() {
     elements.debugInfo = document.getElementById('debug-content');
     elements.supabaseStatus = document.getElementById('supabase-status');
 
-// Masquer le modal au démarrage
+    // Masquer le modal au démarrage
     const modal = document.getElementById('user-registration-modal');
     if (modal) {
         modal.classList.add('modal-overlay--hidden');
     }
 }
 
-/**
- * Configure tous les écouteurs d'événements
- * @returns {void}
- */
 function setupEventListeners() {
-    // Authentification existante
     if (elements.googleLoginBtn) {
         elements.googleLoginBtn.addEventListener('click', signInWithGoogle);
     }
@@ -95,16 +75,9 @@ function setupEventListeners() {
         elements.logoutBtn.addEventListener('click', signOut);
     }
     
-    // Navigation existante
     setupNavigationListeners();
-    
-    // Formulaires existants
     setupFormListeners();
-    
-    // Administration existante
     setupAdminListeners();
-    
-    // Nouveau: enregistrement des utilisateurs
     setupUserRegistrationListeners();
     
     // Gestion des sessions Supabase
@@ -113,15 +86,12 @@ function setupEventListeners() {
 
 // ===== GESTION DE L'AUTHENTIFICATION =====
 
-/**
- * Initie la connexion avec Google OAuth
- * @returns {Promise<void>}
- */
 async function signInWithGoogle() {
     console.log('=== TENTATIVE CONNEXION GOOGLE ===');
     
     try {
         const redirectURL = getRedirectURL();
+        console.log('URL de redirection:', redirectURL);
         
         const { data, error } = await supabaseClient.auth.signInWithOAuth({
             provider: 'google',
@@ -144,10 +114,6 @@ async function signInWithGoogle() {
     }
 }
 
-/**
- * Déconnecte l'utilisateur actuel
- * @returns {Promise<void>}
- */
 async function signOut() {
     console.log('=== DÉCONNEXION ===');
     
@@ -160,7 +126,6 @@ async function signOut() {
             return;
         }
         
-        // Reset des variables globales
         currentUser = null;
         isAdmin = false;
         currentPage = 'dashboard';
@@ -174,10 +139,6 @@ async function signOut() {
     }
 }
 
-/**
- * Vérifie s'il existe une session active au démarrage
- * @returns {Promise<void>}
- */
 async function checkExistingSession() {
     try {
         const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -198,14 +159,8 @@ async function checkExistingSession() {
     }
 }
 
-/**
- * Gère les changements d'état d'authentification
- * @param {string} event - Type d'événement
- * @param {Object} session - Session utilisateur
- * @returns {Promise<void>}
- */
 async function handleAuthStateChange(event, session) {
-    console.log('=== CHANGEMENT AUTH ===', event);
+    console.log('=== CHANGEMENT AUTH ===', event, session ? 'Session présente' : 'Pas de session');
     
     if (session && session.user) {
         await handleUserSession(session);
@@ -216,61 +171,85 @@ async function handleAuthStateChange(event, session) {
     updateDebugInfo();
 }
 
-/**
- * Traite une session utilisateur valide
- * @param {Object} session - Session utilisateur
- * @returns {Promise<void>}
- */
+// ===== GESTION DES UTILISATEURS =====
+
 async function handleUserSession(session) {
     currentUser = session.user;
     console.log('Utilisateur connecté:', currentUser.email);
     
-    // Vérification du statut administrateur avec délai
-    setTimeout(async () => {
+    // Vérifier si l'utilisateur existe dans notre table users
+    const userExists = await checkUserExists(currentUser.email);
+    console.log('Utilisateur existe dans la DB:', userExists);
+    
+    if (!userExists) {
+        console.log('Nouvel utilisateur détecté, affichage du modal d\'enregistrement');
+        showUserRegistrationModal();
+        return;
+    }
+    
+    // Continuer le processus normal de connexion
+    await continueLoginProcess();
+}
+
+async function checkUserExists(userEmail) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .select('id')
+            .eq('email', userEmail.toLowerCase().trim())
+            .single();
+        
+        if (error && error.code !== 'PGRST116') {
+            console.error('Erreur vérification utilisateur:', error);
+            return false;
+        }
+        
+        return data !== null;
+        
+    } catch (err) {
+        console.error('Exception vérification utilisateur:', err);
+        return false;
+    }
+}
+
+async function continueLoginProcess() {
+    console.log('=== CONTINUATION DU PROCESSUS DE CONNEXION ===');
+    
+    try {
+        // Vérification du statut administrateur
         isAdmin = await checkAdminStatus(currentUser.email);
         console.log('Statut admin final:', isAdmin);
         
         await updateUserInterface();
+        showMainApp();
+        
+        const displayName = currentUser.user_metadata?.full_name || currentUser.email;
+        showMessage('success', `Connexion réussie ! Bienvenue ${displayName}`);
         
         if (isAdmin) {
-            showMessage('success', '🔥 Mode administrateur activé !');
+            showMessage('success', 'Mode administrateur activé');
             setTimeout(initializeAdminPanel, 500);
         }
-    }, 500);
-    
-    await updateUserInterface();
-    showMainApp();
-    
-    const displayName = currentUser.user_metadata?.full_name || currentUser.email;
-    showMessage('success', `Connexion réussie ! Bienvenue ${displayName}`);
+        
+    } catch (error) {
+        console.error('Erreur lors du processus de connexion:', error);
+        showMessage('error', 'Erreur lors de la finalisation de la connexion');
+    }
 }
 
-/**
- * Traite une déconnexion utilisateur
- * @returns {void}
- */
 function handleUserLogout() {
     currentUser = null;
     isAdmin = false;
     showLoginPage();
 }
 
-// ===== GESTION DES PERMISSIONS =====
-
-/**
- * Vérifie si l'utilisateur est administrateur
- * @param {string} userEmail - Email de l'utilisateur
- * @returns {Promise<boolean>}
- */
 async function checkAdminStatus(userEmail) {
     try {
         console.log('=== VÉRIFICATION ADMIN ===');
         console.log('Email à vérifier:', userEmail);
         
         const normalizedEmail = userEmail.toLowerCase().trim();
-        console.log('Email normalisé:', normalizedEmail);
         
-        // Requête pour récupérer tous les admins
         const { data, error } = await supabaseClient
             .from('users')
             .select('id, email, is_admin')
@@ -286,10 +265,8 @@ async function checkAdminStatus(userEmail) {
         
         const isAdminUser = data && data.is_admin === true;
         
-        console.log('Statut admin trouvé:', isAdminUser);
-        
         if (isAdminUser) {
-            updateSupabaseStatus('success', 'Mode admin détecté ✅');
+            updateSupabaseStatus('success', 'Mode admin détecté');
         } else {
             updateSupabaseStatus('info', 'Utilisateur standard');
         }
@@ -303,12 +280,114 @@ async function checkAdminStatus(userEmail) {
     }
 }
 
+// ===== GESTION DU MODAL D'ENREGISTREMENT =====
+
+function showUserRegistrationModal() {
+    const modal = document.getElementById('user-registration-modal');
+    if (modal) {
+        modal.classList.remove('modal-overlay--hidden');
+        
+        const firstInput = modal.querySelector('input[type="date"]');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+    }
+}
+
+function hideUserRegistrationModal() {
+    const modal = document.getElementById('user-registration-modal');
+    if (modal) {
+        modal.classList.add('modal-overlay--hidden');
+    }
+}
+
+async function createNewUser(userData) {
+    try {
+        const { error } = await supabaseClient
+            .from('users')
+            .insert({
+                id: currentUser.id,
+                email: currentUser.email.toLowerCase().trim(),
+                name: userData.name,
+                lastname: userData.lastname,
+                birthday: userData.birthday,
+                teams: userData.team,
+                photo_url: currentUser.user_metadata?.avatar_url,
+                is_admin: false,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            });
+        
+        if (error) {
+            console.error('Erreur création utilisateur:', error);
+            showMessage('error', `Erreur lors de la création du profil: ${error.message}`);
+            return false;
+        }
+        
+        return true;
+        
+    } catch (err) {
+        console.error('Exception création utilisateur:', err);
+        showMessage('error', 'Erreur technique lors de la création du profil');
+        return false;
+    }
+}
+
+function setupUserRegistrationListeners() {
+    const registrationForm = document.getElementById('user-registration-form');
+    
+    if (registrationForm) {
+        registrationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showMessage('error', 'Erreur: aucun utilisateur connecté');
+                return;
+            }
+            
+            const formData = new FormData(e.target);
+            const birthday = formData.get('birthday');
+            const team = formData.get('team');
+            
+            if (!birthday || !team) {
+                showMessage('error', 'Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+            
+            const fullName = currentUser.user_metadata?.full_name || '';
+            const nameParts = fullName.split(' ');
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+            
+            const userData = {
+                name: firstName,
+                lastname: lastName,
+                birthday: birthday,
+                team: team
+            };
+            
+            const success = await createNewUser(userData);
+            
+            if (success) {
+                hideUserRegistrationModal();
+                showMessage('success', 'Profil créé avec succès ! Bienvenue dans l\'intranet MACIF Arles');
+                await continueLoginProcess();
+            }
+        });
+    }
+    
+    const modal = document.getElementById('user-registration-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                showMessage('info', 'Veuillez compléter votre profil pour accéder à l\'intranet');
+            }
+        });
+    }
+}
+
 // ===== GESTION DE L'INTERFACE UTILISATEUR =====
 
-/**
- * Affiche la page de connexion
- * @returns {void}
- */
 function showLoginPage() {
     if (elements.loginPage && elements.mainApp) {
         elements.loginPage.classList.remove('login-page--hidden');
@@ -316,10 +395,6 @@ function showLoginPage() {
     }
 }
 
-/**
- * Affiche l'application principale
- * @returns {void}
- */
 function showMainApp() {
     if (elements.loginPage && elements.mainApp) {
         elements.loginPage.classList.add('login-page--hidden');
@@ -327,14 +402,9 @@ function showMainApp() {
     }
 }
 
-/**
- * Met à jour l'interface après connexion
- * @returns {Promise<void>}
- */
 async function updateUserInterface() {
     if (!currentUser) return;
     
-    // Nom d'utilisateur
     if (elements.userName) {
         const displayName = currentUser.user_metadata?.full_name || 
                            currentUser.user_metadata?.name || 
@@ -342,13 +412,11 @@ async function updateUserInterface() {
         elements.userName.textContent = displayName;
     }
     
-    // Avatar utilisateur
     if (elements.userAvatar && currentUser.user_metadata?.avatar_url) {
         elements.userAvatar.src = currentUser.user_metadata.avatar_url;
         elements.userAvatar.alt = `Avatar de ${elements.userName.textContent}`;
     }
     
-    // Badge administrateur
     if (elements.adminBadge) {
         if (isAdmin) {
             elements.adminBadge.classList.add('admin-badge--visible');
@@ -357,7 +425,6 @@ async function updateUserInterface() {
         }
     }
     
-    // Menu administrateur
     if (elements.adminNavItem) {
         if (isAdmin) {
             elements.adminNavItem.classList.add('nav-item--visible');
@@ -369,12 +436,7 @@ async function updateUserInterface() {
 
 // ===== NAVIGATION =====
 
-/**
- * Configure les écouteurs pour la navigation
- * @returns {void}
- */
 function setupNavigationListeners() {
-    // Navigation par les liens du menu
     const navLinks = document.querySelectorAll('[data-page]');
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -384,7 +446,6 @@ function setupNavigationListeners() {
         });
     });
     
-    // Navigation par les cartes features
     const featureCards = document.querySelectorAll('.feature-card[data-page]');
     featureCards.forEach(card => {
         card.addEventListener('click', () => {
@@ -394,44 +455,28 @@ function setupNavigationListeners() {
     });
 }
 
-/**
- * Navigue vers une page spécifique
- * @param {string} pageId - Identifiant de la page
- * @returns {void}
- */
 function navigateToPage(pageId) {
-    // Masquer toutes les pages
     const pages = document.querySelectorAll('.page-content');
     pages.forEach(page => page.classList.remove('page-content--active'));
     
-    // Retirer le style actif de tous les liens
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => link.classList.remove('nav-link--active'));
     
-    // Afficher la page cible
     const targetPage = document.getElementById(`page-${pageId}`);
     if (targetPage) {
         targetPage.classList.add('page-content--active');
         currentPage = pageId;
     }
     
-    // Activer le lien correspondant
     const activeLink = document.querySelector(`[data-page="${pageId}"]`);
     if (activeLink && activeLink.classList.contains('nav-link')) {
         activeLink.classList.add('nav-link--active');
     }
     
-    // Charger le contenu de la page si nécessaire
     loadPageContent(pageId);
-    
     console.log(`Navigation vers: ${pageId}`);
 }
 
-/**
- * Charge le contenu dynamique d'une page
- * @param {string} pageId - Identifiant de la page
- * @returns {Promise<void>}
- */
 async function loadPageContent(pageId) {
     switch (pageId) {
         case 'trombinoscope':
@@ -462,12 +507,7 @@ async function loadPageContent(pageId) {
 
 // ===== GESTION DES FORMULAIRES =====
 
-/**
- * Configure les écouteurs pour les formulaires
- * @returns {void}
- */
 function setupFormListeners() {
-    // Formulaire d'offres
     const createOfferBtn = document.getElementById('create-offer-btn');
     const cancelOfferBtn = document.getElementById('cancel-offer-btn');
     const offerForm = document.getElementById('offer-form');
@@ -489,7 +529,6 @@ function setupFormListeners() {
         offerForm.addEventListener('submit', handleOfferSubmission);
     }
     
-    // Formulaire d'activités
     const createActivityBtn = document.getElementById('create-activity-btn');
     const cancelActivityBtn = document.getElementById('cancel-activity-btn');
     const activityForm = document.getElementById('activity-form');
@@ -512,12 +551,6 @@ function setupFormListeners() {
     }
 }
 
-/**
- * Affiche ou masque un formulaire
- * @param {string} formId - Identifiant du formulaire
- * @param {boolean} show - Afficher ou masquer
- * @returns {void}
- */
 function toggleFormVisibility(formId, show) {
     const form = document.getElementById(formId);
     if (form) {
@@ -529,11 +562,6 @@ function toggleFormVisibility(formId, show) {
     }
 }
 
-/**
- * Remet à zéro un formulaire
- * @param {string} formId - Identifiant du formulaire
- * @returns {void}
- */
 function resetForm(formId) {
     const form = document.getElementById(formId);
     if (form) {
@@ -541,19 +569,11 @@ function resetForm(formId) {
     }
 }
 
-// ===== GESTION DES DONNÉES =====
-
-/**
- * Traite la soumission du formulaire d'offre
- * @param {Event} e - Événement de soumission
- * @returns {Promise<void>}
- */
 async function handleOfferSubmission(e) {
     e.preventDefault();
     
-    const formData = new FormData(e.target);
     const offerData = {
-        title: formData.get('title') || document.getElementById('offer-title').value,
+        title: document.getElementById('offer-title').value,
         price: parseFloat(document.getElementById('offer-price').value) || null,
         type: document.getElementById('offer-type').value,
         image_url: document.getElementById('offer-image-url').value || null,
@@ -586,11 +606,6 @@ async function handleOfferSubmission(e) {
     }
 }
 
-/**
- * Traite la soumission du formulaire d'activité
- * @param {Event} e - Événement de soumission
- * @returns {Promise<void>}
- */
 async function handleActivitySubmission(e) {
     e.preventDefault();
     
@@ -631,10 +646,6 @@ async function handleActivitySubmission(e) {
 
 // ===== CHARGEMENT DU CONTENU =====
 
-/**
- * Charge le contenu du trombinoscope
- * @returns {Promise<void>}
- */
 async function loadTrombinoscope() {
     const container = document.getElementById('trombinoscope-content');
     if (!container) return;
@@ -670,10 +681,6 @@ async function loadTrombinoscope() {
     }
 }
 
-/**
- * Charge les anniversaires
- * @returns {Promise<void>}
- */
 async function loadAnniversaires() {
     const container = document.getElementById('anniversaires-content');
     if (!container) return;
@@ -717,10 +724,6 @@ async function loadAnniversaires() {
     }
 }
 
-/**
- * Charge les événements FAD'ARLES
- * @returns {Promise<void>}
- */
 async function loadFadArles() {
     const container = document.getElementById('fadarles-content');
     if (!container) return;
@@ -757,10 +760,6 @@ async function loadFadArles() {
     }
 }
 
-/**
- * Charge la galerie photos
- * @returns {Promise<void>}
- */
 async function loadGalerie() {
     const container = document.getElementById('galerie-content');
     if (!container) return;
@@ -798,10 +797,6 @@ async function loadGalerie() {
     }
 }
 
-/**
- * Charge les bonnes affaires
- * @returns {Promise<void>}
- */
 async function loadBonnesAffaires() {
     const container = document.getElementById('offers-list');
     if (!container) return;
@@ -842,10 +837,6 @@ async function loadBonnesAffaires() {
     }
 }
 
-/**
- * Charge les activités
- * @returns {Promise<void>}
- */
 async function loadActivites() {
     const container = document.getElementById('activities-list');
     if (!container) return;
@@ -887,12 +878,7 @@ async function loadActivites() {
 
 // ===== ADMINISTRATION =====
 
-/**
- * Configure les écouteurs pour l'administration
- * @returns {void}
- */
 function setupAdminListeners() {
-    // Onglets d'administration
     const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -902,21 +888,12 @@ function setupAdminListeners() {
     });
 }
 
-/**
- * Initialise le panneau d'administration
- * @returns {Promise<void>}
- */
 async function initializeAdminPanel() {
     if (!isAdmin) return;
-    
     console.log('Initialisation du panneau admin');
     await loadAdminStats();
 }
 
-/**
- * Charge le panneau d'administration
- * @returns {Promise<void>}
- */
 async function loadAdminPanel() {
     if (!isAdmin) {
         showMessage('error', 'Accès non autorisé');
@@ -927,33 +904,24 @@ async function loadAdminPanel() {
     await switchAdminTab('users');
 }
 
-/**
- * Charge les statistiques administrateur
- * @returns {Promise<void>}
- */
 async function loadAdminStats() {
     try {
-        // Compter les utilisateurs
         const { count: usersCount } = await supabaseClient
             .from('users')
             .select('*', { count: 'exact', head: true });
         
-        // Compter les événements
         const { count: eventsCount } = await supabaseClient
             .from('events')
             .select('*', { count: 'exact', head: true });
         
-        // Compter les photos
         const { count: photosCount } = await supabaseClient
             .from('gallery_photos')
             .select('*', { count: 'exact', head: true });
         
-        // Compter les offres
         const { count: offersCount } = await supabaseClient
             .from('offers')
             .select('*', { count: 'exact', head: true });
         
-        // Mettre à jour l'interface
         const statsUsers = document.getElementById('stats-users');
         const statsEvents = document.getElementById('stats-events');
         const statsPhotos = document.getElementById('stats-photos');
@@ -969,36 +937,22 @@ async function loadAdminStats() {
     }
 }
 
-/**
- * Change d'onglet dans le panneau admin
- * @param {string} tabName - Nom de l'onglet
- * @returns {Promise<void>}
- */
 async function switchAdminTab(tabName) {
-    // Masquer tous les onglets
     const tabPanes = document.querySelectorAll('.admin-tab-pane');
     tabPanes.forEach(pane => pane.classList.remove('admin-tab-pane--active'));
     
-    // Désactiver tous les boutons
     const tabButtons = document.querySelectorAll('.tab-btn');
     tabButtons.forEach(button => button.classList.remove('tab-btn--active'));
     
-    // Activer l'onglet ciblé
     const targetPane = document.getElementById(`admin-tab-${tabName}`);
     const targetButton = document.querySelector(`[data-tab="${tabName}"]`);
     
     if (targetPane) targetPane.classList.add('admin-tab-pane--active');
     if (targetButton) targetButton.classList.add('tab-btn--active');
     
-    // Charger le contenu de l'onglet
     await loadAdminTabContent(tabName);
 }
 
-/**
- * Charge le contenu d'un onglet admin
- * @param {string} tabName - Nom de l'onglet
- * @returns {Promise<void>}
- */
 async function loadAdminTabContent(tabName) {
     const container = document.getElementById(`${tabName}-management`);
     if (!container) return;
@@ -1021,11 +975,6 @@ async function loadAdminTabContent(tabName) {
     }
 }
 
-/**
- * Charge la gestion des utilisateurs
- * @param {HTMLElement} container - Conteneur
- * @returns {Promise<void>}
- */
 async function loadUsersManagement(container) {
     try {
         const { data: users, error } = await supabaseClient
@@ -1068,41 +1017,20 @@ async function loadUsersManagement(container) {
     }
 }
 
-/**
- * Charge la gestion des événements
- * @param {HTMLElement} container - Conteneur
- * @returns {Promise<void>}
- */
 async function loadEventsManagement(container) {
     container.innerHTML = '<p>Gestion des événements - En développement</p>';
 }
 
-/**
- * Charge la gestion de la galerie
- * @param {HTMLElement} container - Conteneur
- * @returns {Promise<void>}
- */
 async function loadGalleryManagement(container) {
     container.innerHTML = '<p>Gestion de la galerie - En développement</p>';
 }
 
-/**
- * Charge la gestion des offres
- * @param {HTMLElement} container - Conteneur
- * @returns {Promise<void>}
- */
 async function loadOffersManagement(container) {
     container.innerHTML = '<p>Gestion des offres - En développement</p>';
 }
 
 // ===== UTILITAIRES =====
 
-/**
- * Affiche un message à l'utilisateur
- * @param {string} type - Type de message (success, error, info, warning)
- * @param {string} message - Contenu du message
- * @returns {void}
- */
 function showMessage(type, message) {
     if (!elements.messageContainer) return;
     
@@ -1112,7 +1040,6 @@ function showMessage(type, message) {
     
     elements.messageContainer.appendChild(messageDiv);
     
-    // Suppression automatique après 5 secondes
     setTimeout(() => {
         if (messageDiv.parentNode) {
             messageDiv.parentNode.removeChild(messageDiv);
@@ -1120,10 +1047,6 @@ function showMessage(type, message) {
     }, 5000);
 }
 
-/**
- * Met à jour les informations de debug
- * @returns {void}
- */
 function updateDebugInfo() {
     if (!elements.debugInfo) return;
     
@@ -1131,7 +1054,7 @@ function updateDebugInfo() {
         <div style="font-family: monospace; font-size: 0.8rem;">
             <strong>URL:</strong> ${window.location.href}<br>
             <strong>Utilisateur:</strong> ${currentUser ? currentUser.email + ' (' + (isAdmin ? 'admin' : 'user') + ')' : 'Non connecté'}<br>
-            <strong>Mode admin:</strong> ${isAdmin ? '<span style="color: var(--success);">Activé ✅</span>' : '<span style="color: var(--error);">Désactivé ❌</span>'}<br>
+            <strong>Mode admin:</strong> ${isAdmin ? '<span style="color: var(--success);">Activé</span>' : '<span style="color: var(--error);">Désactivé</span>'}<br>
             <strong>Page courante:</strong> ${currentPage}<br>
             <strong>Timestamp:</strong> ${new Date().toLocaleString('fr-FR')}
         </div>
@@ -1140,12 +1063,6 @@ function updateDebugInfo() {
     elements.debugInfo.innerHTML = debugContent;
 }
 
-/**
- * Met à jour le statut Supabase
- * @param {string} type - Type de statut
- * @param {string} message - Message de statut
- * @returns {void}
- */
 function updateSupabaseStatus(type, message) {
     if (!elements.supabaseStatus) return;
     
@@ -1160,10 +1077,6 @@ function updateSupabaseStatus(type, message) {
         `<span style="color: ${colors[type] || colors.info};">${message}</span>`;
 }
 
-/**
- * Détermine l'URL de redirection OAuth
- * @returns {string}
- */
 function getRedirectURL() {
     const hostname = window.location.hostname;
     
@@ -1176,10 +1089,6 @@ function getRedirectURL() {
     }
 }
 
-/**
- * Promeut un utilisateur au rang d'administrateur
- * @returns {Promise<void>}
- */
 async function promoteToAdmin() {
     const email = document.getElementById('admin-email')?.value.trim().toLowerCase();
     
@@ -1204,208 +1113,6 @@ async function promoteToAdmin() {
         console.error('Erreur promotion admin:', error);
         showMessage('error', `Erreur: ${error.message}`);
     }
-
-/**
- * Vérifie si l'utilisateur existe dans la table users personnalisée
- * @param {string} userEmail - Email de l'utilisateur
- * @returns {Promise<boolean>}
- */
-async function checkUserExists(userEmail) {
-    try {
-        const { data, error } = await supabaseClient
-            .from('users')
-            .select('id')
-            .eq('email', userEmail.toLowerCase().trim())
-            .single();
-        
-        if (error && error.code !== 'PGRST116') {
-            console.error('Erreur vérification utilisateur:', error);
-            return false;
-        }
-        
-        return data !== null;
-        
-    } catch (err) {
-        console.error('Exception vérification utilisateur:', err);
-        return false;
-    }
-}
-
-/**
- * Affiche le modal d'enregistrement pour les nouveaux utilisateurs
- * @returns {void}
- */
-function showUserRegistrationModal() {
-    const modal = document.getElementById('user-registration-modal');
-    if (modal) {
-        modal.classList.remove('modal-overlay--hidden');
-        
-        // Focus sur le premier champ
-        const firstInput = modal.querySelector('input[type="date"]');
-        if (firstInput) {
-            setTimeout(() => firstInput.focus(), 100);
-        }
-    }
-}
-
-/**
- * Masque le modal d'enregistrement
- * @returns {void}
- */
-function hideUserRegistrationModal() {
-    const modal = document.getElementById('user-registration-modal');
-    if (modal) {
-        modal.classList.add('modal-overlay--hidden');
-    }
-}
-
-/**
- * Crée un nouvel utilisateur dans la table users personnalisée
- * @param {Object} userData - Données de l'utilisateur
- * @returns {Promise<boolean>}
- */
-async function createNewUser(userData) {
-    try {
-        const { error } = await supabaseClient
-            .from('users')
-            .insert({
-                id: currentUser.id,
-                email: currentUser.email.toLowerCase().trim(),
-                name: userData.name,
-                lastname: userData.lastname,
-                birthday: userData.birthday,
-                teams: userData.team,
-                photo_url: currentUser.user_metadata?.avatar_url,
-                is_admin: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-            });
-        
-        if (error) {
-            console.error('Erreur création utilisateur:', error);
-            showMessage('error', `Erreur lors de la création du profil: ${error.message}`);
-            return false;
-        }
-        
-        return true;
-        
-    } catch (err) {
-        console.error('Exception création utilisateur:', err);
-        showMessage('error', 'Erreur technique lors de la création du profil');
-        return false;
-    }
-}
-
-/**
- * Traite une session utilisateur avec vérification d'existence
- * @param {Object} session - Session utilisateur
- * @returns {Promise<void>}
- */
-async function handleUserSession(session) {
-    currentUser = session.user;
-    console.log('Utilisateur connecté:', currentUser.email);
-    
-    // Vérifier si l'utilisateur existe dans notre table users
-    const userExists = await checkUserExists(currentUser.email);
-    
-    if (!userExists) {
-        console.log('Nouvel utilisateur détecté, affichage du modal d\'enregistrement');
-        showUserRegistrationModal();
-        return; // Ne pas continuer le processus de connexion
-    }
-    
-    // Continuer le processus normal de connexion
-    await continueLoginProcess();
-}
-
-/**
- * Continue le processus de connexion après vérification/création de l'utilisateur
- * @returns {Promise<void>}
- */
-async function continueLoginProcess() {
-    // Vérification du statut administrateur
-    setTimeout(async () => {
-        isAdmin = await checkAdminStatus(currentUser.email);
-        console.log('Statut admin final:', isAdmin);
-        
-        await updateUserInterface();
-        
-        if (isAdmin) {
-            showMessage('success', 'Mode administrateur activé');
-            setTimeout(initializeAdminPanel, 500);
-        }
-    }, 500);
-    
-    await updateUserInterface();
-    showMainApp();
-    
-    const displayName = currentUser.user_metadata?.full_name || currentUser.email;
-    showMessage('success', `Connexion réussie ! Bienvenue ${displayName}`);
-}
-
-/**
- * Configure les écouteurs pour l'enregistrement des nouveaux utilisateurs
- * @returns {void}
- */
-function setupUserRegistrationListeners() {
-    const registrationForm = document.getElementById('user-registration-form');
-    
-    if (registrationForm) {
-        registrationForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (!currentUser) {
-                showMessage('error', 'Erreur: aucun utilisateur connecté');
-                return;
-            }
-            
-            // Extraire les données du formulaire
-            const formData = new FormData(e.target);
-            const birthday = formData.get('birthday');
-            const team = formData.get('team');
-            
-            // Valider les données
-            if (!birthday || !team) {
-                showMessage('error', 'Veuillez remplir tous les champs obligatoires');
-                return;
-            }
-            
-            // Extraire nom et prénom du profil Google
-            const fullName = currentUser.user_metadata?.full_name || '';
-            const nameParts = fullName.split(' ');
-            const firstName = nameParts[0] || '';
-            const lastName = nameParts.slice(1).join(' ') || '';
-            
-            // Créer l'utilisateur
-            const userData = {
-                name: firstName,
-                lastname: lastName,
-                birthday: birthday,
-                team: team
-            };
-            
-            const success = await createNewUser(userData);
-            
-            if (success) {
-                hideUserRegistrationModal();
-                showMessage('success', 'Profil créé avec succès ! Bienvenue dans l\'intranet MACIF Arles');
-                await continueLoginProcess();
-            }
-        });
-    }
-    
-    // Empêcher la fermeture du modal en cliquant à l'extérieur
-    const modal = document.getElementById('user-registration-modal');
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            // Ne fermer que si on clique sur l'overlay, pas sur le contenu
-            if (e.target === modal) {
-                // Afficher un message d'information plutôt que de fermer
-                showMessage('info', 'Veuillez compléter votre profil pour accéder à l\'intranet');
-            }
-        });
-    }
-}
 }
 
 // ===== INITIALISATION DE L'APPLICATION =====
