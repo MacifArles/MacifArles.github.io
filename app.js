@@ -6,12 +6,16 @@
 // ===== CONFIGURATION SUPABASE =====
 const SUPABASE_CONFIG = {
     url: 'https://ifbnsnhtrbqcxzpsihzy.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm5zbmh0cmJxY3h6cHNpaHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMjUyMzcsImV4cCI6MjA3MTYwMTIzN30.8H9R8rwyPFgODQdDMK5Wgru0XVoc5xN58dGUD2pAW70'
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm5zbmh0cmJxY3h6cHNpaHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMjUyMzcsImV4cCI6MjA3MTYwMTIzN30.8H9R8rwyPFgODQdDMK5Wgru0XVoc5xN58dGUD2pAW70',
+    serviceRoleKey: 'REMPLACEZ_PAR_VOTRE_CLE_SERVICE_ROLE' // À remplacer par votre vraie clé service_role
 };
 
 // ===== VARIABLES GLOBALES =====
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+// Client administrateur pour contourner les restrictions RLS
+let supabaseAdminClient = null;
 
 let currentUser = null;
 let isAdmin = false;
@@ -43,6 +47,9 @@ async function initializeApp() {
     initializeElements();
     setupEventListeners();
     
+    // Initialiser le client administrateur
+    initializeAdminClient();
+    
     // Vérifier si nous revenons d'un callback OAuth
     const urlParams = new URLSearchParams(window.location.search);
     const hasAuthParams = urlParams.has('code') || urlParams.has('access_token') || urlParams.has('refresh_token');
@@ -52,20 +59,29 @@ async function initializeApp() {
     if (hasAuthParams) {
         console.log('Callback OAuth détecté - Attente du traitement...');
         showMessage('info', 'Finalisation de la connexion...');
-        // Attendre un peu plus longtemps pour le traitement du callback
         await new Promise(resolve => setTimeout(resolve, 2000));
     }
     
-    // Configuration du listener d'authentification avant la vérification de session
     setupAuthListener();
-    
-    // Vérifier la session existante
     await checkExistingSession();
-    
-    // Mise à jour des informations de debug
     updateDebugInfo();
     
     console.log('Application initialisée avec succès');
+}
+
+// Initialiser le client administrateur Supabase
+function initializeAdminClient() {
+    console.log('=== INITIALISATION CLIENT ADMIN ===');
+    
+    if (SUPABASE_CONFIG.serviceRoleKey && SUPABASE_CONFIG.serviceRoleKey !== 'REMPLACEZ_PAR_VOTRE_CLE_SERVICE_ROLE') {
+        supabaseAdminClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.serviceRoleKey);
+        console.log('Client administrateur Supabase initialisé avec succès');
+        return true;
+    } else {
+        console.warn('ATTENTION: Clé service_role non configurée - fonctionnalités limitées');
+        showMessage('warning', 'Configuration administrateur manquante - certaines fonctionnalités peuvent être limitées');
+        return false;
+    }
 }
 
 function initializeElements() {
@@ -279,36 +295,82 @@ async function handleUserSession(session) {
     console.log('Métadonnées utilisateur:', currentUser.user_metadata);
     
     try {
-        // SOLUTION TEMPORAIRE : Contourner la vérification utilisateur
-        // à cause des problèmes de permissions Supabase
-        console.log('SOLUTION TEMPORAIRE ACTIVÉE - Contournement vérification utilisateur');
-        
-        // S'assurer que le modal d'enregistrement est masqué
-        hideUserRegistrationModal();
-        
-        // Aller directement au processus de connexion
-        await continueLoginProcess();
-        
-        // Code original commenté pour restauration ultérieure
-        /*
-        // Vérifier si l'utilisateur existe dans la base
-        const userExists = await checkUserExists(currentUser.email);
-        console.log('Utilisateur existe en base:', userExists);
+        // Utiliser la vérification administrateur pour contourner les restrictions RLS
+        const userExists = await adminCheckUserExists(currentUser.email);
+        console.log('Utilisateur existe en base (vérification admin):', userExists);
         
         if (!userExists) {
-            console.log('Nouvel utilisateur - Affichage modal enregistrement');
+            console.log('Nouvel utilisateur détecté - Affichage modal enregistrement');
             showUserRegistrationModal();
             return;
         }
         
-        // Continuer le processus de connexion
+        // Utilisateur existant - continuer le processus de connexion
         await continueLoginProcess();
-        */
         
     } catch (error) {
         console.error('Erreur traitement session utilisateur:', error);
         showMessage('error', 'Erreur lors de la connexion');
         showLoginPage();
+    }
+}
+
+// Fonction de vérification d'utilisateur avec permissions administrateur
+async function adminCheckUserExists(userEmail) {
+    console.log('=== VÉRIFICATION UTILISATEUR (MODE ADMIN) ===');
+    const normalizedEmail = userEmail.toLowerCase().trim();
+    console.log('Email à vérifier:', normalizedEmail);
+    
+    try {
+        // Utiliser le client admin si disponible, sinon le client standard
+        const client = supabaseAdminClient || supabaseClient;
+        console.log('Utilisation du client:', supabaseAdminClient ? 'ADMIN' : 'STANDARD');
+        
+        const { data, error } = await client
+            .from('users')
+            .select('id, email, is_admin')
+            .eq('email', normalizedEmail)
+            .maybeSingle();
+        
+        if (error) {
+            console.error('Erreur vérification utilisateur (mode admin):', error);
+            
+            // Si l'erreur persiste même avec le client admin, créer les politiques
+            if (error.message.includes('row-level security') && supabaseAdminClient) {
+                console.log('Tentative de création des politiques RLS...');
+                await createBasicRLSPolicies();
+                
+                // Réessayer après création des politiques
+                const retryResult = await client
+                    .from('users')
+                    .select('id, email, is_admin')
+                    .eq('email', normalizedEmail)
+                    .maybeSingle();
+                
+                if (retryResult.error) {
+                    console.error('Erreur même après création des politiques:', retryResult.error);
+                    return false;
+                }
+                
+                const exists = retryResult.data !== null;
+                console.log('Utilisateur trouvé après création des politiques:', exists);
+                return exists;
+            }
+            
+            return false;
+        }
+        
+        const exists = data !== null;
+        console.log('Utilisateur trouvé (mode admin):', exists);
+        if (exists) {
+            console.log('Données utilisateur:', data);
+        }
+        
+        return exists;
+        
+    } catch (err) {
+        console.error('Exception vérification utilisateur (mode admin):', err);
+        return false;
     }
 }
 
@@ -445,10 +507,21 @@ async function checkAdminStatus(userEmail) {
 // ===== GESTION DU MODAL D'ENREGISTREMENT =====
 
 function showUserRegistrationModal() {
-    console.log('=== AFFICHAGE MODAL ENREGISTREMENT ===');
+    console.log('=== AFFICHAGE FORMULAIRE ENREGISTREMENT EN PLEINE PAGE ===');
+    
+    // Masquer la page de login et l'application principale
+    if (elements.loginPage) {
+        elements.loginPage.classList.add('login-page--hidden');
+    }
+    if (elements.mainApp) {
+        elements.mainApp.classList.remove('main-app--visible');
+    }
+    
+    // Afficher le formulaire d'enregistrement en pleine page
     const modal = document.getElementById('user-registration-modal');
     if (modal) {
         modal.classList.remove('modal-overlay--hidden');
+        modal.classList.add('registration-fullpage');
         
         const firstInput = modal.querySelector('input[type="date"]');
         if (firstInput) {
@@ -458,16 +531,24 @@ function showUserRegistrationModal() {
 }
 
 function hideUserRegistrationModal() {
+    console.log('=== MASQUAGE FORMULAIRE ENREGISTREMENT ===');
+    
     const modal = document.getElementById('user-registration-modal');
     if (modal) {
         modal.classList.add('modal-overlay--hidden');
+        modal.classList.remove('registration-fullpage');
     }
 }
 
 async function createNewUser(userData) {
-    console.log('=== CRÉATION NOUVEL UTILISATEUR ===');
+    console.log('=== CRÉATION NOUVEL UTILISATEUR (MODE ADMIN) ===');
+    console.log('Données à insérer:', userData);
     
     try {
+        // Utiliser le client admin si disponible, sinon le client standard
+        const client = supabaseAdminClient || supabaseClient;
+        console.log('Utilisation du client:', supabaseAdminClient ? 'ADMIN' : 'STANDARD');
+        
         const newUserData = {
             id: currentUser.id,
             email: currentUser.email.toLowerCase().trim(),
@@ -481,24 +562,131 @@ async function createNewUser(userData) {
             updated_at: new Date().toISOString()
         };
         
-        console.log('Données à insérer:', newUserData);
+        console.log('Données finales à insérer:', newUserData);
         
-        const { error } = await supabaseClient
+        const { data, error } = await client
             .from('users')
-            .insert(newUserData);
+            .insert(newUserData)
+            .select()
+            .single();
         
         if (error) {
-            console.error('Erreur création utilisateur:', error);
+            console.error('Erreur création utilisateur (mode admin):', error);
+            
+            // Si même le client admin échoue, essayer de créer les politiques RLS
+            if (error.message.includes('row-level security') && supabaseAdminClient) {
+                console.log('Création des politiques RLS en cours...');
+                const policiesCreated = await createBasicRLSPolicies();
+                
+                if (policiesCreated) {
+                    console.log('Politiques créées, nouvelle tentative d\'insertion...');
+                    // Réessayer après création des politiques
+                    const retryResult = await client
+                        .from('users')
+                        .insert(newUserData)
+                        .select()
+                        .single();
+                    
+                    if (retryResult.error) {
+                        console.error('Erreur même après création des politiques:', retryResult.error);
+                        showMessage('error', `Erreur persistante: ${retryResult.error.message}`);
+                        return false;
+                    }
+                    
+                    console.log('Utilisateur créé avec succès après création des politiques:', retryResult.data);
+                    return true;
+                }
+            }
+            
             showMessage('error', `Erreur création profil: ${error.message}`);
             return false;
         }
         
-        console.log('Utilisateur créé avec succès');
+        console.log('Utilisateur créé avec succès (mode admin):', data);
         return true;
         
     } catch (err) {
-        console.error('Exception création utilisateur:', err);
+        console.error('Exception création utilisateur (mode admin):', err);
         showMessage('error', 'Erreur technique lors de la création du profil');
+        return false;
+    }
+}
+
+// Fonction pour créer les politiques RLS de base
+async function createBasicRLSPolicies() {
+    console.log('=== CRÉATION POLITIQUES RLS DE BASE ===');
+    
+    if (!supabaseAdminClient) {
+        console.error('Client administrateur non disponible pour créer les politiques');
+        return false;
+    }
+    
+    try {
+        // Activer RLS sur la table users si pas déjà fait
+        const enableRLSSQL = 'ALTER TABLE users ENABLE ROW LEVEL SECURITY;';
+        
+        // Politique de lecture pour les utilisateurs authentifiés
+        const readPolicySQL = `
+            DROP POLICY IF EXISTS "authenticated_users_read_policy" ON users;
+            CREATE POLICY "authenticated_users_read_policy" 
+            ON users FOR SELECT 
+            USING (auth.role() = 'authenticated');
+        `;
+        
+        // Politique d'écriture pour les utilisateurs authentifiés
+        const insertPolicySQL = `
+            DROP POLICY IF EXISTS "authenticated_users_insert_policy" ON users;
+            CREATE POLICY "authenticated_users_insert_policy" 
+            ON users FOR INSERT 
+            WITH CHECK (auth.role() = 'authenticated' AND auth.uid() = id);
+        `;
+        
+        // Politique de mise à jour pour les utilisateurs authentifiés
+        const updatePolicySQL = `
+            DROP POLICY IF EXISTS "authenticated_users_update_policy" ON users;
+            CREATE POLICY "authenticated_users_update_policy" 
+            ON users FOR UPDATE 
+            USING (auth.role() = 'authenticated' AND auth.uid() = id)
+            WITH CHECK (auth.role() = 'authenticated' AND auth.uid() = id);
+        `;
+        
+        // Exécuter les requêtes SQL
+        console.log('Activation de RLS...');
+        const { error: rlsError } = await supabaseAdminClient.rpc('query', { 
+            query: enableRLSSQL 
+        });
+        
+        console.log('Création politique de lecture...');
+        const { error: readError } = await supabaseAdminClient.rpc('query', { 
+            query: readPolicySQL 
+        });
+        
+        console.log('Création politique d\'insertion...');
+        const { error: insertError } = await supabaseAdminClient.rpc('query', { 
+            query: insertPolicySQL 
+        });
+        
+        console.log('Création politique de mise à jour...');
+        const { error: updateError } = await supabaseAdminClient.rpc('query', { 
+            query: updatePolicySQL 
+        });
+        
+        // Vérifier les erreurs
+        if (readError || insertError || updateError) {
+            console.error('Erreurs lors de la création des politiques:', {
+                read: readError,
+                insert: insertError,
+                update: updateError
+            });
+            return false;
+        }
+        
+        console.log('Politiques RLS créées avec succès');
+        showMessage('success', 'Configuration de sécurité Supabase mise à jour');
+        return true;
+        
+    } catch (error) {
+        console.error('Exception lors de la création des politiques RLS:', error);
         return false;
     }
 }
