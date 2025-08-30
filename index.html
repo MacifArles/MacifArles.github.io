@@ -4,675 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MACIF ARLES - Intranet</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            /* Palette sobre et professionnelle */
-            --primary-blue: #003d82;
-            --light-blue: #e8f4fd;
-            --accent-orange: #ff6b35;
-            --dark-gray: #2c3e50;
-            --medium-gray: #7f8c8d;
-            --light-gray: #ecf0f1;
-            --white: #ffffff;
-            --success: #27ae60;
-            --error: #e74c3c;
-            
-            /* Glassmorphing discret */
-            --glass-bg: rgba(255, 255, 255, 0.25);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            
-            /* Ombres subtiles */
-            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
-            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            color: var(--dark-gray);
-            line-height: 1.6;
-        }
-
-        /* Page de Login */
-        .login-page {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            backdrop-filter: blur(20px);
-            background: linear-gradient(135deg, rgba(245, 247, 250, 0.9) 0%, rgba(195, 207, 226, 0.9) 100%);
-        }
-
-        .login-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            padding: 3rem;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .login-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 2rem;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow-medium);
-        }
-
-        .login-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .login-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--primary-blue);
-            margin-bottom: 0.5rem;
-        }
-
-        .login-subtitle {
-            color: var(--medium-gray);
-            margin-bottom: 2rem;
-            font-size: 1rem;
-        }
-
-        .google-login-btn {
-            background: var(--white);
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--dark-gray);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin: 0 auto;
-            box-shadow: var(--shadow-light);
-        }
-
-        .google-login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-            border-color: var(--primary-blue);
-        }
-
-        /* Header avec deux niveaux */
-        .header {
-            background: var(--white);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .top-bar {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem 2rem;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .navbar {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 2rem;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            gap: 1rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .logo:hover {
-            transform: scale(1.02);
-        }
-
-        .logo-container {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow-light);
-        }
-
-        .logo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .logo-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-blue);
-        }
-
-        /* Navigation sobre */
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
-            text-decoration: none;
-            color: var(--dark-gray);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 0.9rem;
-            position: relative;
-        }
-
-        .nav-link:hover {
-            background: var(--light-gray);
-            color: var(--primary-blue);
-            transform: translateY(-1px);
-        }
-
-        .nav-link.active {
-            background: var(--primary-blue);
-            color: var(--white);
-        }
-
-        .nav-link .emoji {
-            font-size: 1.1rem;
-        }
-
-        /* Section utilisateur épurée */
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--light-gray);
-            border-radius: 12px;
-            padding: 0.5rem 1rem;
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px solid var(--white);
-            object-fit: cover;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--dark-gray);
-            font-size: 0.9rem;
-        }
-
-        .admin-badge {
-            background: var(--accent-orange);
-            color: var(--white);
-            padding: 0.2rem 0.5rem;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-top: 0.2rem;
-        }
-
-        .logout-btn {
-            background: transparent;
-            color: var(--medium-gray);
-            border: 1px solid var(--medium-gray);
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: var(--accent-orange);
-            color: var(--white);
-            border-color: var(--accent-orange);
-        }
-
-        /* Contenu principal */
-        .main-content {
-            flex: 1;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .page-content {
-            display: none;
-            animation: fadeIn 0.6s ease;
-        }
-
-        .page-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Hero section sobre */
-        .hero {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: var(--white);
-            border-radius: 20px;
-            box-shadow: var(--shadow-light);
-            margin-bottom: 2rem;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--primary-blue);
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--medium-gray);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Grille de cartes épurée */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .feature-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-light);
-            cursor: pointer;
-            border: 1px solid transparent;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-medium);
-            border-color: var(--primary-blue);
-        }
-
-        .feature-card .emoji {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            color: var(--dark-gray);
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .feature-card p {
-            color: var(--medium-gray);
-            line-height: 1.6;
-        }
-
-        /* Cards communes */
-        .card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-light);
-        }
-
-        .card h2 {
-            color: var(--primary-blue);
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        /* Panneau admin sobre */
-        .admin-panel {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-light);
-            border-left: 4px solid var(--accent-orange);
-        }
-
-        .admin-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .admin-badge-large {
-            background: var(--accent-orange);
-            color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .admin-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--light-blue);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-icon {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-label {
-            color: var(--medium-gray);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        /* Onglets admin */
-        .admin-tabs {
-            margin-top: 2rem;
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: var(--light-gray);
-            border: none;
-            border-radius: 10px;
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            color: var(--dark-gray);
-        }
-
-        .tab-btn.active {
-            background: var(--primary-blue);
-            color: var(--white);
-        }
-
-        .tab-btn:hover:not(.active) {
-            background: var(--medium-gray);
-            color: var(--white);
-        }
-
-        .admin-tab-pane {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .admin-tab-pane.active {
-            display: block;
-        }
-
-        /* Formulaires */
-        .admin-form {
-            background: var(--light-blue);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-grid {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .form-input, .form-textarea {
-            padding: 0.75rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
-
-        .form-textarea {
-            grid-column: 1 / -1;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            margin-top: 1rem;
-        }
-
-        .btn-primary, .btn-secondary {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--primary-blue);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background: #002a5c;
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: var(--light-gray);
-            color: var(--dark-gray);
-        }
-
-        .btn-secondary:hover {
-            background: var(--medium-gray);
-            color: var(--white);
-        }
-
-        /* Messages */
-        .message {
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-
-        .message.success {
-            background: rgba(39, 174, 96, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(39, 174, 96, 0.3);
-        }
-
-        .message.error {
-            background: rgba(231, 76, 60, 0.1);
-            color: var(--error);
-            border: 1px solid rgba(231, 76, 60, 0.3);
-        }
-
-        .message.info {
-            background: rgba(0, 61, 130, 0.1);
-            color: var(--primary-blue);
-            border: 1px solid rgba(0, 61, 130, 0.3);
-        }
-
-        /* Debug info sobre */
-        .debug-info {
-            background: var(--light-gray);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--medium-gray);
-        }
-
-        .debug-info h4 {
-            color: var(--dark-gray);
-            margin-bottom: 1rem;
-        }
-
-        /* Listes admin */
-        .users-list, .events-list {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .user-item, .event-item {
-            background: var(--white);
-            border-radius: 10px;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow-light);
-        }
-
-        .user-info, .event-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-avatar-small {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .loading {
-            text-align: center;
-            color: var(--medium-gray);
-            padding: 2rem;
-            font-style: italic;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
-
-            .nav-menu {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Page de Login -->
-    <div id="loginPage" class="login-page">
+    <!-- Page de connexion -->
+    <div id="login-page" class="login-page">
         <div class="login-container">
             <div class="login-logo">
-                <img src="data:image/png;base64,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" alt="MACIF">
+                <img src="data:image/png;base64,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" alt="Logo MACIF">
             </div>
             <h1 class="login-title">MACIF ARLES</h1>
             <p class="login-subtitle">Intranet CRC Commercial</p>
-            <button class="google-login-btn" onclick="signInWithGoogle()">
+            <button id="google-login-btn" class="btn btn--primary btn--google">
                 <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -685,70 +31,70 @@
     </div>
 
     <!-- Application principale -->
-    <div id="mainApp" class="main-app" style="display: none;">
+    <div id="main-app" class="main-app">
         <!-- Header -->
         <header class="header">
             <nav class="navbar">
-                <a href="#" class="logo" onclick="showPage('dashboard')">
+                <a href="#" class="logo" data-page="dashboard">
                     <div class="logo-container">
-                        <img src="data:image/png;base64,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" alt="MACIF Logo">
+                        <img src="data:image/png;base64,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" alt="Logo MACIF">
                     </div>
                     <div class="logo-text">INTRANET ARLES</div>
                 </a>
                 
-                <ul class="nav-menu">
+                <ul class="nav-menu" role="navigation">
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showPage('trombinoscope')">
-                            <span class="emoji">👥</span>Trombinoscope
+                        <a href="#" class="nav-link" data-page="trombinoscope" aria-label="Accéder au trombinoscope">
+                            <span class="nav-icon">👥</span>Trombinoscope
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showPage('anniversaire')">
-                            <span class="emoji">🎂</span>Anniversaires
+                        <a href="#" class="nav-link" data-page="anniversaires" aria-label="Voir les anniversaires">
+                            <span class="nav-icon">🎂</span>Anniversaires
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showPage('fadarles')">
-                            <span class="emoji">🎉</span>FAD'ARLES
+                        <a href="#" class="nav-link" data-page="fadarles" aria-label="Événements FAD'ARLES">
+                            <span class="nav-icon">🎉</span>FAD'ARLES
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showPage('galerie')">
-                            <span class="emoji">📸</span>Galerie
+                        <a href="#" class="nav-link" data-page="galerie" aria-label="Galerie photos">
+                            <span class="nav-icon">📸</span>Galerie
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showPage('bonnes-affaires')">
-                            <span class="emoji">🛒</span>Bonnes Affaires
+                        <a href="#" class="nav-link" data-page="bonnes-affaires" aria-label="Bonnes affaires">
+                            <span class="nav-icon">🛒</span>Bonnes Affaires
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showPage('activites')">
-                            <span class="emoji">⚽</span>Activités
+                        <a href="#" class="nav-link" data-page="activites" aria-label="Activités sportives">
+                            <span class="nav-icon">⚽</span>Activités
                         </a>
                     </li>
-                    <li class="nav-item" id="adminNavItem" style="display: none;">
-                        <a href="#" class="nav-link" onclick="showPage('admin-panel')">
-                            <span class="emoji">⚙️</span>Administration
+                    <li class="nav-item nav-item--admin" id="admin-nav-item">
+                        <a href="#" class="nav-link" data-page="admin" aria-label="Administration">
+                            <span class="nav-icon">⚙️</span>Administration
                         </a>
                     </li>
                 </ul>
 
                 <div class="user-section">
-                    <img id="userAvatar" class="user-avatar" src="" alt="">
+                    <img id="user-avatar" class="user-avatar" src="" alt="Avatar utilisateur">
                     <div class="user-info">
-                        <div id="userName" class="user-name"></div>
-                        <div id="adminBadge" class="admin-badge" style="display: none;">ADMIN</div>
+                        <div id="user-name" class="user-name"></div>
+                        <div id="admin-badge" class="admin-badge">ADMIN</div>
                     </div>
-                    <button class="logout-btn" onclick="signOut()">Déconnexion</button>
+                    <button id="logout-btn" class="btn btn--secondary btn--small">Déconnexion</button>
                 </div>
             </nav>
         </header>
 
-        <div class="main-content">
+        <main class="main-content">
             <div class="container">
-                <!-- Page Dashboard -->
-                <div id="dashboard" class="page-content active">
+                <!-- Dashboard -->
+                <section id="page-dashboard" class="page-content page-content--active">
                     <div class="hero">
                         <h1>Bienvenue sur l'Intranet</h1>
                         <p>CRC Commercial Arles - MACIF<br>
@@ -756,1092 +102,237 @@
                     </div>
 
                     <div class="features-grid">
-                        <div class="feature-card" onclick="showPage('trombinoscope')">
-                            <div class="emoji">👥</div>
+                        <div class="feature-card" data-page="trombinoscope">
+                            <div class="feature-icon">👥</div>
                             <h3>Trombinoscope</h3>
                             <p>Découvrez les équipes du CRC Arles, leurs membres et leurs rôles dans l'entreprise.</p>
                         </div>
-                        <div class="feature-card" onclick="showPage('anniversaire')">
-                            <div class="emoji">🎂</div>
+                        <div class="feature-card" data-page="anniversaires">
+                            <div class="feature-icon">🎂</div>
                             <h3>Anniversaires</h3>
                             <p>Consultez le calendrier des anniversaires et ne manquez plus aucune célébration !</p>
                         </div>
-                        <div class="feature-card" onclick="showPage('fadarles')">
-                            <div class="emoji">🎉</div>
+                        <div class="feature-card" data-page="fadarles">
+                            <div class="feature-icon">🎉</div>
                             <h3>Événements FAD'ARLES</h3>
                             <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
                         </div>
-                        <div class="feature-card" onclick="showPage('galerie')">
-                            <div class="emoji">📸</div>
+                        <div class="feature-card" data-page="galerie">
+                            <div class="feature-icon">📸</div>
                             <h3>Galerie Photos</h3>
                             <p>Parcourez les albums photos des événements et partagez vos souvenirs !</p>
                         </div>
-                        <div class="feature-card" onclick="showPage('bonnes-affaires')">
-                            <div class="emoji">🛒</div>
+                        <div class="feature-card" data-page="bonnes-affaires">
+                            <div class="feature-icon">🛒</div>
                             <h3>Coin des Bonnes Affaires</h3>
                             <p>Achetez, vendez et échangez entre collègues. Contactez directement les vendeurs.</p>
                         </div>
-                        <div class="feature-card" onclick="showPage('activites')">
-                            <div class="emoji">⚽</div>
+                        <div class="feature-card" data-page="activites">
+                            <div class="feature-icon">⚽</div>
                             <h3>Organisation d'activités</h3>
                             <p>Inscrivez-vous aux activités sportives et événements team building.</p>
                         </div>
                     </div>
 
-                    <!-- Informations de debug améliorées -->
-                    <div class="debug-info">
+                    <div class="debug-info" id="debug-info">
                         <h4>Informations de debug</h4>
-                        <div id="debugInfo">En attente...</div>
-                        <div id="supabaseStatus" style="margin-top: 1rem; font-weight: bold;"></div>
+                        <div id="debug-content">En attente...</div>
+                        <div id="supabase-status"></div>
                     </div>
-                </div>
+                </section>
 
                 <!-- Autres pages -->
-                <div id="trombinoscope" class="page-content">
+                <section id="page-trombinoscope" class="page-content">
                     <div class="card">
                         <h2>👥 Trombinoscope</h2>
-                        <p>Cette section sera bientôt disponible avec toutes les équipes du CRC Arles !</p>
+                        <div id="trombinoscope-content">
+                            <div class="loading">Chargement du trombinoscope...</div>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <div id="anniversaire" class="page-content">
+                <section id="page-anniversaires" class="page-content">
                     <div class="card">
                         <h2>🎂 Calendrier des anniversaires</h2>
-                        <p>Cette section affichera le calendrier des anniversaires de tous les collaborateurs.</p>
+                        <div id="anniversaires-content">
+                            <div class="loading">Chargement des anniversaires...</div>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <div id="fadarles" class="page-content">
+                <section id="page-fadarles" class="page-content">
                     <div class="card">
                         <h2>🎉 Événements FAD'ARLES</h2>
-                        <p>Découvrez tous les événements organisés par les FAD'ARLES, passés et à venir.</p>
+                        <div id="fadarles-content">
+                            <div class="loading">Chargement des événements...</div>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <div id="galerie" class="page-content">
+                <section id="page-galerie" class="page-content">
                     <div class="card">
                         <h2>📸 Galerie Photos</h2>
-                        <p>Albums photos des événements et moments partagés au CRC.</p>
+                        <div id="galerie-content">
+                            <div class="loading">Chargement de la galerie...</div>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <div id="bonnes-affaires" class="page-content">
+                <section id="page-bonnes-affaires" class="page-content">
                     <div class="card">
                         <h2>🛒 Coin des Bonnes Affaires</h2>
-                        <button class="btn-primary" style="margin-bottom: 1rem;" onclick="showCreateOfferForm()">Créer une annonce</button>
+                        <button id="create-offer-btn" class="btn btn--primary">Créer une annonce</button>
                         
-                        <div id="createOfferForm" class="admin-form" style="display: none; margin-bottom: 2rem;">
+                        <div id="create-offer-form" class="form-container form-container--hidden">
                             <h4>Nouvelle annonce</h4>
-                            <div class="form-grid">
-                                <input type="text" id="offerTitle" placeholder="Titre de l'annonce" class="form-input">
-                                <input type="number" id="offerPrice" placeholder="Prix" class="form-input">
-                                <select id="offerCategory" class="form-input">
-                                    <option value="">Catégorie</option>
-                                    <option value="electronique">Électronique</option>
-                                    <option value="mobilier">Mobilier</option>
-                                    <option value="vetements">Vêtements</option>
-                                    <option value="vehicule">Véhicule</option>
-                                    <option value="autre">Autre</option>
-                                </select>
-                                <input type="url" id="offerImageUrl" placeholder="URL de l'image" class="form-input">
-                                <textarea id="offerDescription" placeholder="Description" class="form-textarea"></textarea>
-                            </div>
-                            <div class="form-actions">
-                                <button class="btn-primary" onclick="createOffer()">Publier</button>
-                                <button class="btn-secondary" onclick="hideCreateOfferForm()">Annuler</button>
-                            </div>
+                            <form id="offer-form" class="form">
+                                <div class="form-grid">
+                                    <input type="text" id="offer-title" placeholder="Titre de l'annonce" class="form-input" required>
+                                    <input type="number" id="offer-price" placeholder="Prix" class="form-input" min="0" step="0.01">
+                                    <select id="offer-type" class="form-input">
+                                        <option value="vente">Vente</option>
+                                        <option value="don">Don</option>
+                                        <option value="echange">Échange</option>
+                                    </select>
+                                    <input type="url" id="offer-image-url" placeholder="URL de l'image" class="form-input">
+                                    <textarea id="offer-description" placeholder="Description" class="form-textarea" required></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">Publier</button>
+                                    <button type="button" id="cancel-offer-btn" class="btn btn--secondary">Annuler</button>
+                                </div>
+                            </form>
                         </div>
                         
-                        <div id="offersList">
+                        <div id="offers-list">
                             <div class="loading">Chargement des annonces...</div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div id="activites" class="page-content">
+                <section id="page-activites" class="page-content">
                     <div class="card">
                         <h2>⚽ Organisation d'activités</h2>
-                        <button class="btn-primary" style="margin-bottom: 1rem;" onclick="showCreateActivityForm()">Organiser une activité</button>
+                        <button id="create-activity-btn" class="btn btn--primary">Organiser une activité</button>
                         
-                        <div id="createActivityForm" class="admin-form" style="display: none; margin-bottom: 2rem;">
+                        <div id="create-activity-form" class="form-container form-container--hidden">
                             <h4>Nouvelle activité</h4>
-                            <div class="form-grid">
-                                <input type="text" id="activityTitle" placeholder="Nom de l'activité" class="form-input">
-                                <input type="date" id="activityDate" placeholder="Date" class="form-input">
-                                <input type="time" id="activityTime" placeholder="Heure" class="form-input">
-                                <input type="text" id="activityDuration" placeholder="Durée" class="form-input">
-                                <input type="text" id="activityLocation" placeholder="Lieu" class="form-input">
-                                <input type="number" id="activityMaxParticipants" placeholder="Nombre max de participants" class="form-input">
-                                <textarea id="activityDescription" placeholder="Description" class="form-textarea"></textarea>
-                            </div>
-                            <div class="form-actions">
-                                <button class="btn-primary" onclick="createActivity()">Créer l'activité</button>
-                                <button class="btn-secondary" onclick="hideCreateActivityForm()">Annuler</button>
-                            </div>
+                            <form id="activity-form" class="form">
+                                <div class="form-grid">
+                                    <input type="text" id="activity-title" placeholder="Nom de l'activité" class="form-input" required>
+                                    <input type="date" id="activity-date" placeholder="Date" class="form-input" required>
+                                    <input type="time" id="activity-time" placeholder="Heure" class="form-input">
+                                    <input type="text" id="activity-location" placeholder="Lieu" class="form-input">
+                                    <input type="number" id="activity-max-participants" placeholder="Nombre max de participants" class="form-input" min="1">
+                                    <textarea id="activity-description" placeholder="Description" class="form-textarea" required></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">Créer l'activité</button>
+                                    <button type="button" id="cancel-activity-btn" class="btn btn--secondary">Annuler</button>
+                                </div>
+                            </form>
                         </div>
                         
-                        <div id="activitiesList">
+                        <div id="activities-list">
                             <div class="loading">Chargement des activités...</div>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- Panneau d'administration -->
-                <div id="admin-panel" class="page-content">
+                <section id="page-admin" class="page-content">
                     <div class="admin-panel">
                         <div class="admin-header">
-                            <h2 style="color: var(--primary-blue); margin: 0;">⚙️ Panneau d'administration</h2>
-                            <div class="admin-badge-large">MODE ADMIN ACTIVÉ</div>
+                            <h2>⚙️ Panneau d'administration</h2>
+                            <div class="admin-badge admin-badge--large">MODE ADMIN ACTIVÉ</div>
                         </div>
                         
-                        <!-- Statistiques rapides -->
+                        <!-- Statistiques -->
                         <div class="admin-stats-grid">
                             <div class="stat-card">
                                 <div class="stat-icon">👥</div>
-                                <div class="stat-number" id="statsUsers">-</div>
+                                <div class="stat-number" id="stats-users">-</div>
                                 <div class="stat-label">Utilisateurs</div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">🎉</div>
-                                <div class="stat-number" id="statsEvents">-</div>
+                                <div class="stat-number" id="stats-events">-</div>
                                 <div class="stat-label">Événements</div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">📸</div>
-                                <div class="stat-number" id="statsPhotos">0</div>
+                                <div class="stat-number" id="stats-photos">0</div>
                                 <div class="stat-label">Photos</div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">🛒</div>
-                                <div class="stat-number" id="statsAnnonces">0</div>
+                                <div class="stat-number" id="stats-offers">0</div>
                                 <div class="stat-label">Annonces</div>
                             </div>
                         </div>
                         
                         <!-- Onglets d'administration -->
                         <div class="admin-tabs">
-                            <div class="tab-buttons">
-                                <button class="tab-btn active" onclick="showAdminTab('users')">👥 Utilisateurs</button>
-                                <button class="tab-btn" onclick="showAdminTab('events')">🎉 Événements</button>
-                                <button class="tab-btn" onclick="showAdminTab('gallery')">📸 Galerie</button>
-                                <button class="tab-btn" onclick="showAdminTab('birthdays')">🎂 Anniversaires</button>
+                            <div class="tab-buttons" role="tablist">
+                                <button class="tab-btn tab-btn--active" data-tab="users" role="tab">👥 Utilisateurs</button>
+                                <button class="tab-btn" data-tab="events" role="tab">🎉 Événements</button>
+                                <button class="tab-btn" data-tab="gallery" role="tab">📸 Galerie</button>
+                                <button class="tab-btn" data-tab="offers" role="tab">🛒 Annonces</button>
                             </div>
                             
                             <div class="tab-content">
                                 <!-- Onglet Utilisateurs -->
-                                <div id="admin-tab-users" class="admin-tab-pane active">
+                                <div id="admin-tab-users" class="admin-tab-pane admin-tab-pane--active" role="tabpanel">
                                     <div class="admin-form">
-                                        <h4>Ajouter un administrateur</h4>
-                                        <div style="display: flex; gap: 1rem; align-items: center;">
-                                            <input type="email" id="newAdminEmail" placeholder="Email de l'utilisateur" class="form-input">
-                                            <button class="btn-primary" onclick="addNewAdmin()">Ajouter Admin</button>
+                                        <h4>Gestion des utilisateurs</h4>
+                                        <div id="users-management">
+                                            <div class="loading">Chargement...</div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="admin-form">
-                                        <h4>Modifier les informations utilisateur</h4>
-                                        <div class="form-grid">
-                                            <select id="userSelect" class="form-input" onchange="loadUserData()">
-                                                <option value="">Sélectionner un utilisateur</option>
-                                            </select>
-                                            <input type="text" id="userTeam" placeholder="Équipe" class="form-input">
-                                            <input type="date" id="userBirthday" placeholder="Date de naissance" class="form-input">
-                                            <input type="url" id="userPhotoUrl" placeholder="URL de la photo" class="form-input">
-                                            <input type="file" id="userPhotoFile" accept="image/*" class="form-input">
-                                            <button class="btn-primary" onclick="updateUserInfo()">Mettre à jour</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div id="usersList" class="users-list">
-                                        <div class="loading">Chargement des utilisateurs...</div>
                                     </div>
                                 </div>
                                 
                                 <!-- Onglet Événements -->
-                                <div id="admin-tab-events" class="admin-tab-pane">
+                                <div id="admin-tab-events" class="admin-tab-pane" role="tabpanel">
                                     <div class="admin-form">
-                                        <h4>Créer un nouvel événement</h4>
-                                        <div class="form-grid">
-                                            <input type="text" id="eventTitle" placeholder="Nom de l'événement" class="form-input">
-                                            <input type="date" id="eventStartDate" placeholder="Date de début" class="form-input">
-                                            <input type="date" id="eventEndDate" placeholder="Date de fin (optionnel)" class="form-input">
-                                            <input type="time" id="eventTime" placeholder="Heure" class="form-input">
-                                            <input type="text" id="eventLocation" placeholder="Lieu" class="form-input">
-                                            <input type="text" id="eventDuration" placeholder="Durée" class="form-input">
-                                            <input type="url" id="eventImageUrl" placeholder="URL de l'image" class="form-input">
-                                            <input type="file" id="eventImageFile" accept="image/*" class="form-input">
-                                            <textarea id="eventDescription" placeholder="Description" class="form-textarea"></textarea>
-                                            <select id="eventStatus" class="form-input">
-                                                <option value="2">À venir</option>
-                                                <option value="1">En cours</option>
-                                                <option value="3">Terminé</option>
-                                            </select>
+                                        <h4>Gestion des événements</h4>
+                                        <div id="events-management">
+                                            <div class="loading">Chargement...</div>
                                         </div>
-                                        <div class="form-actions">
-                                            <button class="btn-primary" onclick="createEvent()">Créer l'événement</button>
-                                            <button class="btn-secondary" onclick="clearEventForm()">Effacer</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div id="eventsList" class="events-list">
-                                        <div class="loading">Chargement des événements...</div>
                                     </div>
                                 </div>
                                 
                                 <!-- Onglet Galerie -->
-                                <div id="admin-tab-gallery" class="admin-tab-pane">
+                                <div id="admin-tab-gallery" class="admin-tab-pane" role="tabpanel">
                                     <div class="admin-form">
-                                        <h4>Ajouter des photos à la galerie</h4>
-                                        <div class="form-grid">
-                                            <input type="text" id="galleryTitle" placeholder="Titre de l'album" class="form-input">
-                                            <select id="galleryEventId" class="form-input">
-                                                <option value="">Lié à un événement (optionnel)</option>
-                                            </select>
-                                            <input type="url" id="galleryImageUrl" placeholder="URL de l'image" class="form-input">
-                                            <input type="file" id="galleryImageFile" accept="image/*" multiple class="form-input">
-                                            <textarea id="galleryDescription" placeholder="Description" class="form-textarea"></textarea>
+                                        <h4>Gestion de la galerie</h4>
+                                        <div id="gallery-management">
+                                            <div class="loading">Chargement...</div>
                                         </div>
-                                        <div class="form-actions">
-                                            <button class="btn-primary" onclick="addGalleryPhotos()">Ajouter les photos</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div id="galleryList">
-                                        <div class="loading">Chargement de la galerie...</div>
                                     </div>
                                 </div>
                                 
-                                <!-- Onglet Anniversaires -->
-                                <div id="admin-tab-birthdays" class="admin-tab-pane">
+                                <!-- Onglet Annonces -->
+                                <div id="admin-tab-offers" class="admin-tab-pane" role="tabpanel">
                                     <div class="admin-form">
-                                        <h4>Gestion des anniversaires</h4>
-                                        <p>Les anniversaires sont automatiquement synchronisés avec les dates de naissance des utilisateurs.</p>
-                                        <button class="btn-primary" onclick="generateBirthdayCalendar()">Générer le calendrier</button>
-                                    </div>
-                                    
-                                    <div id="birthdaysList">
-                                        <div class="loading">Chargement des anniversaires...</div>
+                                        <h4>Gestion des annonces</h4>
+                                        <div id="offers-management">
+                                            <div class="loading">Chargement...</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
-        </div>
+        </main>
     </div>
 
-    <!-- Inclure Supabase -->
+    <!-- Messages système -->
+    <div id="message-container" class="message-container" aria-live="polite"></div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // Configuration Supabase
-        const SUPABASE_URL = 'https://ifbnsnhtrbqcxzpsihzy.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm5zbmh0cmJxY3h6cHNpaHp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMjUyMzcsImV4cCI6MjA3MTYwMTIzN30.8H9R8rwyPFgODQdDMK5Wgru0XVoc5xN58dGUD2pAW70';
-        
-        const { createClient } = supabase;
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        let currentUser = null;
-        let isAdmin = false;
-
-        // Gestion des pages
-        function showLoginPage() {
-            document.getElementById('loginPage').style.display = 'flex';
-            document.getElementById('mainApp').style.display = 'none';
-        }
-
-        function showMainApp() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            
-            document.getElementById(pageId).classList.add('active');
-            
-            const navLink = document.querySelector(`.nav-link[onclick*="${pageId}"]`);
-            if (navLink) {
-                navLink.classList.add('active');
-            }
-        }
-
-        // Debug et diagnostics améliorés
-        function updateDebugInfo() {
-            const debugDiv = document.getElementById('debugInfo');
-            if (debugDiv) {
-                debugDiv.innerHTML = `
-                    <div style="font-family: monospace; font-size: 0.8rem;">
-                        <strong>URL:</strong> ${window.location.href}<br>
-                        <strong>Utilisateur:</strong> ${currentUser ? currentUser.email + ' (' + (isAdmin ? 'admin' : 'user') + ')' : 'Non connecté'}<br>
-                        <strong>Mode admin:</strong> ${isAdmin ? '<span style="color: var(--success);">Activé ✅</span>' : '<span style="color: var(--error);">Désactivé ❌</span>'}<br>
-                        <strong>Timestamp:</strong> ${new Date().toLocaleString('fr-FR')}
-                    </div>
-                `;
-            }
-        }
-
-        // Test des permissions Supabase
-        async function testSupabasePermissions() {
-            const resultDiv = document.getElementById('permissionTest');
-            resultDiv.innerHTML = '<p>Test en cours...</p>';
-            
-            try {
-                // Test 1: Connexion de base
-                const { data: testData, error: testError } = await supabaseClient
-                    .from('user_profiles')
-                    .select('count', { count: 'exact', head: true });
-                
-                let results = '<h5>Résultats des tests:</h5>';
-                results += `<p>✅ Connexion Supabase: OK</p>`;
-                
-                // Test 2: Accès admin_accounts
-                try {
-                    const { data: adminData, error: adminError } = await supabaseClient
-                        .from('admin_accounts')
-                        .select('*')
-                        .limit(1);
-                    
-                    if (adminError) {
-                        results += `<p>❌ admin_accounts: Erreur ${adminError.code} - ${adminError.message}</p>`;
-                        results += `<p style="color: red; font-weight: bold;">PROBLÈME IDENTIFIÉ: ${adminError.details || 'Permissions RLS'}</p>`;
-                    } else {
-                        results += `<p>✅ admin_accounts: Accessible (${adminData?.length || 0} entrées)</p>`;
-                    }
-                } catch (adminErr) {
-                    results += `<p>❌ admin_accounts: Exception - ${adminErr.message}</p>`;
-                }
-                
-                // Test 3: Utilisateur actuel
-                if (currentUser) {
-                    results += `<p>✅ Utilisateur connecté: ${currentUser.email}</p>`;
-                    results += `<p>📧 Email normalisé: ${currentUser.email.toLowerCase().trim()}</p>`;
-                }
-                
-                resultDiv.innerHTML = results;
-                
-            } catch (error) {
-                resultDiv.innerHTML = `<p style="color: red;">❌ Erreur générale: ${error.message}</p>`;
-            }
-        }
-
-        // Test spécifique pour l'accès admin
-        async function testAdminAccess() {
-            const resultDiv = document.getElementById('adminTestResult');
-            if (!currentUser) {
-                resultDiv.innerHTML = '<p style="color: red;">Aucun utilisateur connecté</p>';
-                return;
-            }
-            
-            resultDiv.innerHTML = '<p>Test en cours...</p>';
-            
-            try {
-                console.log('=== TEST ADMIN ACCESS ===');
-                console.log('Email utilisateur:', currentUser.email);
-                
-                // Approche 1: Requête directe
-                const { data: adminData, error: adminError } = await supabaseClient
-                    .from('admin_accounts')
-                    .select('*')
-                    .eq('email', currentUser.email.toLowerCase().trim());
-                
-                console.log('Résultat requête:', { data: adminData, error: adminError });
-                
-                let result = '<h5>Test d\'accès admin:</h5>';
-                result += `<p>Email testé: <code>${currentUser.email.toLowerCase().trim()}</code></p>`;
-                
-                if (adminError) {
-                    result += `<p style="color: red;">❌ Erreur: ${adminError.code} - ${adminError.message}</p>`;
-                    if (adminError.details) {
-                        result += `<p style="color: red;">Détails: ${adminError.details}</p>`;
-                    }
-                    result += `<p style="color: red; font-weight: bold;">SOLUTION: Vérifier les politiques RLS sur admin_accounts</p>`;
-                } else if (adminData && adminData.length > 0) {
-                    result += `<p style="color: green;">✅ Utilisateur trouvé dans admin_accounts!</p>`;
-                    result += `<p>Données: <code>${JSON.stringify(adminData[0], null, 2)}</code></p>`;
-                    result += `<p style="color: green; font-weight: bold;">Le mode admin devrait fonctionner</p>`;
-                } else {
-                    result += `<p style="color: orange;">⚠️ Utilisateur non trouvé dans admin_accounts</p>`;
-                    result += `<p>Ajoutez cet email à la table admin_accounts</p>`;
-                }
-                
-                resultDiv.innerHTML = result;
-                
-            } catch (error) {
-                console.error('Erreur test admin:', error);
-                resultDiv.innerHTML = `<p style="color: red;">❌ Exception: ${error.message}</p>`;
-            }
-        }
-
-        // Vérification admin corrigée
-        async function checkAdminStatus(userEmail) {
-            try {
-                console.log('=== VÉRIFICATION ADMIN ===');
-                console.log('Email à vérifier:', userEmail);
-                
-                // Normalisation de l'email
-                const normalizedEmail = userEmail.toLowerCase().trim();
-                console.log('Email normalisé:', normalizedEmail);
-                
-                // Approche alternative: sans .eq() pour éviter l'erreur 406
-                const { data, error } = await supabaseClient
-                    .from('admin_accounts')
-                    .select('*');
-                
-                console.log('Résultat requête admin:', { data, error });
-                
-                if (error) {
-                    console.error('❌ Erreur accès admin_accounts:', error);
-                    document.getElementById('supabaseStatus').innerHTML = 
-                        `<span style="color: var(--error);">Erreur admin: ${error.code} - ${error.message}</span>`;
-                    return false;
-                }
-                
-                // Vérification manuelle
-                const isAdminUser = data && data.some(admin => 
-                    admin.email.toLowerCase().trim() === normalizedEmail
-                );
-                
-                console.log('Statut admin trouvé:', isAdminUser);
-                
-                if (isAdminUser) {
-                    document.getElementById('supabaseStatus').innerHTML = 
-                        `<span style="color: var(--success);">Mode admin détecté ✅</span>`;
-                } else {
-                    document.getElementById('supabaseStatus').innerHTML = 
-                        `<span style="color: var(--error);">Non admin (email non trouvé dans admin_accounts)</span>`;
-                }
-                
-                return isAdminUser;
-                
-            } catch (err) {
-                console.error('❌ Exception vérification admin:', err);
-                document.getElementById('supabaseStatus').innerHTML = 
-                    `<span style="color: var(--error);">Exception: ${err.message}</span>`;
-                return false;
-            }
-        }
-
-        // Authentification
-        async function signInWithGoogle() {
-            console.log('=== CONNEXION GOOGLE ===');
-            
-            try {
-                let redirectURL;
-                if (window.location.hostname === 'macif-arles-github-io.vercel.app') {
-                    redirectURL = 'https://macif-arles-github-io.vercel.app/';
-                } else if (window.location.hostname === 'macifarles.github.io') {
-                    redirectURL = 'https://macifarles.github.io/';
-                } else {
-                    redirectURL = window.location.origin;
-                }
-                
-                const { data, error } = await supabaseClient.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        redirectTo: redirectURL
-                    }
-                });
-                
-                if (error) {
-                    console.error('Erreur Supabase:', error);
-                    showMessage('error', `Erreur de connexion: ${error.message}`);
-                    return;
-                }
-                
-            } catch (err) {
-                console.error('Exception:', err);
-                showMessage('error', `Erreur technique: ${err.message}`);
-            }
-        }
-
-        async function signOut() {
-            const { error } = await supabaseClient.auth.signOut();
-            if (error) {
-                console.error('Erreur de déconnexion:', error);
-                return;
-            }
-            
-            currentUser = null;
-            isAdmin = false;
-            showLoginPage();
-            showMessage('info', 'Déconnexion réussie');
-        }
-
-        // Gestion des sessions
-        supabaseClient.auth.onAuthStateChange(async (event, session) => {
-            console.log('=== CHANGEMENT AUTH ===');
-            console.log('Événement:', event);
-            console.log('Session:', session);
-            
-            if (session && session.user) {
-                currentUser = session.user;
-                console.log('Utilisateur connecté:', currentUser.email);
-                
-                // Vérifier le statut admin avec délai
-                setTimeout(async () => {
-                    isAdmin = await checkAdminStatus(currentUser.email);
-                    console.log('Statut admin final:', isAdmin);
-                    updateUIAfterLogin();
-                    if (isAdmin) {
-                        showMessage('success', '🔥 Mode administrateur activé !');
-                        setTimeout(() => initializeAdminPanel(), 500);
-                    }
-                }, 500);
-                
-                updateUIAfterLogin();
-                showMainApp();
-                showMessage('success', `Connexion réussie ! Bienvenue ${currentUser.user_metadata?.full_name || currentUser.email}`);
-            } else {
-                currentUser = null;
-                isAdmin = false;
-                showLoginPage();
-            }
-            
-            updateDebugInfo();
-        });
-
-        function updateUIAfterLogin() {
-            const userName = document.getElementById('userName');
-            const userAvatar = document.getElementById('userAvatar');
-            const adminBadge = document.getElementById('adminBadge');
-            const adminNavItem = document.getElementById('adminNavItem');
-            
-            if (userName && currentUser) {
-                userName.textContent = currentUser.user_metadata?.full_name || 
-                                     currentUser.user_metadata?.name || 
-                                     currentUser.email.split('@')[0];
-            }
-            
-            if (userAvatar && currentUser.user_metadata?.avatar_url) {
-                userAvatar.src = currentUser.user_metadata.avatar_url;
-            }
-            
-            if (adminBadge && isAdmin) {
-                adminBadge.style.display = 'block';
-            } else if (adminBadge) {
-                adminBadge.style.display = 'none';
-            }
-            
-            if (adminNavItem && isAdmin) {
-                adminNavItem.style.display = 'block';
-            } else if (adminNavItem) {
-                adminNavItem.style.display = 'none';
-            }
-        }
-
-        // Messages
-        function showMessage(type, message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            messageDiv.innerHTML = message;
-            messageDiv.style.position = 'fixed';
-            messageDiv.style.top = '20px';
-            messageDiv.style.right = '20px';
-            messageDiv.style.zIndex = '200000';
-            messageDiv.style.minWidth = '300px';
-            messageDiv.style.maxWidth = '500px';
-            messageDiv.style.boxShadow = 'var(--shadow-medium)';
-            
-            document.body.appendChild(messageDiv);
-            setTimeout(() => messageDiv.remove(), 5000);
-        }
-
-        // Fonctions admin
-        function showAdminTab(tabName) {
-            document.querySelectorAll('.admin-tab-pane').forEach(pane => {
-                pane.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            const targetPane = document.getElementById(`admin-tab-${tabName}`);
-            const targetBtn = document.querySelector(`[onclick*="${tabName}"]`);
-            
-            if (targetPane) targetPane.classList.add('active');
-            if (targetBtn) targetBtn.classList.add('active');
-            
-            loadTabContent(tabName);
-        }
-        
-        async function loadTabContent(tabName) {
-            switch (tabName) {
-                case 'users':
-                    await loadUsersList();
-                    await loadUsersForSelect();
-                    break;
-                case 'events':
-                    await loadEventsList();
-                    break;
-                case 'gallery':
-                    await loadGalleryList();
-                    await loadEventsForGallery();
-                    break;
-                case 'birthdays':
-                    await loadBirthdaysList();
-                    break;
-            }
-        }
-        
-        async function loadUsersList() {
-            const usersList = document.getElementById('usersList');
-            usersList.innerHTML = '<div class="loading">Chargement des utilisateurs...</div>';
-            
-            try {
-                const { data: users, error } = await supabaseClient
-                    .from('users')
-                    .select('*')
-                    .order('name', { ascending: true });
-                
-                if (error) throw error;
-                
-                if (users && users.length > 0) {
-                    usersList.innerHTML = users.map(user => `
-                        <div class="user-item">
-                            <div class="user-info">
-                                <img src="${user.photo_url || '/api/placeholder/40/40'}" 
-                                     alt="${user.name}" class="user-avatar-small">
-                                <div class="user-details">
-                                    <div class="user-name">${user.name} ${user.lastname}</div>
-                                    <div class="user-email">${user.email}</div>
-                                    <div class="user-team">Équipe: ${user.teams || 'Non définie'}</div>
-                                    <div class="user-birthday">Né le: ${user.birthday ? new Date(user.birthday).toLocaleDateString('fr-FR') : 'Non défini'}</div>
-                                </div>
-                                <div class="user-role ${user.admin ? 'admin' : ''}">${user.admin ? 'ADMIN' : 'USER'}</div>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    usersList.innerHTML = '<div class="loading">Aucun utilisateur trouvé</div>';
-                }
-            } catch (error) {
-                console.error('Erreur chargement utilisateurs:', error);
-                usersList.innerHTML = '<div class="loading">Erreur lors du chargement</div>';
-            }
-        }
-        
-        async function loadUsersForSelect() {
-            try {
-                const { data: users, error } = await supabaseClient
-                    .from('users')
-                    .select('id, name, lastname, email')
-                    .order('name', { ascending: true });
-                
-                if (error) throw error;
-                
-                const userSelect = document.getElementById('userSelect');
-                userSelect.innerHTML = '<option value="">Sélectionner un utilisateur</option>';
-                
-                if (users) {
-                    users.forEach(user => {
-                        userSelect.innerHTML += `<option value="${user.id}">${user.name} ${user.lastname} (${user.email})</option>`;
-                    });
-                }
-            } catch (error) {
-                console.error('Erreur chargement select utilisateurs:', error);
-            }
-        }
-        
-        async function loadUserData() {
-            const userId = document.getElementById('userSelect').value;
-            if (!userId) return;
-            
-            try {
-                const { data: user, error } = await supabaseClient
-                    .from('users')
-                    .select('*')
-                    .eq('id', userId)
-                    .single();
-                
-                if (error) throw error;
-                
-                if (user) {
-                    document.getElementById('userTeam').value = user.teams || '';
-                    document.getElementById('userBirthday').value = user.birthday || '';
-                    document.getElementById('userPhotoUrl').value = user.photo_url || '';
-                }
-            } catch (error) {
-                console.error('Erreur chargement données utilisateur:', error);
-            }
-        }
-        
-        async function updateUserInfo() {
-            const userId = document.getElementById('userSelect').value;
-            if (!userId) {
-                showMessage('error', 'Veuillez sélectionner un utilisateur');
-                return;
-            }
-            
-            const team = document.getElementById('userTeam').value.trim();
-            const birthday = document.getElementById('userBirthday').value;
-            const photoUrl = document.getElementById('userPhotoUrl').value.trim();
-            
-            try {
-                const { error } = await supabaseClient
-                    .from('users')
-                    .update({
-                        teams: team,
-                        birthday: birthday,
-                        photo_url: photoUrl,
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('id', userId);
-                
-                if (error) throw error;
-                
-                showMessage('success', 'Informations utilisateur mises à jour');
-                await loadUsersList();
-                
-                // Clear form
-                document.getElementById('userTeam').value = '';
-                document.getElementById('userBirthday').value = '';
-                document.getElementById('userPhotoUrl').value = '';
-                document.getElementById('userSelect').value = '';
-                
-            } catch (error) {
-                console.error('Erreur mise à jour utilisateur:', error);
-                showMessage('error', `Erreur: ${error.message}`);
-            }
-        }
-        
-        async function addNewAdmin() {
-            const emailInput = document.getElementById('newAdminEmail');
-            const email = emailInput.value.trim().toLowerCase();
-            
-            if (!email || !email.includes('@')) {
-                showMessage('error', 'Veuillez saisir un email valide');
-                return;
-            }
-            
-            try {
-                // Ajouter à admin_accounts
-                const { error: adminError } = await supabaseClient
-                    .from('admin_accounts')
-                    .insert({
-                        email: email,
-                        created_at: new Date().toISOString()
-                    });
-                
-                if (adminError && adminError.code !== '23505') throw adminError;
-                
-                // Mettre à jour le statut admin dans users si l'utilisateur existe
-                const { error: userError } = await supabaseClient
-                    .from('users')
-                    .update({ admin: true })
-                    .eq('email', email);
-                
-                showMessage('success', `${email} ajouté comme administrateur`);
-                emailInput.value = '';
-                await loadUsersList();
-                
-            } catch (error) {
-                console.error('Erreur ajout admin:', error);
-                if (error.code === '23505') {
-                    showMessage('error', 'Cet email est déjà administrateur');
-                } else {
-                    showMessage('error', `Erreur: ${error.message}`);
-                }
-            }
-        }
-        
-        async function createEvent() {
-            const title = document.getElementById('eventTitle').value.trim();
-            const startDate = document.getElementById('eventStartDate').value;
-            const endDate = document.getElementById('eventEndDate').value;
-            const time = document.getElementById('eventTime').value;
-            const location = document.getElementById('eventLocation').value.trim();
-            const duration = document.getElementById('eventDuration').value.trim();
-            const imageUrl = document.getElementById('eventImageUrl').value.trim();
-            const description = document.getElementById('eventDescription').value.trim();
-            const status = document.getElementById('eventStatus').value;
-            
-            if (!title || !startDate) {
-                showMessage('error', 'Nom et date de début sont obligatoires');
-                return;
-            }
-            
-            try {
-                const { error } = await supabaseClient
-                    .from('activities')
-                    .insert({
-                        name: title,
-                        activity_date: startDate,
-                        end_date: endDate || null,
-                        activity_time: time,
-                        duration: duration,
-                        location: location,
-                        image_url: imageUrl,
-                        description: description,
-                        status: parseInt(status),
-                        created_by: currentUser.id,
-                        participants: [],
-                        created_at: new Date().toISOString()
-                    });
-                
-                if (error) throw error;
-                
-                showMessage('success', 'Événement créé avec succès');
-                clearEventForm();
-                await loadEventsList();
-                await loadAdminStats();
-                
-            } catch (error) {
-                console.error('Erreur création événement:', error);
-                showMessage('error', `Erreur: ${error.message}`);
-            }
-        }
-        
-        async function loadEventsList() {
-            const eventsList = document.getElementById('eventsList');
-            eventsList.innerHTML = '<div class="loading">Chargement des événements...</div>';
-            
-            try {
-                const { data: events, error } = await supabaseClient
-                    .from('activities')
-                    .select('*')
-                    .order('activity_date', { ascending: false });
-                
-                if (error) throw error;
-                
-                if (events && events.length > 0) {
-                    eventsList.innerHTML = events.map(event => `
-                        <div class="event-item">
-                            <div class="event-info">
-                                <div class="event-details">
-                                    <div class="event-title">${event.name}</div>
-                                    <div class="event-date">${new Date(event.activity_date).toLocaleDateString('fr-FR')} ${event.activity_time ? 'à ' + event.activity_time : ''}</div>
-                                    <div class="event-location">${event.location || ''}</div>
-                                    <div class="event-status">Status: ${event.status === 1 ? 'En cours' : event.status === 2 ? 'À venir' : 'Terminé'}</div>
-                                </div>
-                            </div>
-                            <div class="event-actions">
-                                <button class="btn-secondary" onclick="editEvent('${event.id}')">Modifier</button>
-                                <button class="btn-danger" onclick="deleteEvent('${event.id}')">Supprimer</button>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    eventsList.innerHTML = '<div class="loading">Aucun événement créé</div>';
-                }
-            } catch (error) {
-                console.error('Erreur chargement événements:', error);
-                eventsList.innerHTML = '<div class="loading">Erreur lors du chargement</div>';
-            }
-        }
-        
-        // Fonctions pour tous les utilisateurs
-        function showCreateOfferForm() {
-            document.getElementById('createOfferForm').style.display = 'block';
-        }
-        
-        function hideCreateOfferForm() {
-            document.getElementById('createOfferForm').style.display = 'none';
-            clearOfferForm();
-        }
-        
-        function clearOfferForm() {
-            document.getElementById('offerTitle').value = '';
-            document.getElementById('offerPrice').value = '';
-            document.getElementById('offerCategory').value = '';
-            document.getElementById('offerImageUrl').value = '';
-            document.getElementById('offerDescription').value = '';
-        }
-        
-        async function createOffer() {
-            const title = document.getElementById('offerTitle').value.trim();
-            const price = document.getElementById('offerPrice').value;
-            const category = document.getElementById('offerCategory').value;
-            const imageUrl = document.getElementById('offerImageUrl').value.trim();
-            const description = document.getElementById('offerDescription').value.trim();
-            
-            if (!title || !price || !description) {
-                showMessage('error', 'Titre, prix et description sont obligatoires');
-                return;
-            }
-            
-            try {
-                const { error } = await supabaseClient
-                    .from('offers')
-                    .insert({
-                        title: title,
-                        price: parseFloat(price),
-                        category: category,
-                        image_url: imageUrl,
-                        description: description,
-                        seller_id: currentUser.id,
-                        seller_name: currentUser.user_metadata?.full_name || currentUser.email,
-                        created_at: new Date().toISOString()
-                    });
-                
-                if (error) throw error;
-                
-                showMessage('success', 'Annonce publiée avec succès');
-                hideCreateOfferForm();
-                await loadOffersList();
-                
-            } catch (error) {
-                console.error('Erreur création annonce:', error);
-                showMessage('error', `Erreur: ${error.message}`);
-            }
-        }
-        
-        function showCreateActivityForm() {
-            document.getElementById('createActivityForm').style.display = 'block';
-        }
-        
-        function hideCreateActivityForm() {
-            document.getElementById('createActivityForm').style.display = 'none';
-            clearActivityForm();
-        }
-        
-        function clearActivityForm() {
-            document.getElementById('activityTitle').value = '';
-            document.getElementById('activityDate').value = '';
-            document.getElementById('activityTime').value = '';
-            document.getElementById('activityDuration').value = '';
-            document.getElementById('activityLocation').value = '';
-            document.getElementById('activityMaxParticipants').value = '';
-            document.getElementById('activityDescription').value = '';
-        }
-        
-        async function createActivity() {
-            const title = document.getElementById('activityTitle').value.trim();
-            const date = document.getElementById('activityDate').value;
-            const time = document.getElementById('activityTime').value;
-            const duration = document.getElementById('activityDuration').value.trim();
-            const location = document.getElementById('activityLocation').value.trim();
-            const maxParticipants = document.getElementById('activityMaxParticipants').value;
-            const description = document.getElementById('activityDescription').value.trim();
-            
-            if (!title || !date || !description) {
-                showMessage('error', 'Nom, date et description sont obligatoires');
-                return;
-            }
-            
-            try {
-                const { error } = await supabaseClient
-                    .from('activities')
-                    .insert({
-                        name: title,
-                        activity_date: date,
-                        activity_time: time,
-                        duration: duration,
-                        location: location,
-                        max_participants: maxParticipants ? parseInt(maxParticipants) : null,
-                        description: description,
-                        status: 2, // À venir
-                        created_by: currentUser.id,
-                        organizer_name: currentUser.user_metadata?.full_name || currentUser.email,
-                        participants: [],
-                        created_at: new Date().toISOString()
-                    });
-                
-                if (error) throw error;
-                
-                showMessage('success', 'Activité créée avec succès');
-                hideCreateActivityForm();
-                await loadActivitiesList();
-                
-            } catch (error) {
-                console.error('Erreur création activité:', error);
-                showMessage('error', `Erreur: ${error.message}`);
-            }
-        }
-
-        function clearEventForm() {
-            document.getElementById('eventTitle').value = '';
-            document.getElementById('eventStartDate').value = '';
-            document.getElementById('eventEndDate').value = '';
-            document.getElementById('eventTime').value = '';
-            document.getElementById('eventLocation').value = '';
-            document.getElementById('eventDuration').value = '';
-            document.getElementById('eventImageUrl').value = '';
-            document.getElementById('eventDescription').value = '';
-            document.getElementById('eventStatus').value = '2';
-        }
-
-        function initializeAdminPanel() {
-            console.log('Initialisation du panneau admin');
-            loadAdminStats();
-        }
-
-        async function loadAdminStats() {
-            try {
-                // Compter les utilisateurs
-                const { count: usersCount } = await supabaseClient
-                    .from('users')
-                    .select('*', { count: 'exact', head: true });
-                
-                // Compter les événements
-                const { count: eventsCount } = await supabaseClient
-                    .from('activities')
-                    .select('*', { count: 'exact', head: true });
-                
-                document.getElementById('statsUsers').textContent = usersCount || '0';
-                document.getElementById('statsEvents').textContent = eventsCount || '0';
-                document.getElementById('statsPhotos').textContent = '0';
-                document.getElementById('statsAnnonces').textContent = '0';
-                
-            } catch (error) {
-                console.error('Erreur chargement stats:', error);
-            }
-        }
-
-        // Stubs pour les fonctions manquantes
-        async function loadOffersList() {
-            // À implémenter selon vos besoins
-        }
-
-        async function loadActivitiesList() {
-            // À implémenter selon vos besoins
-        }
-
-        async function loadGalleryList() {
-            // À implémenter selon vos besoins
-        }
-
-        async function loadEventsForGallery() {
-            // À implémenter selon vos besoins
-        }
-
-        async function loadBirthdaysList() {
-            // À implémenter selon vos besoins
-        }
-
-        async function addGalleryPhotos() {
-            // À implémenter selon vos besoins
-        }
-
-        async function generateBirthdayCalendar() {
-            // À implémenter selon vos besoins
-        }
-
-        async function editEvent(id) {
-            // À implémenter selon vos besoins
-        }
-
-        async function deleteEvent(id) {
-            // À implémenter selon vos besoins
-        }
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('=== INIT APP ===');
-            console.log('URL:', window.location.href);
-            
-            showLoginPage();
-            updateDebugInfo();
-            
-            supabaseClient.auth.getSession().then(({ data: { session } }) => {
-                if (session) {
-                    console.log('Session existante trouvée');
-                } else {
-                    console.log('Aucune session');
-                }
-            });
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
