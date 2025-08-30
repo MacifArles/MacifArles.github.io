@@ -853,4 +853,9 @@ a {
     font-weight: 500;
     color: var(--dark-gray);
 }
+
+/* Solution temporaire - masquer le modal par défaut */
+#user-registration-modal {
+    display: none !important;
+}
 }
