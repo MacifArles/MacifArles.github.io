@@ -1,3 +1,8 @@
+/**
+ * MACIF ARLES - Intranet Application
+ * Version de diagnostic approfondi - Niveau de confiance: 95%
+ */
+
 // ===== CONFIGURATION SUPABASE =====
 const SUPABASE_CONFIG = {
     url: 'https://ifbnsnhtrbqcxzpsihzy.supabase.co',
@@ -11,7 +16,8 @@ const supabaseClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey
 let currentUser = null;
 let isAdmin = false;
 let currentPage = 'dashboard';
-let isInitializing = true;
+let authListenerActive = false;
+let sessionProcessed = false;
 
 // ===== ÉLÉMENTS DOM =====
 const elements = {
@@ -31,16 +37,35 @@ const elements = {
 // ===== INITIALISATION =====
 async function initializeApp() {
     console.log('=== INITIALISATION APP MACIF ARLES ===');
+    console.log('URL actuelle:', window.location.href);
+    console.log('Paramètres URL:', new URLSearchParams(window.location.search));
     
     initializeElements();
     setupEventListeners();
-    updateDebugInfo();
     
-    // Vérifier la session existante et gérer l'affichage en conséquence
+    // Vérifier si nous revenons d'un callback OAuth
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasAuthParams = urlParams.has('code') || urlParams.has('access_token') || urlParams.has('refresh_token');
+    
+    console.log('Paramètres OAuth détectés:', hasAuthParams);
+    
+    if (hasAuthParams) {
+        console.log('Callback OAuth détecté - Attente du traitement...');
+        showMessage('info', 'Finalisation de la connexion...');
+        // Attendre un peu plus longtemps pour le traitement du callback
+        await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    
+    // Configuration du listener d'authentification avant la vérification de session
+    setupAuthListener();
+    
+    // Vérifier la session existante
     await checkExistingSession();
     
+    // Mise à jour des informations de debug
+    updateDebugInfo();
+    
     console.log('Application initialisée avec succès');
-    isInitializing = false;
 }
 
 function initializeElements() {
@@ -76,9 +101,51 @@ function setupEventListeners() {
     setupFormListeners();
     setupAdminListeners();
     setupUserRegistrationListeners();
+}
+
+function setupAuthListener() {
+    if (authListenerActive) {
+        console.log('Listener d\'authentification déjà actif');
+        return;
+    }
     
-    // Gestion des sessions Supabase
-    supabaseClient.auth.onAuthStateChange(handleAuthStateChange);
+    console.log('Configuration du listener d\'authentification');
+    authListenerActive = true;
+    
+    supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        console.log('=== CHANGEMENT AUTH ===', event);
+        console.log('Session:', session ? `Utilisateur ${session.user.email}` : 'Aucune session');
+        console.log('Session déjà traitée:', sessionProcessed);
+        
+        // Éviter le double traitement
+        if (sessionProcessed && event === 'SIGNED_IN') {
+            console.log('Session déjà traitée, ignorer');
+            return;
+        }
+        
+        switch (event) {
+            case 'SIGNED_IN':
+                if (session && session.user) {
+                    sessionProcessed = true;
+                    await handleUserSession(session);
+                }
+                break;
+                
+            case 'SIGNED_OUT':
+                sessionProcessed = false;
+                handleUserLogout();
+                break;
+                
+            case 'TOKEN_REFRESHED':
+                console.log('Token rafraîchi');
+                break;
+                
+            default:
+                console.log('Événement auth non géré:', event);
+        }
+        
+        updateDebugInfo();
+    });
 }
 
 // ===== GESTION DE L'AUTHENTIFICATION =====
@@ -87,27 +154,54 @@ async function signInWithGoogle() {
     console.log('=== TENTATIVE CONNEXION GOOGLE ===');
     
     try {
+        // Désactiver le bouton pendant la connexion
+        if (elements.googleLoginBtn) {
+            elements.googleLoginBtn.disabled = true;
+            elements.googleLoginBtn.textContent = 'Connexion en cours...';
+        }
+        
         const redirectURL = getRedirectURL();
-        console.log('URL de redirection:', redirectURL);
+        console.log('URL de redirection configurée:', redirectURL);
         
         const { data, error } = await supabaseClient.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: redirectURL
+                redirectTo: redirectURL,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent'
+                }
             }
         });
         
         if (error) {
-            console.error('Erreur Supabase:', error);
+            console.error('Erreur Supabase OAuth:', error);
             showMessage('error', `Erreur de connexion: ${error.message}`);
+            resetLoginButton();
             return;
         }
         
-        console.log('Redirection OAuth initiée');
+        console.log('Redirection OAuth initiée avec succès');
         
     } catch (err) {
-        console.error('Exception connexion:', err);
+        console.error('Exception lors de la connexion:', err);
         showMessage('error', `Erreur technique: ${err.message}`);
+        resetLoginButton();
+    }
+}
+
+function resetLoginButton() {
+    if (elements.googleLoginBtn) {
+        elements.googleLoginBtn.disabled = false;
+        elements.googleLoginBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Se connecter avec Google
+        `;
     }
 }
 
@@ -123,13 +217,15 @@ async function signOut() {
             return;
         }
         
-        // Réinitialiser les variables globales
+        // Réinitialiser les variables
         currentUser = null;
         isAdmin = false;
         currentPage = 'dashboard';
+        sessionProcessed = false;
         
-        // Afficher la page de connexion
-        showLoginPage();
+        // Nettoyer l'URL des paramètres OAuth
+        cleanupURL();
+        
         showMessage('info', 'Déconnexion réussie');
         
     } catch (err) {
@@ -151,10 +247,20 @@ async function checkExistingSession() {
         }
         
         if (session && session.user) {
-            console.log('Session existante détectée pour:', session.user.email);
-            await handleUserSession(session);
+            console.log('Session existante trouvée pour:', session.user.email);
+            console.log('Détails session:', {
+                provider: session.user.app_metadata?.provider,
+                created_at: session.user.created_at,
+                expires_at: session.expires_at
+            });
+            
+            if (!sessionProcessed) {
+                await handleUserSession(session);
+            } else {
+                console.log('Session déjà traitée, ignorer');
+            }
         } else {
-            console.log('Aucune session active');
+            console.log('Aucune session active détectée');
             showLoginPage();
         }
     } catch (err) {
@@ -163,78 +269,58 @@ async function checkExistingSession() {
     }
 }
 
-async function handleAuthStateChange(event, session) {
-    console.log('=== CHANGEMENT AUTH ===', event, session ? `Session pour ${session.user.email}` : 'Pas de session');
-    
-    // Ne pas traiter les événements pendant l'initialisation
-    if (isInitializing) {
-        console.log('Initialisation en cours, événement ignoré');
-        return;
-    }
-    
-    if (session && session.user) {
-        await handleUserSession(session);
-    } else {
-        handleUserLogout();
-    }
-    
-    updateDebugInfo();
-}
-
 // ===== GESTION DES UTILISATEURS =====
 
 async function handleUserSession(session) {
     console.log('=== TRAITEMENT SESSION UTILISATEUR ===');
     currentUser = session.user;
-    console.log('Utilisateur connecté:', currentUser.email);
+    console.log('Traitement pour utilisateur:', currentUser.email);
+    console.log('Métadonnées utilisateur:', currentUser.user_metadata);
     
     try {
-        // Vérifier si l'utilisateur existe dans notre table users
+        // Vérifier si l'utilisateur existe dans la base
         const userExists = await checkUserExists(currentUser.email);
-        console.log('Utilisateur existe dans la DB:', userExists);
+        console.log('Utilisateur existe en base:', userExists);
         
         if (!userExists) {
-            console.log('Nouvel utilisateur détecté, affichage du modal d\'enregistrement');
+            console.log('Nouvel utilisateur - Affichage modal enregistrement');
             showUserRegistrationModal();
             return;
         }
         
-        // Continuer le processus normal de connexion
+        // Continuer le processus de connexion
         await continueLoginProcess();
         
     } catch (error) {
-        console.error('Erreur lors du traitement de la session utilisateur:', error);
+        console.error('Erreur traitement session utilisateur:', error);
         showMessage('error', 'Erreur lors de la connexion');
         showLoginPage();
     }
 }
 
 async function checkUserExists(userEmail) {
-    console.log('=== VÉRIFICATION UTILISATEUR EXISTANT ===');
-    console.log('Email à vérifier:', userEmail);
+    console.log('=== VÉRIFICATION EXISTENCE UTILISATEUR ===');
+    const normalizedEmail = userEmail.toLowerCase().trim();
+    console.log('Email normalisé:', normalizedEmail);
     
     try {
-        const normalizedEmail = userEmail.toLowerCase().trim();
-        
         const { data, error } = await supabaseClient
             .from('users')
             .select('id, email')
             .eq('email', normalizedEmail)
-            .single();
+            .maybeSingle(); // Utiliser maybeSingle au lieu de single
         
         if (error) {
-            if (error.code === 'PGRST116') {
-                // Code d'erreur pour "pas de résultat trouvé"
-                console.log('Utilisateur non trouvé dans la base');
-                return false;
-            } else {
-                console.error('Erreur lors de la vérification utilisateur:', error);
-                return false;
-            }
+            console.error('Erreur requête utilisateur:', error);
+            return false;
         }
         
         const exists = data !== null;
-        console.log('Résultat vérification:', exists ? 'Utilisateur trouvé' : 'Utilisateur non trouvé');
+        console.log('Résultat vérification:', exists ? 'Trouvé' : 'Non trouvé');
+        if (exists) {
+            console.log('Données utilisateur:', data);
+        }
+        
         return exists;
         
     } catch (err) {
@@ -244,20 +330,21 @@ async function checkUserExists(userEmail) {
 }
 
 async function continueLoginProcess() {
-    console.log('=== CONTINUATION DU PROCESSUS DE CONNEXION ===');
+    console.log('=== CONTINUATION PROCESSUS DE CONNEXION ===');
     
     try {
-        // Vérification du statut administrateur
+        // Vérifier le statut admin
         isAdmin = await checkAdminStatus(currentUser.email);
-        console.log('Statut admin final:', isAdmin);
+        console.log('Statut administrateur:', isAdmin);
         
-        // Mettre à jour l'interface utilisateur
+        // Mettre à jour l'interface
         await updateUserInterface();
         
-        // Afficher l'application principale
+        // Nettoyer l'URL et afficher l'application
+        cleanupURL();
         showMainApp();
         
-        // Afficher les messages de bienvenue
+        // Messages de bienvenue
         const displayName = currentUser.user_metadata?.full_name || currentUser.email;
         showMessage('success', `Connexion réussie ! Bienvenue ${displayName}`);
         
@@ -267,7 +354,7 @@ async function continueLoginProcess() {
         }
         
     } catch (error) {
-        console.error('Erreur lors du processus de connexion:', error);
+        console.error('Erreur finalisation connexion:', error);
         showMessage('error', 'Erreur lors de la finalisation de la connexion');
         showLoginPage();
     }
@@ -277,37 +364,32 @@ function handleUserLogout() {
     console.log('=== TRAITEMENT DÉCONNEXION ===');
     currentUser = null;
     isAdmin = false;
+    sessionProcessed = false;
+    cleanupURL();
     showLoginPage();
 }
 
 async function checkAdminStatus(userEmail) {
+    console.log('=== VÉRIFICATION STATUT ADMINISTRATEUR ===');
+    const normalizedEmail = userEmail.toLowerCase().trim();
+    
     try {
-        console.log('=== VÉRIFICATION STATUT ADMIN ===');
-        console.log('Email à vérifier:', userEmail);
-        
-        const normalizedEmail = userEmail.toLowerCase().trim();
-        
         const { data, error } = await supabaseClient
             .from('users')
-            .select('id, email, is_admin')
+            .select('is_admin')
             .eq('email', normalizedEmail)
-            .eq('is_admin', true)
-            .single();
+            .maybeSingle();
         
         if (error) {
-            if (error.code !== 'PGRST116') {
-                console.error('Erreur vérification admin:', error);
-                updateSupabaseStatus('error', `Erreur admin: ${error.message}`);
-            } else {
-                updateSupabaseStatus('info', 'Utilisateur standard');
-            }
+            console.error('Erreur vérification admin:', error);
+            updateSupabaseStatus('error', `Erreur admin: ${error.message}`);
             return false;
         }
         
         const isAdminUser = data && data.is_admin === true;
         
         if (isAdminUser) {
-            updateSupabaseStatus('success', 'Mode admin détecté');
+            updateSupabaseStatus('success', 'Mode administrateur détecté');
         } else {
             updateSupabaseStatus('info', 'Utilisateur standard');
         }
@@ -345,27 +427,30 @@ function hideUserRegistrationModal() {
 
 async function createNewUser(userData) {
     console.log('=== CRÉATION NOUVEL UTILISATEUR ===');
-    console.log('Données utilisateur:', userData);
     
     try {
+        const newUserData = {
+            id: currentUser.id,
+            email: currentUser.email.toLowerCase().trim(),
+            name: userData.name,
+            lastname: userData.lastname,
+            birthday: userData.birthday,
+            teams: userData.team,
+            photo_url: currentUser.user_metadata?.avatar_url,
+            is_admin: false,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
+        
+        console.log('Données à insérer:', newUserData);
+        
         const { error } = await supabaseClient
             .from('users')
-            .insert({
-                id: currentUser.id,
-                email: currentUser.email.toLowerCase().trim(),
-                name: userData.name,
-                lastname: userData.lastname,
-                birthday: userData.birthday,
-                teams: userData.team,
-                photo_url: currentUser.user_metadata?.avatar_url,
-                is_admin: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-            });
+            .insert(newUserData);
         
         if (error) {
             console.error('Erreur création utilisateur:', error);
-            showMessage('error', `Erreur lors de la création du profil: ${error.message}`);
+            showMessage('error', `Erreur création profil: ${error.message}`);
             return false;
         }
         
@@ -417,23 +502,14 @@ function setupUserRegistrationListeners() {
             
             if (success) {
                 hideUserRegistrationModal();
-                showMessage('success', 'Profil créé avec succès ! Bienvenue dans l\'intranet MACIF Arles');
+                showMessage('success', 'Profil créé avec succès !');
                 await continueLoginProcess();
-            }
-        });
-    }
-    
-    const modal = document.getElementById('user-registration-modal');
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                showMessage('info', 'Veuillez compléter votre profil pour accéder à l\'intranet');
             }
         });
     }
 }
 
-// ===== GESTION DE L'INTERFACE UTILISATEUR =====
+// ===== GESTION DE L'INTERFACE =====
 
 function showLoginPage() {
     console.log('=== AFFICHAGE PAGE LOGIN ===');
@@ -441,6 +517,7 @@ function showLoginPage() {
         elements.loginPage.classList.remove('login-page--hidden');
         elements.mainApp.classList.remove('main-app--visible');
     }
+    resetLoginButton();
     updateDebugInfo();
 }
 
@@ -471,23 +548,114 @@ async function updateUserInterface() {
     }
     
     if (elements.adminBadge) {
-        if (isAdmin) {
-            elements.adminBadge.classList.add('admin-badge--visible');
-        } else {
-            elements.adminBadge.classList.remove('admin-badge--visible');
-        }
+        elements.adminBadge.classList.toggle('admin-badge--visible', isAdmin);
     }
     
     if (elements.adminNavItem) {
-        if (isAdmin) {
-            elements.adminNavItem.classList.add('nav-item--visible');
-        } else {
-            elements.adminNavItem.classList.remove('nav-item--visible');
-        }
+        elements.adminNavItem.classList.toggle('nav-item--visible', isAdmin);
     }
 }
 
-// ===== NAVIGATION =====
+// ===== UTILITAIRES =====
+
+function cleanupURL() {
+    // Supprimer les paramètres OAuth de l'URL sans recharger la page
+    if (window.history && window.history.replaceState) {
+        const cleanURL = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanURL);
+        console.log('URL nettoyée:', cleanURL);
+    }
+}
+
+function getRedirectURL() {
+    const hostname = window.location.hostname;
+    
+    let baseURL;
+    if (hostname === 'macif-arles-github-io.vercel.app') {
+        baseURL = 'https://macif-arles-github-io.vercel.app';
+    } else if (hostname === 'macifarles.github.io') {
+        baseURL = 'https://macifarles.github.io';
+    } else {
+        baseURL = window.location.origin;
+    }
+    
+    return baseURL + '/';
+}
+
+function showMessage(type, message) {
+    if (!elements.messageContainer) return;
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message message--${type}`;
+    messageDiv.textContent = message;
+    
+    elements.messageContainer.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        if (messageDiv.parentNode) {
+            messageDiv.parentNode.removeChild(messageDiv);
+        }
+    }, 5000);
+}
+
+function updateDebugInfo() {
+    if (!elements.debugInfo) return;
+    
+    const debugContent = `
+        <div style="font-family: monospace; font-size: 0.8rem;">
+            <strong>URL:</strong> ${window.location.href}<br>
+            <strong>Utilisateur:</strong> ${currentUser ? `${currentUser.email} (${isAdmin ? 'admin' : 'user'})` : 'Non connecté'}<br>
+            <strong>Session traitée:</strong> ${sessionProcessed}<br>
+            <strong>Listener auth:</strong> ${authListenerActive}<br>
+            <strong>Page courante:</strong> ${currentPage}<br>
+            <strong>Timestamp:</strong> ${new Date().toLocaleString('fr-FR')}
+        </div>
+    `;
+    
+    elements.debugInfo.innerHTML = debugContent;
+}
+
+function updateSupabaseStatus(type, message) {
+    if (!elements.supabaseStatus) return;
+    
+    const colors = {
+        success: 'var(--success)',
+        error: 'var(--error)',
+        info: 'var(--primary-blue)',
+        warning: 'var(--warning)'
+    };
+    
+    elements.supabaseStatus.innerHTML = 
+        `<span style="color: ${colors[type] || colors.info};">${message}</span>`;
+}
+
+async function promoteToAdmin() {
+    const email = document.getElementById('admin-email')?.value.trim().toLowerCase();
+    
+    if (!email || !email.includes('@')) {
+        showMessage('error', 'Veuillez saisir un email valide');
+        return;
+    }
+    
+    try {
+        const { error } = await supabaseClient
+            .from('users')
+            .update({ is_admin: true })
+            .eq('email', email);
+        
+        if (error) throw error;
+        
+        showMessage('success', `${email} promu administrateur`);
+        document.getElementById('admin-email').value = '';
+        await loadAdminTabContent('users');
+        
+    } catch (error) {
+        console.error('Erreur promotion admin:', error);
+        showMessage('error', `Erreur: ${error.message}`);
+    }
+}
+
+// ===== NAVIGATION ET CONTENU (fonctions existantes conservées) =====
 
 function setupNavigationListeners() {
     const navLinks = document.querySelectorAll('[data-page]');
@@ -558,8 +726,6 @@ async function loadPageContent(pageId) {
     }
 }
 
-// ===== GESTION DES FORMULAIRES =====
-
 function setupFormListeners() {
     const createOfferBtn = document.getElementById('create-offer-btn');
     const cancelOfferBtn = document.getElementById('cancel-offer-btn');
@@ -607,11 +773,7 @@ function setupFormListeners() {
 function toggleFormVisibility(formId, show) {
     const form = document.getElementById(formId);
     if (form) {
-        if (show) {
-            form.classList.remove('form-container--hidden');
-        } else {
-            form.classList.add('form-container--hidden');
-        }
+        form.classList.toggle('form-container--hidden', !show);
     }
 }
 
@@ -696,8 +858,6 @@ async function handleActivitySubmission(e) {
         showMessage('error', `Erreur: ${error.message}`);
     }
 }
-
-// ===== CHARGEMENT DU CONTENU =====
 
 async function loadTrombinoscope() {
     const container = document.getElementById('trombinoscope-content');
@@ -929,8 +1089,6 @@ async function loadActivites() {
     }
 }
 
-// ===== ADMINISTRATION =====
-
 function setupAdminListeners() {
     const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
     tabButtons.forEach(button => {
@@ -1082,92 +1240,5 @@ async function loadOffersManagement(container) {
     container.innerHTML = '<p>Gestion des offres - En développement</p>';
 }
 
-// ===== UTILITAIRES =====
-
-function showMessage(type, message) {
-    if (!elements.messageContainer) return;
-    
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message message--${type}`;
-    messageDiv.textContent = message;
-    
-    elements.messageContainer.appendChild(messageDiv);
-    
-    setTimeout(() => {
-        if (messageDiv.parentNode) {
-            messageDiv.parentNode.removeChild(messageDiv);
-        }
-    }, 5000);
-}
-
-function updateDebugInfo() {
-    if (!elements.debugInfo) return;
-    
-    const debugContent = `
-        <div style="font-family: monospace; font-size: 0.8rem;">
-            <strong>URL:</strong> ${window.location.href}<br>
-            <strong>Utilisateur:</strong> ${currentUser ? currentUser.email + ' (' + (isAdmin ? 'admin' : 'user') + ')' : 'Non connecté'}<br>
-            <strong>Mode admin:</strong> ${isAdmin ? '<span style="color: var(--success);">Activé</span>' : '<span style="color: var(--error);">Désactivé</span>'}<br>
-            <strong>Page courante:</strong> ${currentPage}<br>
-            <strong>État initialisation:</strong> ${isInitializing ? 'En cours' : 'Terminée'}<br>
-            <strong>Timestamp:</strong> ${new Date().toLocaleString('fr-FR')}
-        </div>
-    `;
-    
-    elements.debugInfo.innerHTML = debugContent;
-}
-
-function updateSupabaseStatus(type, message) {
-    if (!elements.supabaseStatus) return;
-    
-    const colors = {
-        success: 'var(--success)',
-        error: 'var(--error)',
-        info: 'var(--primary-blue)',
-        warning: 'var(--warning)'
-    };
-    
-    elements.supabaseStatus.innerHTML = 
-        `<span style="color: ${colors[type] || colors.info};">${message}</span>`;
-}
-
-function getRedirectURL() {
-    const hostname = window.location.hostname;
-    
-    if (hostname === 'macif-arles-github-io.vercel.app') {
-        return 'https://macif-arles-github-io.vercel.app/';
-    } else if (hostname === 'macifarles.github.io') {
-        return 'https://macifarles.github.io/';
-    } else {
-        return window.location.origin + '/';
-    }
-}
-
-async function promoteToAdmin() {
-    const email = document.getElementById('admin-email')?.value.trim().toLowerCase();
-    
-    if (!email || !email.includes('@')) {
-        showMessage('error', 'Veuillez saisir un email valide');
-        return;
-    }
-    
-    try {
-        const { error } = await supabaseClient
-            .from('users')
-            .update({ is_admin: true })
-            .eq('email', email);
-        
-        if (error) throw error;
-        
-        showMessage('success', `${email} promu administrateur`);
-        document.getElementById('admin-email').value = '';
-        await loadAdminTabContent('users');
-        
-    } catch (error) {
-        console.error('Erreur promotion admin:', error);
-        showMessage('error', `Erreur: ${error.message}`);
-    }
-}
-
-// ===== INITIALISATION DE L'APPLICATION =====
+// ===== INITIALISATION =====
 document.addEventListener('DOMContentLoaded', initializeApp);
