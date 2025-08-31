@@ -30,40 +30,42 @@
         </div>
     </div>
 
-
-<!-- Modal d'enregistrement des nouveaux utilisateurs -->
-<div id="user-registration-modal" class="modal-overlay">
-    <div class="modal-container">
-        <div class="modal-header">
-            <h2>Finalisation de votre profil</h2>
-            <p>Quelques informations supplémentaires sont nécessaires pour compléter votre inscription.</p>
+    <!-- Page de finalisation de profil (nouvelle page dédiée) -->
+    <div id="profile-completion-page" class="profile-completion-page page--hidden">
+        <div class="profile-completion-container">
+            <div class="profile-completion-header">
+                <div class="profile-completion-logo">
+                    <img src="data:image/png;base64,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" alt="Logo MACIF">
+                </div>
+                <h1 class="profile-completion-title">Finalisation de votre profil</h1>
+                <p class="profile-completion-subtitle">Quelques informations supplémentaires sont nécessaires pour compléter votre inscription à l'intranet MACIF Arles.</p>
+            </div>
+            
+            <form id="profile-completion-form" class="profile-completion-form">
+                <div class="form-group">
+                    <label for="user-birthday">Date d'anniversaire</label>
+                    <input type="date" id="user-birthday" name="birthday" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-team">Équipe</label>
+                    <select id="user-team" name="team" class="form-input" required>
+                        <option value="">Sélectionnez votre équipe</option>
+                        <option value="Bum's">Les Bum's</option>
+                        <option value="Sparks">Les Sparks</option>
+                        <option value="Squad">J Squad</option>
+                        <option value="Sherlock">Sherlock'Oms</option>
+                        <option value="Golden">Golden Team</option>
+                        <option value="Management">Team Leader</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary btn--large">Valider mon inscription</button>
+                </div>
+            </form>
         </div>
-        
-        <form id="user-registration-form" class="form">
-            <div class="form-group">
-                <label for="user-birthday">Date d'anniversaire</label>
-                <input type="date" id="user-birthday" name="birthday" class="form-input" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="user-team">Équipe</label>
-                <select id="user-team" name="team" class="form-input" required>
-                    <option value="">Sélectionnez votre équipe</option>
-                    <option value="Bum's">Les Bum's</option>
-                    <option value="Sparks">Les Sparks</option>
-                    <option value="Squad">J Squad</option>
-                    <option value="Sherlock">Sherlock'Oms</option>
-                    <option value="Golden">Golden Team</option>
-                    <option value="Management">Team Leader</option>
-                </select>
-            </div>
-            
-            <div class="form-actions">
-                <button type="submit" class="btn btn--primary">Valider mon inscription</button>
-            </div>
-        </form>
     </div>
-</div>
 
     <!-- Application principale -->
     <div id="main-app" class="main-app">
@@ -371,7 +373,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-
-
-
-
