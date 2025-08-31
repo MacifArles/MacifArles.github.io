@@ -1,6 +1,6 @@
 /**
  * MACIF ARLES - Intranet Application
- * Version de diagnostic approfondi - Niveau de confiance: 95%
+ * Version corrigée avec page de finalisation de profil - Niveau de confiance: 95%
  */
 
 // ===== CONFIGURATION SUPABASE =====
@@ -26,6 +26,7 @@ let sessionProcessed = false;
 // ===== ÉLÉMENTS DOM =====
 const elements = {
     loginPage: null,
+    profileCompletionPage: null, // Nouvelle page de finalisation
     mainApp: null,
     googleLoginBtn: null,
     logoutBtn: null,
@@ -86,6 +87,7 @@ function initializeAdminClient() {
 
 function initializeElements() {
     elements.loginPage = document.getElementById('login-page');
+    elements.profileCompletionPage = document.getElementById('profile-completion-page'); // Nouvelle page
     elements.mainApp = document.getElementById('main-app');
     elements.googleLoginBtn = document.getElementById('google-login-btn');
     elements.logoutBtn = document.getElementById('logout-btn');
@@ -96,13 +98,6 @@ function initializeElements() {
     elements.messageContainer = document.getElementById('message-container');
     elements.debugInfo = document.getElementById('debug-content');
     elements.supabaseStatus = document.getElementById('supabase-status');
-
-    // S'assurer que le modal est masqué au démarrage (solution temporaire)
-    const modal = document.getElementById('user-registration-modal');
-    if (modal) {
-        modal.classList.add('modal-overlay--hidden');
-        console.log('Modal d\'enregistrement masqué au démarrage');
-    }
 }
 
 function setupEventListeners() {
@@ -117,7 +112,7 @@ function setupEventListeners() {
     setupNavigationListeners();
     setupFormListeners();
     setupAdminListeners();
-    setupUserRegistrationListeners();
+    setupProfileCompletionListeners(); // Nouveaux listeners pour la finalisation
 }
 
 function setupAuthListener() {
@@ -300,8 +295,8 @@ async function handleUserSession(session) {
         console.log('Utilisateur existe en base (vérification admin):', userExists);
         
         if (!userExists) {
-            console.log('Nouvel utilisateur détecté - Affichage modal enregistrement');
-            showUserRegistrationModal();
+            console.log('Nouvel utilisateur détecté - Affichage page de finalisation');
+            showProfileCompletionPage();
             return;
         }
         
@@ -371,62 +366,6 @@ async function adminCheckUserExists(userEmail) {
     } catch (err) {
         console.error('Exception vérification utilisateur (mode admin):', err);
         return false;
-    }
-}
-
-async function checkUserExists(userEmail) {
-    console.log('=== VÉRIFICATION EXISTENCE UTILISATEUR ===');
-    const normalizedEmail = userEmail.toLowerCase().trim();
-    console.log('Email normalisé:', normalizedEmail);
-    
-    try {
-        // Diagnostic détaillé de l'état d'authentification
-        const { data: authData } = await supabaseClient.auth.getUser();
-        console.log('État auth lors de la vérification:', authData.user ? 'Connecté' : 'Non connecté');
-        
-        const { data, error } = await supabaseClient
-            .from('users')
-            .select('id, email')
-            .eq('email', normalizedEmail)
-            .maybeSingle();
-        
-        if (error) {
-            console.error('=== ERREUR DÉTAILLÉE SUPABASE ===');
-            console.error('Code d\'erreur:', error.code);
-            console.error('Message:', error.message);
-            console.error('Détails:', error.details);
-            console.error('Hint:', error.hint);
-            
-            // Gestion spécifique de l'erreur 406
-            if (error.message && error.message.includes('406')) {
-                console.error('ERREUR 406: Problème de permissions RLS détecté');
-                showMessage('error', 'Erreur de configuration Supabase. Vérifiez les politiques RLS de la table users.');
-                
-                // Tenter une approche alternative avec un délai
-                console.log('Tentative de solution de contournement...');
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                // Retourner true pour forcer le processus normal (solution temporaire)
-                return true;
-            }
-            
-            return false;
-        }
-        
-        const exists = data !== null;
-        console.log('Résultat vérification:', exists ? 'Trouvé' : 'Non trouvé');
-        if (exists) {
-            console.log('Données utilisateur:', data);
-        }
-        
-        return exists;
-        
-    } catch (err) {
-        console.error('Exception vérification utilisateur:', err);
-        
-        // En cas d'exception, assumer que l'utilisateur existe pour éviter les blocages
-        console.log('Solution de contournement activée - assumant utilisateur existant');
-        return true;
     }
 }
 
@@ -504,39 +443,33 @@ async function checkAdminStatus(userEmail) {
     }
 }
 
-// ===== GESTION DU MODAL D'ENREGISTREMENT =====
+// ===== GESTION DE LA PAGE DE FINALISATION DE PROFIL =====
 
-function showUserRegistrationModal() {
-    console.log('=== AFFICHAGE FORMULAIRE ENREGISTREMENT EN PLEINE PAGE ===');
+function showProfileCompletionPage() {
+    console.log('=== AFFICHAGE PAGE DE FINALISATION DE PROFIL ===');
     
-    // Masquer la page de login et l'application principale
-    if (elements.loginPage) {
-        elements.loginPage.classList.add('login-page--hidden');
-    }
-    if (elements.mainApp) {
-        elements.mainApp.classList.remove('main-app--visible');
-    }
+    // Masquer toutes les autres pages
+    hideAllPages();
     
-    // Afficher le formulaire d'enregistrement en pleine page
-    const modal = document.getElementById('user-registration-modal');
-    if (modal) {
-        modal.classList.remove('modal-overlay--hidden');
-        modal.classList.add('registration-fullpage');
+    // Afficher la page de finalisation
+    if (elements.profileCompletionPage) {
+        elements.profileCompletionPage.classList.remove('page--hidden');
+        elements.profileCompletionPage.classList.add('page--visible');
         
-        const firstInput = modal.querySelector('input[type="date"]');
+        // Focus sur le premier champ
+        const firstInput = elements.profileCompletionPage.querySelector('input[type="date"]');
         if (firstInput) {
             setTimeout(() => firstInput.focus(), 100);
         }
     }
 }
 
-function hideUserRegistrationModal() {
-    console.log('=== MASQUAGE FORMULAIRE ENREGISTREMENT ===');
+function hideProfileCompletionPage() {
+    console.log('=== MASQUAGE PAGE DE FINALISATION DE PROFIL ===');
     
-    const modal = document.getElementById('user-registration-modal');
-    if (modal) {
-        modal.classList.add('modal-overlay--hidden');
-        modal.classList.remove('registration-fullpage');
+    if (elements.profileCompletionPage) {
+        elements.profileCompletionPage.classList.add('page--hidden');
+        elements.profileCompletionPage.classList.remove('page--visible');
     }
 }
 
@@ -691,13 +624,13 @@ async function createBasicRLSPolicies() {
     }
 }
 
-function setupUserRegistrationListeners() {
-    const registrationForm = document.getElementById('user-registration-form');
+function setupProfileCompletionListeners() {
+    const profileForm = document.getElementById('profile-completion-form');
     
-    if (registrationForm) {
-        registrationForm.addEventListener('submit', async (e) => {
+    if (profileForm) {
+        profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            console.log('=== SOUMISSION FORMULAIRE ENREGISTREMENT (PLEINE PAGE) ===');
+            console.log('=== SOUMISSION FORMULAIRE DE FINALISATION ===');
             
             if (!currentUser) {
                 showMessage('error', 'Erreur: aucun utilisateur connecté');
@@ -739,8 +672,8 @@ function setupUserRegistrationListeners() {
                     
                     // Attendre un peu pour que l'utilisateur voie le message de succès
                     setTimeout(async () => {
-                        // Masquer le formulaire d'enregistrement
-                        hideUserRegistrationModal();
+                        // Masquer la page de finalisation
+                        hideProfileCompletionPage();
                         
                         // Procéder à la connexion complète
                         await continueLoginProcess();
@@ -759,25 +692,29 @@ function setupUserRegistrationListeners() {
             }
         });
     }
-    
-    // Empêcher la fermeture accidentelle du formulaire
-    const modal = document.getElementById('user-registration-modal');
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                showMessage('info', 'Veuillez compléter votre profil pour accéder à l\'intranet');
-            }
-        });
-    }
 }
 
 // ===== GESTION DE L'INTERFACE =====
 
+function hideAllPages() {
+    // Masquer toutes les pages
+    if (elements.loginPage) {
+        elements.loginPage.classList.add('login-page--hidden');
+    }
+    if (elements.profileCompletionPage) {
+        elements.profileCompletionPage.classList.add('page--hidden');
+        elements.profileCompletionPage.classList.remove('page--visible');
+    }
+    if (elements.mainApp) {
+        elements.mainApp.classList.remove('main-app--visible');
+    }
+}
+
 function showLoginPage() {
     console.log('=== AFFICHAGE PAGE LOGIN ===');
-    if (elements.loginPage && elements.mainApp) {
+    hideAllPages();
+    if (elements.loginPage) {
         elements.loginPage.classList.remove('login-page--hidden');
-        elements.mainApp.classList.remove('main-app--visible');
     }
     resetLoginButton();
     updateDebugInfo();
@@ -785,8 +722,8 @@ function showLoginPage() {
 
 function showMainApp() {
     console.log('=== AFFICHAGE APPLICATION PRINCIPALE ===');
-    if (elements.loginPage && elements.mainApp) {
-        elements.loginPage.classList.add('login-page--hidden');
+    hideAllPages();
+    if (elements.mainApp) {
         elements.mainApp.classList.add('main-app--visible');
     }
     updateDebugInfo();
