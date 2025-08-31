@@ -100,6 +100,15 @@ a {
     font-style: italic;
 }
 
+/* ===== GESTION DES PAGES ===== */
+.page--hidden {
+    display: none;
+}
+
+.page--visible {
+    display: block;
+}
+
 /* ===== ANIMATIONS ===== */
 @keyframes fadeIn {
     from {
@@ -129,6 +138,17 @@ a {
     }
     50% {
         transform: scale(1.05);
+    }
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -190,6 +210,72 @@ a {
     color: var(--medium-gray);
     margin-bottom: var(--spacing-xl);
     font-size: var(--font-size-base);
+}
+
+/* ===== PAGE DE FINALISATION DE PROFIL ===== */
+.profile-completion-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 12000;
+    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, rgba(0, 61, 130, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%);
+    animation: fadeIn var(--transition-slow);
+}
+
+.profile-completion-container {
+    background: var(--white);
+    border-radius: 20px;
+    padding: var(--spacing-xxl);
+    max-width: 500px;
+    width: 90%;
+    box-shadow: var(--shadow-strong);
+    border: 1px solid rgba(0, 61, 130, 0.1);
+    animation: slideInFromTop var(--transition-medium);
+}
+
+.profile-completion-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xxl);
+}
+
+.profile-completion-logo {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto var(--spacing-lg);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+}
+
+.profile-completion-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.profile-completion-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-md);
+}
+
+.profile-completion-subtitle {
+    color: var(--medium-gray);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.profile-completion-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
 }
 
 /* ===== APPLICATION PRINCIPALE ===== */
@@ -289,14 +375,16 @@ a {
     display: block;
 }
 
-/* ===== SECTION UTILISATEUR ===== */
+/* ===== SECTION UTILISATEUR CORRIGÉE ===== */
 .user-section {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
     background: var(--light-gray);
     border-radius: 12px;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-sm);
+    min-width: 280px; /* Largeur minimale pour éviter les superpositions */
+    flex-shrink: 0; /* Empêche la compression */
 }
 
 .user-avatar {
@@ -305,18 +393,25 @@ a {
     border-radius: 50%;
     border: 2px solid var(--white);
     object-fit: cover;
+    flex-shrink: 0;
 }
 
 .user-info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    min-width: 120px; /* Largeur minimale pour le texte */
+    flex: 1;
 }
 
 .user-name {
     font-weight: 600;
     color: var(--dark-gray);
     font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
 }
 
 .admin-badge {
@@ -328,6 +423,7 @@ a {
     font-weight: 600;
     margin-top: 0.2rem;
     display: none;
+    white-space: nowrap;
 }
 
 .admin-badge--visible {
@@ -357,6 +453,8 @@ a {
     cursor: pointer;
     border: 2px solid transparent;
     text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .btn--primary {
@@ -395,6 +493,12 @@ a {
 .btn--small {
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: var(--font-size-sm);
+}
+
+.btn--large {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
 }
 
 .btn--google {
@@ -565,15 +669,28 @@ a {
     grid-template-columns: 1fr 1fr;
 }
 
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+    color: var(--dark-gray);
+}
+
 .form-input,
 .form-textarea,
 .form-select {
+    width: 100%;
     padding: var(--spacing-md);
     border: 2px solid var(--light-gray);
     border-radius: 8px;
     font-size: var(--font-size-base);
     transition: border-color var(--transition-medium);
     font-family: inherit;
+    background: var(--white);
 }
 
 .form-input:focus,
@@ -581,6 +698,7 @@ a {
 .form-select:focus {
     outline: none;
     border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 61, 130, 0.1);
 }
 
 .form-textarea {
@@ -716,6 +834,56 @@ a {
     font-family: var(--font-family);
 }
 
+/* ===== LISTES ET GRILLES DE CONTENU ===== */
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.user-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: var(--spacing-lg);
+    text-align: center;
+    box-shadow: var(--shadow-light);
+    transition: transform var(--transition-medium);
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+}
+
+.user-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: var(--spacing-md);
+}
+
+.birthdays-list {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.birthday-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    background: var(--white);
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-light);
+}
+
+.birthday-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .container {
@@ -724,6 +892,18 @@ a {
     
     .form-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .navbar {
+        gap: var(--spacing-md);
+    }
+    
+    .user-section {
+        min-width: 240px;
+    }
+    
+    .user-name {
+        max-width: 100px;
     }
 }
 
@@ -755,6 +935,12 @@ a {
     .user-section {
         flex-direction: column;
         text-align: center;
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .user-name {
+        max-width: none;
     }
     
     .admin-header {
@@ -769,11 +955,17 @@ a {
     .form-actions {
         justify-content: center;
     }
+    
+    .profile-completion-container {
+        padding: var(--spacing-xl);
+        margin: var(--spacing-md);
+    }
 }
 
 @media (max-width: 480px) {
     .login-container {
         padding: var(--spacing-xl);
+        margin: var(--spacing-md);
     }
     
     .hero {
@@ -788,74 +980,13 @@ a {
     .nav-link {
         padding: var(--spacing-sm) var(--spacing-md);
     }
-
-/* Modal d'enregistrement utilisateur */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 15000;
-    backdrop-filter: blur(5px);
-}
-
-.modal-overlay--hidden {
-    display: none;
-}
-
-.modal-container {
-    background: var(--white);
-    border-radius: 16px;
-    padding: var(--spacing-xl);
-    max-width: 500px;
-    width: 90%;
-    box-shadow: var(--shadow-strong);
-    animation: modalSlideIn var(--transition-medium);
-}
-
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.95);
+    
+    .profile-completion-container {
+        padding: var(--spacing-lg);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+    
+    .btn--large {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-base);
     }
-}
-
-.modal-header {
-    text-align: center;
-    margin-bottom: var(--spacing-xl);
-}
-
-.modal-header h2 {
-    color: var(--primary-blue);
-    margin-bottom: var(--spacing-sm);
-}
-
-.modal-header p {
-    color: var(--medium-gray);
-}
-
-.form-group {
-    margin-bottom: var(--spacing-lg);
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: var(--spacing-sm);
-    font-weight: 500;
-    color: var(--dark-gray);
-}
-
-/* Solution temporaire - masquer le modal par défaut */
-#user-registration-modal {
-    display: none !important;
-}
 }
