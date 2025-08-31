@@ -16,6 +16,7 @@ let isAdmin = false;
 let currentPage = 'dashboard';
 let authListenerActive = false;
 let sessionProcessed = false;
+let initialAuthCheckComplete = false;
 
 // ===== ÉLÉMENTS DOM =====
 const elements = {
@@ -52,6 +53,10 @@ async function initializeApp() {
         initializeElements();
         setupEventListeners();
         
+        // Masquer toutes les pages pendant la vérification initiale
+        hideAllPages();
+        showLoadingState();
+        
         // Vérifier si nous revenons d'un callback OAuth
         const urlParams = new URLSearchParams(window.location.search);
         const hasAuthParams = urlParams.has('code') || urlParams.has('access_token') || urlParams.has('refresh_token');
@@ -65,7 +70,10 @@ async function initializeApp() {
         }
         
         setupAuthListener();
-        await checkExistingSession();
+        
+        // Attendre la vérification initiale de session
+        await performInitialAuthCheck();
+        
         updateDebugInfo();
         
         console.log('Application initialisée avec succès');
@@ -74,7 +82,118 @@ async function initializeApp() {
         console.error('Erreur critique lors de l\'initialisation:', error);
         showMessage('error', 'Erreur lors du chargement de l\'application');
         
-        // Afficher la page de login même en cas d'erreur
+        // Afficher la page de login en cas d'erreur critique
+        hideLoadingState();
+        showLoginPage();
+    }
+}
+
+// Nouvelle fonction pour gérer la vérification initiale
+async function performInitialAuthCheck() {
+    console.log('=== VÉRIFICATION INITIALE D\'AUTHENTIFICATION ===');
+    
+    if (!supabaseClient) {
+        console.error('Client Supabase non disponible');
+        hideLoadingState();
+        showLoginPage();
+        return;
+    }
+    
+    try {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        
+        if (error) {
+            console.error('Erreur vérification session initiale:', error);
+            hideLoadingState();
+            showLoginPage();
+            return;
+        }
+        
+        if (session && session.user) {
+            console.log('Session existante trouvée pour:', session.user.email);
+            console.log('Détails session:', {
+                provider: session.user.app_metadata?.provider,
+                created_at: session.user.created_at,
+                expires_at: session.expires_at
+            });
+            
+            // Traiter la session immédiatement
+            await handleUserSessionInitial(session);
+        } else {
+            console.log('Aucune session active détectée');
+            hideLoadingState();
+            showLoginPage();
+        }
+        
+        initialAuthCheckComplete = true;
+        
+    } catch (err) {
+        console.error('Exception vérification session initiale:', err);
+        hideLoadingState();
+        showLoginPage();
+        initialAuthCheckComplete = true;
+    }
+}
+
+// Fonction spécifique pour le traitement initial de session
+async function handleUserSessionInitial(session) {
+    console.log('=== TRAITEMENT SESSION UTILISATEUR INITIAL ===');
+    currentUser = session.user;
+    console.log('Traitement pour utilisateur:', currentUser.email);
+    
+    try {
+        // Vérifier si l'utilisateur existe en base
+        const userExists = await checkUserExists(currentUser.email);
+        console.log('Utilisateur existe en base (vérification initiale):', userExists);
+        
+        hideLoadingState();
+        
+        if (!userExists) {
+            console.log('Nouvel utilisateur détecté - Affichage page de finalisation');
+            showProfileCompletionPage();
+            return;
+        }
+        
+        // Utilisateur existant - aller directement au dashboard
+        await continueLoginProcessInitial();
+        
+    } catch (error) {
+        console.error('Erreur traitement session utilisateur initial:', error);
+        hideLoadingState();
+        showMessage('error', 'Erreur lors de la connexion');
+        showLoginPage();
+    }
+}
+
+// Fonction pour continuer le processus de connexion sans afficher de message
+async function continueLoginProcessInitial() {
+    console.log('=== CONTINUATION PROCESSUS DE CONNEXION INITIAL ===');
+    
+    try {
+        // Vérifier le statut admin
+        isAdmin = await checkAdminStatus(currentUser.email);
+        console.log('Statut administrateur:', isAdmin);
+        
+        // Mettre à jour l'interface
+        await updateUserInterface();
+        
+        // Nettoyer l'URL et afficher l'application
+        cleanupURL();
+        showMainApp();
+        
+        // Messages de bienvenue (plus discrets pour le refresh)
+        const displayName = currentUser.user_metadata?.full_name || currentUser.email;
+        console.log(`Utilisateur connecté: ${displayName}`);
+        
+        if (isAdmin) {
+            setTimeout(initializeAdminPanel, 500);
+        }
+        
+        sessionProcessed = true;
+        
+    } catch (error) {
+        console.error('Erreur finalisation connexion initiale:', error);
+        showMessage('error', 'Erreur lors de la finalisation de la connexion');
         showLoginPage();
     }
 }
@@ -132,6 +251,12 @@ function setupAuthListener() {
         supabaseClient.auth.onAuthStateChange(async (event, session) => {
             console.log('=== CHANGEMENT AUTH ===', event);
             console.log('Session:', session ? `Utilisateur ${session.user.email}` : 'Aucune session');
+            
+            // Ignorer les événements pendant la vérification initiale
+            if (!initialAuthCheckComplete) {
+                console.log('Vérification initiale en cours, ignorer événement auth');
+                return;
+            }
             
             // Éviter le double traitement
             if (sessionProcessed && event === 'SIGNED_IN') {
@@ -268,49 +393,6 @@ async function signOut() {
     }
 }
 
-async function checkExistingSession() {
-    console.log('=== VÉRIFICATION SESSION EXISTANTE ===');
-    
-    if (!supabaseClient) {
-        console.error('Client Supabase non disponible');
-        showLoginPage();
-        return;
-    }
-    
-    try {
-        const { data: { session }, error } = await supabaseClient.auth.getSession();
-        
-        if (error) {
-            console.error('Erreur vérification session:', error);
-            showLoginPage();
-            return;
-        }
-        
-        if (session && session.user) {
-            console.log('Session existante trouvée pour:', session.user.email);
-            console.log('Détails session:', {
-                provider: session.user.app_metadata?.provider,
-                created_at: session.user.created_at,
-                expires_at: session.expires_at
-            });
-            
-            if (!sessionProcessed) {
-                await handleUserSession(session);
-            } else {
-                console.log('Session déjà traitée, ignorer');
-            }
-        } else {
-            console.log('Aucune session active détectée');
-            showLoginPage();
-        }
-    } catch (err) {
-        console.error('Exception vérification session:', err);
-        showLoginPage();
-    }
-}
-
-// ===== GESTION DES UTILISATEURS =====
-
 async function handleUserSession(session) {
     console.log('=== TRAITEMENT SESSION UTILISATEUR ===');
     currentUser = session.user;
@@ -327,12 +409,45 @@ async function handleUserSession(session) {
             return;
         }
         
-        // Utilisateur existant - continuer le processus de connexion
+        // Utilisateur existant - continuer le processus de connexion avec messages
         await continueLoginProcess();
         
     } catch (error) {
         console.error('Erreur traitement session utilisateur:', error);
         showMessage('error', 'Erreur lors de la connexion');
+        showLoginPage();
+    }
+}
+
+async function continueLoginProcess() {
+    console.log('=== CONTINUATION PROCESSUS DE CONNEXION ===');
+    
+    try {
+        // Vérifier le statut admin
+        isAdmin = await checkAdminStatus(currentUser.email);
+        console.log('Statut administrateur:', isAdmin);
+        
+        // Mettre à jour l'interface
+        await updateUserInterface();
+        
+        // Nettoyer l'URL et afficher l'application
+        cleanupURL();
+        showMainApp();
+        
+        // Messages de bienvenue pour nouvelle connexion
+        const displayName = currentUser.user_metadata?.full_name || currentUser.email;
+        showMessage('success', `Connexion réussie ! Bienvenue ${displayName}`);
+        
+        if (isAdmin) {
+            showMessage('success', 'Mode administrateur activé');
+            setTimeout(initializeAdminPanel, 500);
+        }
+        
+        sessionProcessed = true;
+        
+    } catch (error) {
+        console.error('Erreur finalisation connexion:', error);
+        showMessage('error', 'Erreur lors de la finalisation de la connexion');
         showLoginPage();
     }
 }
@@ -464,8 +579,9 @@ async function checkAdminStatus(userEmail) {
 function showProfileCompletionPage() {
     console.log('=== AFFICHAGE PAGE DE FINALISATION DE PROFIL ===');
     
-    // Masquer toutes les autres pages
+    // Masquer toutes les autres pages et l'état de chargement
     hideAllPages();
+    hideLoadingState();
     
     // Afficher la page de finalisation
     if (elements.profileCompletionPage) {
@@ -690,6 +806,67 @@ function setupProfileCompletionListeners() {
 
 // ===== GESTION DE L'INTERFACE =====
 
+function showLoadingState() {
+    console.log('=== AFFICHAGE ÉTAT DE CHARGEMENT ===');
+    
+    // Créer ou afficher l'indicateur de chargement
+    let loadingElement = document.getElementById('loading-indicator');
+    
+    if (!loadingElement) {
+        loadingElement = document.createElement('div');
+        loadingElement.id = 'loading-indicator';
+        loadingElement.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 15000;
+                backdrop-filter: blur(20px);
+            ">
+                <div style="
+                    text-align: center;
+                    color: var(--primary-blue);
+                ">
+                    <div style="
+                        width: 40px;
+                        height: 40px;
+                        border: 3px solid rgba(0, 61, 130, 0.3);
+                        border-top: 3px solid var(--primary-blue);
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                        margin: 0 auto 20px;
+                    "></div>
+                    <p style="margin: 0; font-weight: 500;">Vérification de votre session...</p>
+                </div>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+        document.body.appendChild(loadingElement);
+    }
+    
+    loadingElement.style.display = 'block';
+}
+
+function hideLoadingState() {
+    console.log('=== MASQUAGE ÉTAT DE CHARGEMENT ===');
+    
+    const loadingElement = document.getElementById('loading-indicator');
+    if (loadingElement) {
+        loadingElement.style.display = 'none';
+    }
+}
+
 function hideAllPages() {
     // Masquer toutes les pages avec vérification d'existence
     if (elements.loginPage) {
@@ -707,6 +884,7 @@ function hideAllPages() {
 function showLoginPage() {
     console.log('=== AFFICHAGE PAGE LOGIN ===');
     hideAllPages();
+    hideLoadingState();
     if (elements.loginPage) {
         elements.loginPage.classList.remove('login-page--hidden');
     }
@@ -717,6 +895,7 @@ function showLoginPage() {
 function showMainApp() {
     console.log('=== AFFICHAGE APPLICATION PRINCIPALE ===');
     hideAllPages();
+    hideLoadingState();
     if (elements.mainApp) {
         elements.mainApp.classList.add('main-app--visible');
     }
