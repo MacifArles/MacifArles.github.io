@@ -53,10 +53,6 @@ async function initializeApp() {
         initializeElements();
         setupEventListeners();
         
-        // Masquer toutes les pages pendant la vérification initiale
-        hideAllPages();
-        showLoadingState();
-        
         // Vérifier si nous revenons d'un callback OAuth
         const urlParams = new URLSearchParams(window.location.search);
         const hasAuthParams = urlParams.has('code') || urlParams.has('access_token') || urlParams.has('refresh_token');
@@ -66,7 +62,14 @@ async function initializeApp() {
         if (hasAuthParams) {
             console.log('Callback OAuth détecté - Attente du traitement...');
             showMessage('info', 'Finalisation de la connexion...');
+            // Masquer toutes les pages et afficher le chargement
+            hideAllPages();
+            showLoadingState();
             await new Promise(resolve => setTimeout(resolve, 2000));
+        } else {
+            // Pas de callback OAuth - vérifier session immédiatement
+            hideAllPages();
+            showLoadingState();
         }
         
         setupAuthListener();
@@ -155,6 +158,7 @@ async function handleUserSessionInitial(session) {
         }
         
         // Utilisateur existant - aller directement au dashboard
+        console.log('Utilisateur existant - Redirection vers dashboard');
         await continueLoginProcessInitial();
         
     } catch (error) {
@@ -993,6 +997,7 @@ function updateDebugInfo() {
                 <strong>Listener auth:</strong> ${authListenerActive}<br>
                 <strong>Page courante:</strong> ${currentPage}<br>
                 <strong>Client Supabase:</strong> ${supabaseClient ? 'Initialisé' : 'Non initialisé'}<br>
+                <strong>Auth check initial:</strong> ${initialAuthCheckComplete}<br>
                 <strong>Timestamp:</strong> ${new Date().toLocaleString('fr-FR')}
             </div>
         `;
@@ -1000,6 +1005,58 @@ function updateDebugInfo() {
         elements.debugInfo.innerHTML = debugContent;
     } catch (error) {
         console.error('Erreur mise à jour debug:', error);
+    }
+}
+
+// ===== DEBUG : Ajout d'un override temporaire pour corriger le bug =====
+async function checkUserExists(userEmail) {
+    console.log('=== VÉRIFICATION EXISTENCE UTILISATEUR ===');
+    const normalizedEmail = userEmail.toLowerCase().trim();
+    console.log('Email à vérifier:', normalizedEmail);
+    
+    if (!supabaseClient) {
+        console.error('Client Supabase non disponible');
+        return false;
+    }
+    
+    try {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .select('id, email, is_admin')
+            .eq('email', normalizedEmail)
+            .maybeSingle();
+        
+        if (error) {
+            console.error('Erreur vérification utilisateur:', error);
+            
+            // En cas d'erreur RLS, assumer que c'est un nouvel utilisateur
+            if (error.message && error.message.includes('row-level security')) {
+                console.log('Erreur RLS détectée - assumé nouvel utilisateur');
+                return false;
+            }
+            
+            return false;
+        }
+        
+        const exists = data !== null;
+        console.log('Utilisateur trouvé:', exists);
+        if (exists) {
+            console.log('Données utilisateur:', data);
+            
+            // BUG FIX: Vérifier que l'utilisateur a bien toutes les données nécessaires
+            if (!data.birthday || !data.teams) {
+                console.log('ATTENTION: Utilisateur incomplet détecté - manque birthday ou teams');
+                console.log('Birthday:', data.birthday, 'Teams:', data.teams);
+                // Si l'utilisateur existe mais n'a pas toutes les infos, considérer comme nouvel utilisateur
+                return false;
+            }
+        }
+        
+        return exists;
+        
+    } catch (err) {
+        console.error('Exception vérification utilisateur:', err);
+        return false;
     }
 }
 
