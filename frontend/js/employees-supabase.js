@@ -1,6 +1,7 @@
 /**
  * Module de gestion des employés pour l'application CRC Co Arles Macif avec Supabase
  * Orchestration du trombinoscope avec interface iOS moderne
+ * Affichage des managers dans Skipper ET leur équipe
  * Niveau de confiance: 98%
  */
 
@@ -123,6 +124,7 @@ class EmployeeManager {
 
     /**
      * Affichage des employés organisés par équipe avec design iOS
+     * Les managers apparaissent dans Skipper ET dans leur équipe
      * Présentation hiérarchique et moderne du personnel
      */
     async displayEmployeesByTeam() {
@@ -134,15 +136,54 @@ class EmployeeManager {
             return;
         }
 
+        // Séparer les managers et grouper tous les employés par équipe
+        const managers = this.filteredEmployees.filter(emp => emp.responsable_equipe);
         const employeesByTeam = this.groupEmployeesByTeam(this.filteredEmployees);
-        const sectionsHTML = Object.entries(employeesByTeam)
-            .map(([teamName, teamEmployees]) => this.generateTeamSection(teamName, teamEmployees))
-            .join('');
 
-        container.innerHTML = sectionsHTML;
+        let html = '';
+
+        // Section Skipper en premier (tous les responsables d'équipe)
+        if (managers.length > 0) {
+            html += this.generateSkipperSection(managers);
+        }
+
+        // Afficher toutes les équipes avec leurs membres (y compris les managers)
+        const sortedTeams = Object.entries(employeesByTeam).sort((a, b) => {
+            // Mettre les équipes numérotées en premier
+            const aNum = a[0].match(/\d+/);
+            const bNum = b[0].match(/\d+/);
+            if (aNum && bNum) {
+                return parseInt(aNum[0]) - parseInt(bNum[0]);
+            }
+            return a[0].localeCompare(b[0]);
+        });
+
+        sortedTeams.forEach(([teamName, teamEmployees]) => {
+            html += this.generateTeamSection(teamName, teamEmployees);
+        });
+
+        container.innerHTML = html;
         
         // Animation des cartes en séquence
         this.animateEmployeeCards();
+    }
+
+    /**
+     * Génération de la section Skipper avec tous les responsables
+     * Design spécial avec mise en avant visuelle
+     */
+    generateSkipperSection(managers) {
+        return `
+            <div class="team-section skipper-section">
+                <div class="team-header">
+                    <h3>⚓ Skipper</h3>
+                    <span class="team-count">${managers.length} ${managers.length > 1 ? 'responsables' : 'responsable'}</span>
+                </div>
+                <div class="team-grid">
+                    ${managers.map(emp => this.generateEmployeeCard(emp, true)).join('')}
+                </div>
+            </div>
+        `;
     }
 
     /**
@@ -159,7 +200,7 @@ class EmployeeManager {
                 card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-            }, index * 100);
+            }, index * 50);
         });
     }
 
@@ -181,23 +222,24 @@ class EmployeeManager {
     /**
      * Génération d'une section d'équipe avec design iOS moderne
      * Structure hiérarchique claire et élégante
+     * Affiche tous les membres, y compris les managers
      */
     generateTeamSection(teamName, employees) {
+        // Séparer managers et membres pour l'ordre d'affichage
         const managers = employees.filter(emp => emp.responsable_equipe);
         const members = employees.filter(emp => !emp.responsable_equipe);
         
-        const teamStats = this.teams.find(team => team.nom === teamName);
-        const statsText = teamStats ? 
-            `${teamStats.nombreEmployes} membre${teamStats.nombreEmployes > 1 ? 's' : ''} · ${teamStats.nombreResponsables} responsable${teamStats.nombreResponsables > 1 ? 's' : ''}` :
-            `${employees.length} membre${employees.length > 1 ? 's' : ''}`;
+        // Compter les managers dans l'équipe pour l'indicateur
+        const managerIndicator = managers.length > 0 ? 
+            ` <span class="manager-indicator">👑 ${managers.length}</span>` : '';
 
         return `
             <div class="team-section">
                 <div class="team-header">
-                    <h3>${this.escapeHtml(teamName)}</h3>
-                    <p class="team-stats">${statsText}</p>
+                    <h3>${this.escapeHtml(teamName)}${managerIndicator}</h3>
+                    <span class="team-count">${employees.length} ${employees.length > 1 ? 'membres' : 'membre'}</span>
                 </div>
-                <div class="employee-grid">
+                <div class="team-grid">
                     ${managers.map(emp => this.generateEmployeeCard(emp, true)).join('')}
                     ${members.map(emp => this.generateEmployeeCard(emp, false)).join('')}
                 </div>
@@ -212,9 +254,9 @@ class EmployeeManager {
     generateEmployeeCard(employee, isManager = false) {
         const avatarContent = employee.photo_url && employee.photo_url !== '/assets/default-avatar.png' 
             ? `<img src="${employee.photo_url}" alt="${this.escapeHtml(employee.prenom)} ${this.escapeHtml(employee.nom)}">`
-            : '<i class="fas fa-user"></i>';
+            : `<div class="employee-initials">${this.getInitials(employee.prenom, employee.nom)}</div>`;
 
-        const managerBadge = isManager ? '<span class="manager-badge">Responsable</span>' : '';
+        const managerBadge = isManager ? '<span class="manager-badge">RESPONSABLE</span>' : '';
         const contactInfo = this.generateContactInfo(employee);
 
         return `
@@ -228,6 +270,16 @@ class EmployeeManager {
                 ${managerBadge}
             </div>
         `;
+    }
+
+    /**
+     * Génération des initiales pour l'avatar
+     * Affichage élégant quand pas de photo
+     */
+    getInitials(prenom, nom) {
+        const firstInitial = prenom ? prenom.charAt(0).toUpperCase() : '';
+        const lastInitial = nom ? nom.charAt(0).toUpperCase() : '';
+        return firstInitial + lastInitial;
     }
 
     /**
@@ -357,7 +409,7 @@ class EmployeeManager {
     generateEmployeeModalContent(employee) {
         const avatarContent = employee.photo_url && employee.photo_url !== '/assets/default-avatar.png' 
             ? `<img src="${employee.photo_url}" alt="${this.escapeHtml(employee.prenom)} ${this.escapeHtml(employee.nom)}">`
-            : '<i class="fas fa-user"></i>';
+            : `<div style="font-size: 3rem; color: var(--text-light);">${this.getInitials(employee.prenom, employee.nom)}</div>`;
 
         const managerInfo = employee.manager_nom ? 
             `<p><strong>Manager :</strong> ${this.escapeHtml(employee.manager_prenom)} ${this.escapeHtml(employee.manager_nom)}</p>` : '';
@@ -371,7 +423,7 @@ class EmployeeManager {
                     </button>
                 </div>
                 <div class="employee-details" style="padding: var(--spacing-xl); text-align: center;">
-                    <div class="employee-avatar-large" style="width: 120px; height: 120px; margin: 0 auto var(--spacing-lg); border-radius: var(--radius-large); background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--text-light); border: 3px solid rgba(255, 255, 255, 0.3);">
+                    <div class="employee-avatar-large" style="width: 120px; height: 120px; margin: 0 auto var(--spacing-lg); border-radius: var(--radius-large); background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255, 255, 255, 0.3);">
                         ${avatarContent}
                     </div>
                     <div class="employee-info">
@@ -424,7 +476,7 @@ class EmployeeManager {
                     <i class="fas fa-exclamation-triangle"></i>
                     <h3>Erreur de chargement</h3>
                     <p>${this.escapeHtml(message)}</p>
-                    <button class="btn btn-primary" onclick="window.employees.loadEmployeeData()">
+                    <button class="btn btn-primary" onclick="window.employeesManager.loadEmployeeData()">
                         <i class="fas fa-arrow-clockwise"></i>
                         Réessayer
                     </button>
@@ -446,7 +498,7 @@ class EmployeeManager {
                     <i class="fas fa-magnifying-glass"></i>
                     <h3>Aucun résultat trouvé</h3>
                     <p>Aucun collaborateur ne correspond aux critères de recherche.</p>
-                    <button class="btn btn-secondary" onclick="window.employees.clearFilters()">
+                    <button class="btn btn-secondary" onclick="window.employeesManager.clearFilters()">
                         <i class="fas fa-filter-circle-xmark"></i>
                         Effacer les filtres
                     </button>
@@ -539,4 +591,43 @@ class EmployeeManager {
 }
 
 // Initialisation globale du gestionnaire d'employés
-window.employees = new EmployeeManager();
+window.employeesManager = new EmployeeManager();
+
+// Charger les employés au démarrage si authentifié
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            if (window.auth?.isAuthenticated()) {
+                window.employeesManager.loadEmployeeData();
+            }
+        }, 1500);
+    });
+} else {
+    setTimeout(() => {
+        if (window.auth?.isAuthenticated()) {
+            window.employeesManager.loadEmployeeData();
+        }
+    }, 1500);
+}
+
+// Gestion de la recherche et du filtrage
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('employeeSearch');
+    const teamFilter = document.getElementById('teamFilter');
+    
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                window.employeesManager.searchEmployees(e.target.value);
+            }, 300);
+        });
+    }
+    
+    if (teamFilter) {
+        teamFilter.addEventListener('change', (e) => {
+            window.employeesManager.filterByTeam(e.target.value);
+        });
+    }
+});
