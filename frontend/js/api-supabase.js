@@ -5,8 +5,8 @@
  */
 
 // Configuration Supabase - À REMPLACER par vos vraies valeurs
-const SUPABASE_URL = 'https://votre-projet.supabase.co';
-const SUPABASE_ANON_KEY = 'votre-cle-publique-anon';
+const SUPABASE_URL = 'https://bscsfrdfyukplupovzla.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzY3NmcmRmeXVrcGx1cG92emxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxOTE4MjYsImV4cCI6MjA3Nzc2NzgyNn0.cTHtIpv4wopk5YnxOZ9ip5tseTPutngPPkhu2XdU3q8';
 
 class APIManager {
     constructor() {
