@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRC Co Arles Macif - Intranet</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Arrière-plan animé avec effet glassmorphism -->
+    <div class="background-container">
+        <div class="background-gradient"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="main-nav" id="mainNav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="assets/logo-macif.png" alt="Macif" class="nav-logo">
+                <h2>CRC Co Arles</h2>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active" data-section="home">
+                    <i class="fas fa-home"></i>
+                    <span>Accueil</span>
+                </a>
+                <a href="#trombinoscope" class="nav-link" data-section="trombinoscope">
+                    <i class="fas fa-users"></i>
+                    <span>Trombinoscope</span>
+                </a>
+                <a href="#agenda" class="nav-link" data-section="agenda">
+                    <i class="fas fa-calendar"></i>
+                    <span>Agenda</span>
+                </a>
+                <a href="#anniversaires" class="nav-link" data-section="anniversaires">
+                    <i class="fas fa-birthday-cake"></i>
+                    <span>Anniversaires</span>
+                </a>
+            </div>
+
+            <div class="nav-user">
+                <div class="user-info" id="userInfo">
+                    <span class="user-name">Connexion</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <button class="logout-btn" id="logoutBtn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <!-- Section Accueil -->
+        <section id="home" class="content-section active">
+            <div class="section-container">
+                <div class="welcome-header">
+                    <h1>Bienvenue sur l'intranet du CRC Co Arles Macif</h1>
+                    <p>Votre espace collaboratif pour rester connecté avec votre équipe</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Équipe</h3>
+                            <p class="card-number" id="totalEmployees">-</p>
+                            <span class="card-label">Collaborateurs</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Événements</h3>
+                            <p class="card-number" id="upcomingEvents">-</p>
+                            <span class="card-label">À venir</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-birthday-cake"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Anniversaires</h3>
+                            <p class="card-number" id="monthlyBirthdays">-</p>
+                            <span class="card-label">Ce mois-ci</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Équipes</h3>
+                            <p class="card-number" id="totalTeams">-</p>
+                            <span class="card-label">Actives</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <div class="activity-card">
+                        <h3>Événements à venir</h3>
+                        <div class="activity-list" id="recentEvents">
+                            <div class="loading-spinner">Chargement...</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-card">
+                        <h3>Anniversaires du mois</h3>
+                        <div class="activity-list" id="recentBirthdays">
+                            <div class="loading-spinner">Chargement...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Trombinoscope -->
+        <section id="trombinoscope" class="content-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Trombinoscope</h2>
+                    <div class="section-actions">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="employeeSearch" placeholder="Rechercher un collaborateur...">
+                        </div>
+                        <select id="teamFilter" class="team-filter">
+                            <option value="">Toutes les équipes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="team-structure" id="teamStructure">
+                    <div class="loading-spinner">Chargement du trombinoscope...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Agenda -->
+        <section id="agenda" class="content-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Agenda</h2>
+                    <div class="section-actions">
+                        <select id="eventTypeFilter" class="event-filter">
+                            <option value="">Tous les événements</option>
+                            <option value="reunion">Réunions</option>
+                            <option value="formation">Formations</option>
+                            <option value="evenement">Événements</option>
+                            <option value="conge">Congés</option>
+                        </select>
+                        <button class="btn btn-primary" id="addEventBtn">
+                            <i class="fas fa-plus"></i>
+                            Nouvel événement
+                        </button>
+                    </div>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button id="prevMonth" class="btn btn-secondary">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h3 id="currentMonth">Novembre 2024</h3>
+                        <button id="nextMonth" class="btn btn-secondary">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="calendar-grid" id="calendarGrid">
+                        <div class="loading-spinner">Chargement de l'agenda...</div>
+                    </div>
+                </div>
+
+                <div class="events-list">
+                    <h3>Événements à venir</h3>
+                    <div class="events-container" id="eventsList">
+                        <div class="loading-spinner">Chargement des événements...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Anniversaires -->
+        <section id="anniversaires" class="content-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Anniversaires</h2>
+                    <p class="section-subtitle">Célébrons ensemble nos collaborateurs</p>
+                </div>
+
+                <div class="birthdays-container" id="birthdaysContainer">
+                    <div class="loading-spinner">Chargement des anniversaires...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de connexion -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Connexion</h3>
+                <button class="modal-close" id="closeLoginModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    Se connecter
+                </button>
+                <div class="form-message" id="loginMessage"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal d'événement -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="eventModalTitle">Nouvel événement</h3>
+                <button class="modal-close" id="closeEventModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="eventForm" class="event-form">
+                <div class="form-group">
+                    <label for="eventTitle">Titre</label>
+                    <input type="text" id="eventTitle" name="titre" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="eventType">Type</label>
+                        <select id="eventType" name="type_evenement" required>
+                            <option value="reunion">Réunion</option>
+                            <option value="formation">Formation</option>
+                            <option value="evenement">Événement</option>
+                            <option value="conge">Congé</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDate">Date</label>
+                        <input type="datetime-local" id="eventDate" name="date_debut" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Lieu</label>
+                    <input type="text" id="eventLocation" name="lieu">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEvent">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer l'événement</button>
+                </div>
+                <div class="form-message" id="eventMessage"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast de notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/employees.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
