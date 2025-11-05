@@ -1416,3 +1416,77 @@ body {
   outline-offset: 2px;
   border-radius: var(--radius-small);
 }
+
+/* Section Skipper - Style spécial */
+.skipper-section {
+    background: linear-gradient(135deg, rgba(0, 122, 255, 0.08), rgba(0, 122, 255, 0.15));
+    border: 2px solid var(--ios-blue);
+    border-radius: var(--radius-large);
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 20px rgba(0, 122, 255, 0.15);
+}
+
+.skipper-section .team-header h3 {
+    color: var(--ios-blue);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+/* Indicateur de manager dans les équipes */
+.manager-indicator {
+    font-size: 0.9rem;
+    color: var(--ios-orange);
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* Grid en colonnes pour toutes les équipes */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Responsive : 1 colonne sur mobile */
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Section équipe normale */
+.team-section {
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-large);
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid var(--glass-border);
+}
+
+.team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.team-count {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
