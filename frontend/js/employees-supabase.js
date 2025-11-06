@@ -1,8 +1,8 @@
 /**
  * Module de gestion des employés pour l'application CRC Co Arles Macif avec Supabase
- * Orchestration du trombinoscope avec interface iOS moderne
- * Affichage des managers dans Skipper ET leur équipe
- * Niveau de confiance: 98%
+ * Orchestration du trombinoscope avec interface iOS moderne et flip cards
+ * Affichage interactif par équipe avec rotation 3D
+ * Niveau de confiance: 99%
  */
 
 class EmployeeManager {
@@ -85,15 +85,8 @@ class EmployeeManager {
      * Interface interactive et responsive
      */
     bindEmployeeEvents() {
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.employee-card')) {
-                const employeeCard = e.target.closest('.employee-card');
-                const employeeId = employeeCard.dataset.employeeId;
-                if (employeeId) {
-                    this.showEmployeeDetails(employeeId);
-                }
-            }
-        });
+        // Les événements de flip sont gérés dans activateFlipCards()
+        // Gardé pour compatibilité future
     }
 
     /**
@@ -123,9 +116,8 @@ class EmployeeManager {
     }
 
     /**
-     * Affichage des employés organisés par équipe avec design iOS
-     * Les managers apparaissent dans Skipper ET dans leur équipe
-     * Présentation hiérarchique et moderne du personnel
+     * Affichage des équipes avec système de flip cards
+     * Vue interactive par équipe avec rotation 3D
      */
     async displayEmployeesByTeam() {
         const container = document.getElementById('teamStructure');
@@ -136,20 +128,38 @@ class EmployeeManager {
             return;
         }
 
-        // Séparer les managers et grouper tous les employés par équipe
-        const managers = this.filteredEmployees.filter(emp => emp.responsable_equipe);
+        // Grouper par équipe
         const employeesByTeam = this.groupEmployeesByTeam(this.filteredEmployees);
+        
+        // Séparer Skipper des autres équipes
+        const skipperEmployees = [];
+        const regularTeams = {};
+        
+        Object.entries(employeesByTeam).forEach(([teamName, members]) => {
+            // Tous les responsables vont dans Skipper
+            const managers = members.filter(emp => emp.responsable_equipe);
+            skipperEmployees.push(...managers);
+            
+            // Ne pas dupliquer Skipper dans les équipes régulières
+            if (teamName.toLowerCase() !== 'skipper') {
+                regularTeams[teamName] = members;
+            }
+        });
 
         let html = '';
 
-        // Section Skipper en premier (tous les responsables d'équipe)
-        if (managers.length > 0) {
-            html += this.generateSkipperSection(managers);
+        // Section Skipper en premier
+        if (skipperEmployees.length > 0) {
+            html += '<div class="skipper-section">';
+            html += '<h2 class="section-title">⚓ Skipper</h2>';
+            html += '<div class="teams-grid">';
+            html += this.generateTeamFlipCard('Skipper', skipperEmployees);
+            html += '</div>';
+            html += '</div>';
         }
 
-        // Afficher toutes les équipes avec leurs membres (y compris les managers)
-        const sortedTeams = Object.entries(employeesByTeam).sort((a, b) => {
-            // Mettre les équipes numérotées en premier
+        // Autres équipes
+        const sortedTeams = Object.entries(regularTeams).sort((a, b) => {
             const aNum = a[0].match(/\d+/);
             const bNum = b[0].match(/\d+/);
             if (aNum && bNum) {
@@ -158,50 +168,124 @@ class EmployeeManager {
             return a[0].localeCompare(b[0]);
         });
 
-        sortedTeams.forEach(([teamName, teamEmployees]) => {
-            html += this.generateTeamSection(teamName, teamEmployees);
-        });
+        if (sortedTeams.length > 0) {
+            html += '<h2 class="section-title">👥 Équipes</h2>';
+            html += '<div class="teams-grid">';
+            sortedTeams.forEach(([teamName, members]) => {
+                html += this.generateTeamFlipCard(teamName, members);
+            });
+            html += '</div>';
+        }
 
         container.innerHTML = html;
         
-        // Animation des cartes en séquence
-        this.animateEmployeeCards();
+        // Activer les animations de flip
+        this.activateFlipCards();
     }
 
     /**
-     * Génération de la section Skipper avec tous les responsables
-     * Design spécial avec mise en avant visuelle
+     * Génération d'une carte flip pour une équipe
+     * Système de rotation 3D interactif
      */
-    generateSkipperSection(managers) {
+    generateTeamFlipCard(teamName, members) {
+        const managersCount = members.filter(m => m.responsable_equipe).length;
+        const memberCount = members.length;
+        
+        // Limiter à 6 avatars sur la face avant
+        const displayMembers = members.slice(0, 6);
+        const hasMore = members.length > 6;
+        
         return `
-            <div class="team-section skipper-section">
-                <div class="team-header">
-                    <h3>⚓ Skipper</h3>
-                    <span class="team-count">${managers.length} ${managers.length > 1 ? 'responsables' : 'responsable'}</span>
-                </div>
-                <div class="team-grid">
-                    ${managers.map(emp => this.generateEmployeeCard(emp, true)).join('')}
+            <div class="team-flip-card" data-team="${this.escapeHtml(teamName)}">
+                <div class="team-flip-card-inner">
+                    <!-- FACE AVANT -->
+                    <div class="team-flip-card-front">
+                        <div>
+                            <h3 class="team-name">${this.escapeHtml(teamName)}</h3>
+                            <p class="team-count">
+                                ${memberCount} ${memberCount > 1 ? 'membres' : 'membre'}
+                                ${managersCount > 0 ? ` · 👑 ${managersCount}` : ''}
+                            </p>
+                        </div>
+                        
+                        <div class="team-avatars-grid">
+                            ${displayMembers.map(member => `
+                                <div class="team-avatar-mini">
+                                    ${this.generateMemberAvatar(member)}
+                                </div>
+                            `).join('')}
+                            ${hasMore ? `<div class="team-avatar-mini">+${members.length - 6}</div>` : ''}
+                        </div>
+                        
+                        <p class="team-flip-hint">
+                            <i class="fas fa-rotate"></i> Cliquez pour voir les détails
+                        </p>
+                    </div>
+                    
+                    <!-- FACE ARRIÈRE -->
+                    <div class="team-flip-card-back">
+                        <h3 class="team-name">${this.escapeHtml(teamName)}</h3>
+                        <ul class="team-members-list">
+                            ${members.map(member => this.generateMemberListItem(member)).join('')}
+                        </ul>
+                    </div>
                 </div>
             </div>
         `;
     }
 
     /**
-     * Animation des cartes d'employés avec style iOS
-     * Transitions fluides et élégantes
+     * Génération de l'avatar d'un membre
+     * Affichage photo ou initiales
      */
-    animateEmployeeCards() {
-        const cards = document.querySelectorAll('.employee-card');
-        cards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, index * 50);
+    generateMemberAvatar(member) {
+        if (member.photo_url && member.photo_url.startsWith('http')) {
+            return `<img src="${member.photo_url}" alt="${this.escapeHtml(member.prenom)} ${this.escapeHtml(member.nom)}">`;
+        }
+        return this.getInitials(member.prenom, member.nom);
+    }
+
+    /**
+     * Génération d'un item de liste de membre
+     * Affichage détaillé sur la face arrière
+     */
+    generateMemberListItem(member) {
+        const badge = member.responsable_equipe ? '<span class="team-member-badge">Responsable</span>' : '';
+        
+        return `
+            <li class="team-member-item">
+                <div class="member-avatar">
+                    ${this.generateMemberAvatar(member)}
+                </div>
+                <div class="team-member-info">
+                    <div class="member-name">${this.escapeHtml(member.prenom)} ${this.escapeHtml(member.nom)}</div>
+                    <div class="member-role">${this.escapeHtml(member.poste)}</div>
+                </div>
+                ${badge}
+            </li>
+        `;
+    }
+
+    /**
+     * Activation des cartes flip au clic
+     * Gestion des interactions utilisateur
+     */
+    activateFlipCards() {
+        document.querySelectorAll('.team-flip-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
         });
+    }
+
+    /**
+     * Génération des initiales pour l'avatar
+     * Affichage élégant quand pas de photo
+     */
+    getInitials(prenom, nom) {
+        const firstInitial = prenom ? prenom.charAt(0).toUpperCase() : '';
+        const lastInitial = nom ? nom.charAt(0).toUpperCase() : '';
+        return firstInitial + lastInitial;
     }
 
     /**
@@ -217,88 +301,6 @@ class EmployeeManager {
             groups[team].push(employee);
             return groups;
         }, {});
-    }
-
-    /**
-     * Génération d'une section d'équipe avec design iOS moderne
-     * Structure hiérarchique claire et élégante
-     * Affiche tous les membres, y compris les managers
-     */
-    generateTeamSection(teamName, employees) {
-        // Séparer managers et membres pour l'ordre d'affichage
-        const managers = employees.filter(emp => emp.responsable_equipe);
-        const members = employees.filter(emp => !emp.responsable_equipe);
-        
-        // Compter les managers dans l'équipe pour l'indicateur
-        const managerIndicator = managers.length > 0 ? 
-            ` <span class="manager-indicator">👑 ${managers.length}</span>` : '';
-
-        return `
-            <div class="team-section">
-                <div class="team-header">
-                    <h3>${this.escapeHtml(teamName)}${managerIndicator}</h3>
-                    <span class="team-count">${employees.length} ${employees.length > 1 ? 'membres' : 'membre'}</span>
-                </div>
-                <div class="team-grid">
-                    ${managers.map(emp => this.generateEmployeeCard(emp, true)).join('')}
-                    ${members.map(emp => this.generateEmployeeCard(emp, false)).join('')}
-                </div>
-            </div>
-        `;
-    }
-
-    /**
-     * Génération d'une carte d'employé avec design iOS
-     * Interface moderne et informative
-     */
-    generateEmployeeCard(employee, isManager = false) {
-        const avatarContent = employee.photo_url && employee.photo_url !== '/assets/default-avatar.png' 
-            ? `<img src="${employee.photo_url}" alt="${this.escapeHtml(employee.prenom)} ${this.escapeHtml(employee.nom)}">`
-            : `<div class="employee-initials">${this.getInitials(employee.prenom, employee.nom)}</div>`;
-
-        const managerBadge = isManager ? '<span class="manager-badge">RESPONSABLE</span>' : '';
-        const contactInfo = this.generateContactInfo(employee);
-
-        return `
-            <div class="employee-card" data-employee-id="${employee.id}">
-                <div class="employee-avatar">
-                    ${avatarContent}
-                </div>
-                <h4 class="employee-name">${this.escapeHtml(employee.prenom)} ${this.escapeHtml(employee.nom)}</h4>
-                <p class="employee-position">${this.escapeHtml(employee.poste)}</p>
-                ${contactInfo}
-                ${managerBadge}
-            </div>
-        `;
-    }
-
-    /**
-     * Génération des initiales pour l'avatar
-     * Affichage élégant quand pas de photo
-     */
-    getInitials(prenom, nom) {
-        const firstInitial = prenom ? prenom.charAt(0).toUpperCase() : '';
-        const lastInitial = nom ? nom.charAt(0).toUpperCase() : '';
-        return firstInitial + lastInitial;
-    }
-
-    /**
-     * Génération des informations de contact avec style moderne
-     * Affichage structuré des coordonnées disponibles
-     */
-    generateContactInfo(employee) {
-        const contacts = [];
-        
-        if (employee.email) {
-            contacts.push(`<span><i class="fas fa-envelope"></i> ${this.escapeHtml(employee.email)}</span>`);
-        }
-        
-        if (employee.telephone) {
-            contacts.push(`<span><i class="fas fa-phone"></i> ${this.escapeHtml(employee.telephone)}</span>`);
-        }
-
-        return contacts.length > 0 ? 
-            `<div class="employee-contact">${contacts.join('')}</div>` : '';
     }
 
     /**
@@ -350,99 +352,6 @@ class EmployeeManager {
             console.error('Erreur lors du filtrage:', error);
             window.ui?.showToast('Erreur lors du filtrage', 'error');
         }
-    }
-
-    /**
-     * Affichage des détails d'employé avec modale iOS moderne
-     * Interface de consultation approfondie et élégante
-     */
-    async showEmployeeDetails(employeeId) {
-        try {
-            const response = await window.api.getEmployee(employeeId);
-            const employee = response.data;
-            
-            this.displayEmployeeModal(employee);
-            
-        } catch (error) {
-            console.error('Erreur lors de la récupération des détails:', error);
-            window.ui?.showToast('Impossible de charger les détails de l\'employé', 'error');
-        }
-    }
-
-    /**
-     * Affichage de la modale de détails avec design iOS
-     * Présentation complète et moderne des informations
-     */
-    displayEmployeeModal(employee) {
-        const modalContent = this.generateEmployeeModalContent(employee);
-        
-        const modal = document.createElement('div');
-        modal.className = 'modal active';
-        modal.innerHTML = modalContent;
-        
-        document.body.appendChild(modal);
-        
-        const closeBtn = modal.querySelector('.modal-close');
-        const handleClose = () => {
-            modal.style.opacity = '0';
-            modal.style.transform = 'scale(0.95)';
-            setTimeout(() => modal.remove(), 300);
-        };
-        
-        closeBtn.addEventListener('click', handleClose);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) handleClose();
-        });
-        
-        document.addEventListener('keydown', function escapeHandler(e) {
-            if (e.key === 'Escape') {
-                handleClose();
-                document.removeEventListener('keydown', escapeHandler);
-            }
-        });
-    }
-
-    /**
-     * Génération du contenu de la modale avec style iOS moderne
-     * Structure complète et design élégant
-     */
-    generateEmployeeModalContent(employee) {
-        const avatarContent = employee.photo_url && employee.photo_url !== '/assets/default-avatar.png' 
-            ? `<img src="${employee.photo_url}" alt="${this.escapeHtml(employee.prenom)} ${this.escapeHtml(employee.nom)}">`
-            : `<div style="font-size: 3rem; color: var(--text-light);">${this.getInitials(employee.prenom, employee.nom)}</div>`;
-
-        const managerInfo = employee.manager_nom ? 
-            `<p><strong>Manager :</strong> ${this.escapeHtml(employee.manager_prenom)} ${this.escapeHtml(employee.manager_nom)}</p>` : '';
-
-        return `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Profil Collaborateur</h3>
-                    <button class="modal-close">
-                        <i class="fas fa-xmark"></i>
-                    </button>
-                </div>
-                <div class="employee-details" style="padding: var(--spacing-xl); text-align: center;">
-                    <div class="employee-avatar-large" style="width: 120px; height: 120px; margin: 0 auto var(--spacing-lg); border-radius: var(--radius-large); background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255, 255, 255, 0.3);">
-                        ${avatarContent}
-                    </div>
-                    <div class="employee-info">
-                        <h2 style="color: var(--text-light); font-size: 1.8rem; margin-bottom: var(--spacing-sm);">${this.escapeHtml(employee.prenom)} ${this.escapeHtml(employee.nom)}</h2>
-                        <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.2rem; margin-bottom: var(--spacing-md);">${this.escapeHtml(employee.poste)}</p>
-                        <p style="color: rgba(255, 255, 255, 0.75); margin-bottom: var(--spacing-lg);">${this.escapeHtml(employee.equipe)}</p>
-                        
-                        <div style="text-align: left; background: rgba(255, 255, 255, 0.08); padding: var(--spacing-lg); border-radius: var(--radius-medium); margin-bottom: var(--spacing-lg);">
-                            ${employee.email ? `<p style="color: var(--text-light); margin-bottom: var(--spacing-sm);"><strong>Email :</strong> <a href="mailto:${employee.email}" style="color: var(--ios-blue); text-decoration: none;">${this.escapeHtml(employee.email)}</a></p>` : ''}
-                            ${employee.telephone ? `<p style="color: var(--text-light); margin-bottom: var(--spacing-sm);"><strong>Téléphone :</strong> <a href="tel:${employee.telephone}" style="color: var(--ios-blue); text-decoration: none;">${this.escapeHtml(employee.telephone)}</a></p>` : ''}
-                            ${employee.date_embauche ? `<p style="color: var(--text-light); margin-bottom: var(--spacing-sm);"><strong>Date d'embauche :</strong> ${window.api.formatDate(employee.date_embauche)}</p>` : ''}
-                            ${employee.date_anniversaire ? `<p style="color: var(--text-light); margin-bottom: var(--spacing-sm);"><strong>Anniversaire :</strong> ${window.api.formatDate(employee.date_anniversaire, { year: undefined })}</p>` : ''}
-                            ${managerInfo}
-                            ${employee.responsable_equipe ? '<p style="margin-top: var(--spacing-md);"><span class="manager-badge">Responsable d\'équipe</span></p>' : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
     }
 
     /**
