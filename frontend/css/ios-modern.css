@@ -2186,3 +2186,24 @@ body {
         transform: translateY(0);
     }
 }
+
+.event-card-home, .birthday-card-home {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-large);
+    padding: 25px;
+    transition: all 0.3s ease;
+}
+
+.event-card-home:hover, .birthday-card-home:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.no-data-text {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    padding: 40px;
+}
