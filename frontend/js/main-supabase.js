@@ -135,7 +135,7 @@ class App {
             const upcomingEventsContainer = document.getElementById('homeUpcomingEvents');
             if (upcomingEventsContainer) {
                 try {
-                    const eventsResponse = await window.api.getUpcomingEvents(3);
+                    const eventsResponse = await window.api.getEvents(3);
                     if (eventsResponse.data && eventsResponse.data.length > 0) {
                         upcomingEventsContainer.innerHTML = eventsResponse.data.map(event => `
                             <div class="event-card-home">
@@ -152,13 +152,16 @@ class App {
                     console.error('Erreur chargement événements:', error);
                     upcomingEventsContainer.innerHTML = '<p class="no-data-text">Aucun événement à venir</p>';
                 }
+            if (eventsResponse.data) {
+                eventsResponse.data = eventsResponse.data.slice(0, 3);
+            }
             }
 
             // Charger les anniversaires du mois
             const birthdaysContainer = document.getElementById('homeBirthdays');
             if (birthdaysContainer) {
                 try {
-                    const birthdaysResponse = await window.api.getCurrentMonthBirthdays();
+                    const birthdaysResponse = await window.api.getBirthdays();
                     if (birthdaysResponse.data && birthdaysResponse.data.length > 0) {
                         birthdaysContainer.innerHTML = birthdaysResponse.data.map(person => `
                             <div class="birthday-card-home">
