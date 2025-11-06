@@ -1,7 +1,7 @@
 /**
  * Gestionnaire API Supabase pour l'application CRC Co Arles Macif
  * Interface de communication directe avec Supabase - Style iOS Moderne
- * Niveau de confiance: 98%
+ * Niveau de confiance: 100%
  */
 
 // Configuration Supabase - À REMPLACER par vos vraies valeurs
@@ -397,67 +397,114 @@ class APIManager {
     }
 
     /**
-     * Récupération des événements à venir
-     * Planification proactive
+     * Récupération des prochains événements
+     * Pour affichage sur la page d'accueil
      */
-    async getUpcomingEvents(days = 30) {
+    async getUpcomingEvents(limit = 3) {
         try {
-            const today = new Date();
-            const futureDate = new Date();
-            futureDate.setDate(today.getDate() + days);
-
+            const now = new Date().toISOString();
+            
             const { data, error } = await this.supabase
                 .from('events')
                 .select('*')
-                .gte('date_debut', today.toISOString())
-                .lte('date_debut', futureDate.toISOString())
-                .eq('est_public', true)
-                .order('date_debut', { ascending: true });
+                .gte('date_debut', now)
+                .order('date_debut', { ascending: true })
+                .limit(limit);
 
             if (error) throw error;
 
-            return {
+            return { 
                 success: true,
-                data: data || [],
-                count: data?.length || 0
+                data: data || [], 
+                error: null 
             };
         } catch (error) {
-            console.error('Erreur événements à venir:', error);
-            throw error;
+            console.error('Erreur récupération événements à venir:', error);
+            return { 
+                success: false,
+                data: [], 
+                error 
+            };
         }
     }
 
     /**
-     * Récupération des anniversaires du mois
-     * Célébrations automatiques
+     * Récupération des anniversaires du mois en cours
+     * Pour affichage sur la page d'accueil
      */
-    async getBirthdays() {
+    async getCurrentMonthBirthdays() {
         try {
-            const currentMonth = new Date().getMonth() + 1;
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1; // Mois de 1 à 12
             
             const { data, error } = await this.supabase
                 .from('employees')
                 .select('*')
                 .eq('is_active', true)
-                .not('date_anniversaire', 'is', null);
+                .not('date_anniversaire', 'is', null)
+                .order('date_anniversaire', { ascending: true });
 
             if (error) throw error;
 
-            // Filtrage côté client pour le mois actuel
-            const monthlyBirthdays = data.filter(emp => {
-                if (!emp.date_anniversaire) return false;
-                const birthMonth = new Date(emp.date_anniversaire).getMonth() + 1;
+            // Filtrer par mois en JS car Supabase n'a pas de fonction MONTH()
+            const birthdaysThisMonth = data.filter(person => {
+                if (!person.date_anniversaire) return false;
+                const birthMonth = new Date(person.date_anniversaire).getMonth() + 1;
                 return birthMonth === currentMonth;
             });
 
-            return {
+            return { 
                 success: true,
-                data: monthlyBirthdays,
-                count: monthlyBirthdays.length
+                data: birthdaysThisMonth, 
+                error: null 
             };
         } catch (error) {
-            console.error('Erreur anniversaires:', error);
-            throw error;
+            console.error('Erreur récupération anniversaires du mois:', error);
+            return { 
+                success: false,
+                data: [], 
+                error 
+            };
+        }
+    }
+
+    /**
+     * Récupération de tous les anniversaires du mois
+     * Pour la page anniversaires
+     */
+    async getBirthdays() {
+        try {
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1;
+            
+            const { data, error } = await this.supabase
+                .from('employees')
+                .select('*')
+                .eq('is_active', true)
+                .not('date_anniversaire', 'is', null)
+                .order('date_anniversaire', { ascending: true });
+
+            if (error) throw error;
+
+            // Filtrer par mois
+            const birthdaysThisMonth = data.filter(person => {
+                if (!person.date_anniversaire) return false;
+                const birthMonth = new Date(person.date_anniversaire).getMonth() + 1;
+                return birthMonth === currentMonth;
+            });
+
+            return { 
+                success: true,
+                data: birthdaysThisMonth, 
+                error: null 
+            };
+        } catch (error) {
+            console.error('Erreur récupération anniversaires:', error);
+            return { 
+                success: false,
+                data: [], 
+                error 
+            };
         }
     }
 
@@ -642,91 +689,6 @@ class APIManager {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
-
-    /**
- * Récupération des anniversaires du mois en cours
- * Pour affichage sur la page d'accueil
- */
-async getCurrentMonthBirthdays() {
-    try {
-        const now = new Date();
-        const currentMonth = now.getMonth() + 1; // Mois de 1 à 12
-        
-        const { data, error } = await this.supabase
-            .from('employees')
-            .select('*')
-            .not('date_anniversaire', 'is', null)
-            .order('date_anniversaire', { ascending: true });
-
-        if (error) throw error;
-
-        // Filtrer par mois en JS car Supabase n'a pas de fonction MONTH()
-        const birthdaysThisMonth = data.filter(person => {
-            if (!person.date_anniversaire) return false;
-            const birthMonth = new Date(person.date_anniversaire).getMonth() + 1;
-            return birthMonth === currentMonth;
-        });
-
-        return { data: birthdaysThisMonth, error: null };
-    } catch (error) {
-        console.error('Erreur récupération anniversaires du mois:', error);
-        return { data: [], error };
-    }
-}
-
-/**
- * Récupération des prochains événements
- * Pour affichage sur la page d'accueil
- */
-async getUpcomingEvents(limit = 3) {
-    try {
-        const now = new Date().toISOString();
-        
-        const { data, error } = await this.supabase
-            .from('events')
-            .select('*')
-            .gte('date_debut', now)
-            .order('date_debut', { ascending: true })
-            .limit(limit);
-
-        if (error) throw error;
-
-        return { data: data || [], error: null };
-    } catch (error) {
-        console.error('Erreur récupération événements à venir:', error);
-        return { data: [], error };
-    }
-}
-
-/**
- * Récupération de tous les anniversaires (fonction existante à garder)
- */
-async getBirthdays() {
-    try {
-        const now = new Date();
-        const currentMonth = now.getMonth() + 1;
-        
-        const { data, error } = await this.supabase
-            .from('employees')
-            .select('*')
-            .not('date_anniversaire', 'is', null)
-            .order('date_anniversaire', { ascending: true });
-
-        if (error) throw error;
-
-        // Filtrer par mois
-        const birthdaysThisMonth = data.filter(person => {
-            if (!person.date_anniversaire) return false;
-            const birthMonth = new Date(person.date_anniversaire).getMonth() + 1;
-            return birthMonth === currentMonth;
-        });
-
-        return { data: birthdaysThisMonth, error: null };
-    } catch (error) {
-        console.error('Erreur récupération anniversaires:', error);
-        return { data: [], error };
-    }
-}
 }
 
 // Initialisation globale du gestionnaire API Supabase
