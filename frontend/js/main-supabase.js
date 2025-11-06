@@ -110,7 +110,7 @@ class App {
                 break;
             case 'trombinoscope':
                 if (window.employeesManager) {
-                    window.employeesManager.loadEmployees();
+                    window.employeesManager.loadEmployeeData();
                 }
                 break;
             case 'agenda':
