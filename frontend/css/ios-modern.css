@@ -1490,3 +1490,227 @@ body {
     font-weight: 500;
     color: var(--text-light);
 }
+
+/* ===== SYSTÈME DE CARDS FLIP POUR ÉQUIPES ===== */
+
+.teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+    perspective: 1000px;
+}
+
+.team-flip-card {
+    position: relative;
+    height: 400px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.team-flip-card:hover {
+    transform: translateY(-5px);
+}
+
+.team-flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.team-flip-card.flipped .team-flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.team-flip-card-front,
+.team-flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: var(--radius-large);
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* FACE AVANT - Preview de l'équipe */
+.team-flip-card-front {
+    background: linear-gradient(135deg, var(--glass-bg-strong), var(--glass-bg));
+    backdrop-filter: blur(20px);
+    border: 2px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
+}
+
+.team-flip-card-front .team-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.team-flip-card-front .team-count {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 30px;
+}
+
+.team-avatars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.team-avatar-mini {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    font-weight: 600;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.team-avatar-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.team-avatar-mini:hover {
+    transform: scale(1.1);
+    border-color: var(--ios-blue);
+}
+
+.team-flip-hint {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* FACE ARRIÈRE - Détails de l'équipe */
+.team-flip-card-back {
+    background: linear-gradient(135deg, rgba(0, 122, 255, 0.95), rgba(88, 86, 214, 0.95));
+    transform: rotateY(180deg);
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.team-flip-card-back .team-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.team-members-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.team-member-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.team-member-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.team-member-item .member-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 600;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+}
+
+.team-member-item .member-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.team-member-info {
+    flex: 1;
+    text-align: left;
+}
+
+.team-member-info .member-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 3px;
+}
+
+.team-member-info .member-role {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.team-member-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Section Skipper spéciale */
+.skipper-section .team-flip-card-front {
+    background: linear-gradient(135deg, rgba(0, 122, 255, 0.2), rgba(0, 122, 255, 0.3));
+    border: 2px solid var(--ios-blue);
+}
+
+.skipper-section .team-flip-card-back {
+    background: linear-gradient(135deg, rgba(0, 122, 255, 1), rgba(30, 144, 255, 1));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .teams-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .team-flip-card {
+        height: 350px;
+    }
+    
+    .team-avatars-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
