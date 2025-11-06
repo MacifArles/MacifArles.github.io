@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -73,77 +73,54 @@
 
     <!-- Contenu principal -->
     <main class="main-content">
-        <!-- Section Accueil -->
-        <section id="home" class="content-section active">
-            <div class="section-container">
-                <div class="welcome-header">
-                    <h1>Bienvenue sur l'intranet moderne du CRC Co Arles Macif</h1>
-                    <p>Votre espace collaboratif nouvelle génération pour rester connecté avec votre équipe</p>
-                </div>
+       <!-- Section Accueil -->
+<section id="home" class="content-section active">
+    <div class="section-container">
+        <!-- Hero section avec animation -->
+        <div class="hero-section">
+            <h1 class="hero-title">⚓ Bienvenue chez Fad'Arles</h1>
+            <p class="hero-subtitle">Le blog interne du CRC Co Arles - Au cœur de l'actu</p>
+            <div class="hero-description">
+                <p>Votre source d'information pour tous les événements, actualités et moments de convivialité de notre équipe !</p>
+            </div>
+        </div>
 
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="card-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Collaborateurs</h3>
-                            <p class="card-number" id="totalEmployees">-</p>
-                            <span class="card-label">Actifs</span>
-                        </div>
-                    </div>
+        <!-- Section événements à venir -->
+        <div class="home-section">
+            <div class="section-header-home">
+                <h2><i class="fas fa-calendar-star"></i> Prochains événements</h2>
+            </div>
+            <div class="events-carousel" id="homeUpcomingEvents">
+                <div class="loading-spinner">Chargement des événements...</div>
+            </div>
+        </div>
 
-                    <div class="dashboard-card">
-                        <div class="card-icon">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Événements</h3>
-                            <p class="card-number" id="upcomingEvents">-</p>
-                            <span class="card-label">À venir</span>
-                        </div>
-                    </div>
+        <!-- Section anniversaires du mois -->
+        <div class="home-section">
+            <div class="section-header-home">
+                <h2><i class="fas fa-cake-candles"></i> Anniversaires du mois</h2>
+            </div>
+            <div class="birthdays-carousel" id="homeBirthdays">
+                <div class="loading-spinner">Chargement des anniversaires...</div>
+            </div>
+        </div>
 
-                    <div class="dashboard-card">
-                        <div class="card-icon">
-                            <i class="fas fa-cake-candles"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Anniversaires</h3>
-                            <p class="card-number" id="monthlyBirthdays">-</p>
-                            <span class="card-label">Ce mois-ci</span>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="card-icon">
-                            <i class="fas fa-building-user"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Équipes</h3>
-                            <p class="card-number" id="totalTeams">-</p>
-                            <span class="card-label">Actives</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="recent-activity">
-                    <div class="activity-card">
-                        <h3>Prochains événements</h3>
-                        <div class="activity-list" id="recentEvents">
-                            <div class="loading-spinner">Chargement des événements...</div>
-                        </div>
-                    </div>
-
-                    <div class="activity-card">
-                        <h3>Anniversaires du mois</h3>
-                        <div class="activity-list" id="recentBirthdays">
-                            <div class="loading-spinner">Chargement des anniversaires...</div>
-                        </div>
-                    </div>
+        <!-- Section actualités récentes -->
+        <div class="home-section">
+            <div class="section-header-home">
+                <h2><i class="fas fa-newspaper"></i> Dernières actualités</h2>
+            </div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-icon">📢</div>
+                    <h3>Les dernières nouveautés !</h3>
+                    <p>Découvrez notre nouvelle plateforme moderne pour rester connecté avec toute l'équipe.</p>
+                    <span class="news-date">Aujourd'hui</span>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
+</section>
 
         <!-- Section Trombinoscope -->
         <section id="trombinoscope" class="content-section">
@@ -328,7 +305,7 @@
 <script src="frontend/js/api-supabase.js?v=2024110501"></script>
 <script src="frontend/js/auth-supabase.js?v=2024110501"></script>
 <script src="frontend/js/ui-supabase.js?v=2024110501"></script>
-<script src="frontend/js/employees-supabase.js?v=2024110503"></script>
+<script src="frontend/js/employees-supabase.js?v=2024110504"></script>
 <script src="frontend/js/events-supabase.js?v=2024110501"></script>
 <script src="frontend/js/main-supabase.js?v=2024110502"></script>
 </body>
