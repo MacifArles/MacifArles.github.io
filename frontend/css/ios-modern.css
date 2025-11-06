@@ -873,6 +873,14 @@ body {
   border-radius: inherit;
 }
 
+.employee-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* ← CHANGÉ */
+    border-radius: var(--radius-large);
+    padding: 10px;
+}
+
 .employee-name {
   color: var(--text-light);
   font-size: 1.2rem;
@@ -1418,13 +1426,13 @@ body {
 }
 
 /* Section Skipper - Style spécial */
+/* APRÈS - Plus de bulle, juste le titre */
 .skipper-section {
-    background: linear-gradient(135deg, rgba(0, 122, 255, 0.08), rgba(0, 122, 255, 0.15));
-    border: 2px solid var(--ios-blue);
-    border-radius: var(--radius-large);
-    padding: 24px;
     margin-bottom: 32px;
-    box-shadow: 0 4px 20px rgba(0, 122, 255, 0.15);
+}
+
+.skipper-section .section-title {
+    /* Garde juste le titre stylisé */
 }
 
 .skipper-section .team-header h3 {
@@ -1585,8 +1593,10 @@ body {
 .team-avatar-mini img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* ← CHANGÉ de "cover" à "contain" */
     border-radius: 50%;
+    padding: 5px; /* ← AJOUTÉ pour donner de l'air */
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .team-avatar-mini:hover {
@@ -1956,8 +1966,9 @@ body {
 .team-member-card .member-avatar img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* ← CHANGÉ */
     border-radius: 50%;
+    padding: 8px; /* ← AJOUTÉ */
 }
 
 .team-member-card .member-name {
@@ -2206,4 +2217,51 @@ body {
     color: rgba(255, 255, 255, 0.6);
     font-style: italic;
     padding: 40px;
+}
+
+/* ===== AVATARS NON COUPÉS ===== */
+
+.team-avatar-mini {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    font-weight: 600;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.team-avatar-mini img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.team-member-card .member-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    font-weight: 600;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+}
+
+.team-member-card .member-avatar img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
 }
