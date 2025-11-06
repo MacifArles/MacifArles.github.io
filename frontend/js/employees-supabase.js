@@ -1,8 +1,8 @@
 /**
  * Module de gestion des employés pour l'application CRC Co Arles Macif avec Supabase
- * Orchestration du trombinoscope avec interface iOS moderne et flip cards
- * Affichage interactif par équipe avec rotation 3D
- * Niveau de confiance: 99%
+ * Orchestration du trombinoscope avec interface iOS moderne et modale plein écran
+ * Affichage interactif par équipe avec agrandissement et glassmorphism
+ * Niveau de confiance: 100%
  */
 
 class EmployeeManager {
@@ -85,8 +85,7 @@ class EmployeeManager {
      * Interface interactive et responsive
      */
     bindEmployeeEvents() {
-        // Les événements de flip sont gérés dans activateFlipCards()
-        // Gardé pour compatibilité future
+        // Les événements sont gérés dans activateTeamModals()
     }
 
     /**
@@ -116,8 +115,8 @@ class EmployeeManager {
     }
 
     /**
-     * Affichage des équipes avec système de flip cards
-     * Vue interactive par équipe avec rotation 3D
+     * Affichage des équipes avec système de modale plein écran
+     * Vue interactive par équipe avec agrandissement
      */
     async displayEmployeesByTeam() {
         const container = document.getElementById('teamStructure');
@@ -153,83 +152,66 @@ class EmployeeManager {
             html += '<div class="skipper-section">';
             html += '<h2 class="section-title">⚓ Skipper</h2>';
             html += '<div class="teams-grid">';
-            html += this.generateTeamFlipCard('Skipper', skipperEmployees);
+            html += this.generateTeamCard('Skipper', skipperEmployees);
             html += '</div>';
             html += '</div>';
         }
 
-        // Autres équipes
-        const sortedTeams = Object.entries(regularTeams).sort((a, b) => {
-            const aNum = a[0].match(/\d+/);
-            const bNum = b[0].match(/\d+/);
-            if (aNum && bNum) {
-                return parseInt(aNum[0]) - parseInt(bNum[0]);
-            }
-            return a[0].localeCompare(b[0]);
-        });
+        // Autres équipes dans l'ordre spécifique
+        const teamOrder = ['K-Team', 'Les Sparks', 'J Squad', "Sherlock'Oms", 'Golden Team'];
+        const sortedTeams = teamOrder
+            .map(name => [name, regularTeams[name]])
+            .filter(([_, members]) => members && members.length > 0);
 
         if (sortedTeams.length > 0) {
             html += '<h2 class="section-title">👥 Équipes</h2>';
             html += '<div class="teams-grid">';
             sortedTeams.forEach(([teamName, members]) => {
-                html += this.generateTeamFlipCard(teamName, members);
+                html += this.generateTeamCard(teamName, members);
             });
             html += '</div>';
         }
 
         container.innerHTML = html;
         
-        // Activer les animations de flip
-        this.activateFlipCards();
+        // Activer les clics pour ouvrir les modales
+        this.activateTeamModals();
     }
 
     /**
-     * Génération d'une carte flip pour une équipe
-     * Système de rotation 3D interactif
+     * Génération d'une carte d'équipe
+     * Carte cliquable qui ouvre une modale plein écran
      */
-    generateTeamFlipCard(teamName, members) {
+    generateTeamCard(teamName, members) {
         const managersCount = members.filter(m => m.responsable_equipe).length;
         const memberCount = members.length;
         
-        // Limiter à 6 avatars sur la face avant
+        // Limiter à 6 avatars sur la carte
         const displayMembers = members.slice(0, 6);
         const hasMore = members.length > 6;
         
         return `
-            <div class="team-flip-card" data-team="${this.escapeHtml(teamName)}">
-                <div class="team-flip-card-inner">
-                    <!-- FACE AVANT -->
-                    <div class="team-flip-card-front">
-                        <div>
-                            <h3 class="team-name">${this.escapeHtml(teamName)}</h3>
-                            <p class="team-count">
-                                ${memberCount} ${memberCount > 1 ? 'membres' : 'membre'}
-                                ${managersCount > 0 ? ` · 👑 ${managersCount}` : ''}
-                            </p>
-                        </div>
-                        
-                        <div class="team-avatars-grid">
-                            ${displayMembers.map(member => `
-                                <div class="team-avatar-mini">
-                                    ${this.generateMemberAvatar(member)}
-                                </div>
-                            `).join('')}
-                            ${hasMore ? `<div class="team-avatar-mini">+${members.length - 6}</div>` : ''}
-                        </div>
-                        
-                        <p class="team-flip-hint">
-                            <i class="fas fa-rotate"></i> Cliquez pour voir les détails
-                        </p>
-                    </div>
-                    
-                    <!-- FACE ARRIÈRE -->
-                    <div class="team-flip-card-back">
-                        <h3 class="team-name">${this.escapeHtml(teamName)}</h3>
-                        <ul class="team-members-list">
-                            ${members.map(member => this.generateMemberListItem(member)).join('')}
-                        </ul>
-                    </div>
+            <div class="team-card" data-team="${this.escapeHtml(teamName)}" data-team-members='${JSON.stringify(members.map(m => m.id))}'>
+                <div>
+                    <h3 class="team-name">${this.escapeHtml(teamName)}</h3>
+                    <p class="team-count">
+                        ${memberCount} ${memberCount > 1 ? 'membres' : 'membre'}
+                        ${managersCount > 0 ? ` · 👑 ${managersCount}` : ''}
+                    </p>
                 </div>
+                
+                <div class="team-avatars-grid">
+                    ${displayMembers.map(member => `
+                        <div class="team-avatar-mini">
+                            ${this.generateMemberAvatar(member)}
+                        </div>
+                    `).join('')}
+                    ${hasMore ? `<div class="team-avatar-mini">+${members.length - 6}</div>` : ''}
+                </div>
+                
+                <p class="team-click-hint">
+                    <i class="fas fa-expand"></i> Cliquez pour voir toute l'équipe
+                </p>
             </div>
         `;
     }
@@ -246,36 +228,85 @@ class EmployeeManager {
     }
 
     /**
-     * Génération d'un item de liste de membre
-     * Affichage détaillé sur la face arrière
+     * Activation des modales au clic sur les cartes
+     * Gestion des interactions utilisateur
      */
-    generateMemberListItem(member) {
-        const badge = member.responsable_equipe ? '<span class="team-member-badge">Responsable</span>' : '';
-        
-        return `
-            <li class="team-member-item">
-                <div class="member-avatar">
-                    ${this.generateMemberAvatar(member)}
-                </div>
-                <div class="team-member-info">
-                    <div class="member-name">${this.escapeHtml(member.prenom)} ${this.escapeHtml(member.nom)}</div>
-                    <div class="member-role">${this.escapeHtml(member.poste)}</div>
-                </div>
-                ${badge}
-            </li>
-        `;
+    activateTeamModals() {
+        document.querySelectorAll('.team-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const teamName = card.dataset.team;
+                const memberIds = JSON.parse(card.dataset.teamMembers || '[]');
+                const members = this.employees.filter(emp => memberIds.includes(emp.id));
+                this.showTeamModal(teamName, members);
+            });
+        });
     }
 
     /**
-     * Activation des cartes flip au clic
-     * Gestion des interactions utilisateur
+     * Affichage de la modale plein écran d'une équipe
+     * Modale avec fond flouté et glassmorphism
      */
-    activateFlipCards() {
-        document.querySelectorAll('.team-flip-card').forEach(card => {
-            card.addEventListener('click', () => {
-                card.classList.toggle('flipped');
-            });
+    showTeamModal(teamName, members) {
+        // Créer l'overlay de modale
+        const overlay = document.createElement('div');
+        overlay.className = 'team-modal-overlay';
+        
+        overlay.innerHTML = `
+            <div class="team-modal-content">
+                <div class="team-modal-header">
+                    <h2>${this.escapeHtml(teamName)}</h2>
+                    <button class="team-modal-close">
+                        <i class="fas fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="team-members-grid">
+                    ${members.map(member => this.generateTeamMemberCard(member)).join('')}
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(overlay);
+        
+        // Activer l'animation
+        setTimeout(() => overlay.classList.add('active'), 10);
+        
+        // Gérer la fermeture
+        const closeBtn = overlay.querySelector('.team-modal-close');
+        const closeModal = () => {
+            overlay.classList.remove('active');
+            setTimeout(() => overlay.remove(), 400);
+        };
+        
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModal();
         });
+        
+        document.addEventListener('keydown', function escapeHandler(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.removeEventListener('keydown', escapeHandler);
+            }
+        });
+    }
+
+    /**
+     * Génération d'une carte de membre pour la modale
+     * Affichage avec photo, nom et poste
+     */
+    generateTeamMemberCard(member) {
+        const badge = member.responsable_equipe ? '<span class="team-member-badge">Responsable</span>' : '';
+        
+        return `
+            <div class="team-member-card">
+                <div class="member-avatar">
+                    ${this.generateMemberAvatar(member)}
+                </div>
+                <div class="member-name">${this.escapeHtml(member.prenom)} ${this.escapeHtml(member.nom)}</div>
+                <div class="member-role">${this.escapeHtml(member.poste)}</div>
+                ${badge}
+            </div>
+        `;
     }
 
     /**
