@@ -2265,3 +2265,70 @@ body {
     height: 90%;
     object-fit: contain;
 }
+
+
+/* ===== CARTES PAGE D'ACCUEIL ===== */
+
+.event-card-home, .birthday-card-home {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-large);
+    padding: 25px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.event-card-home:hover, .birthday-card-home:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.event-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.event-card-home h3, .birthday-card-home h4 {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.event-card-home p, .birthday-card-home p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
+}
+
+.event-date, .birthday-date {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.birthday-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    font-weight: 600;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.no-data-text {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    padding: 40px;
+    font-size: 1.1rem;
+}
