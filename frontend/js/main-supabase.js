@@ -1,6 +1,7 @@
 /**
- * Script principal de l'application
- * Gestion de la navigation et initialisation
+ * Script principal de l'application Fad'Arles
+ * Gestion de la navigation, initialisation et données du dashboard
+ * Version avec support de la nouvelle page d'accueil
  */
 
 class App {
@@ -19,7 +20,7 @@ class App {
         
         // Charger les données si authentifié
         if (window.auth?.isAuthenticated()) {
-            this.loadDashboardData();
+            this.loadHomeData();
         }
     }
 
@@ -106,7 +107,7 @@ class App {
 
         switch (section) {
             case 'home':
-                this.loadDashboardData();
+                await this.loadHomeData();
                 break;
             case 'trombinoscope':
                 if (window.employeesManager) {
@@ -119,13 +120,71 @@ class App {
                 }
                 break;
             case 'anniversaires':
-                this.loadBirthdays();
+                await this.loadBirthdays();
                 break;
         }
     }
 
     /**
-     * Chargement des données du tableau de bord
+     * Chargement des données de la page d'accueil
+     * Affiche les prochains événements et anniversaires du mois
+     */
+    async loadHomeData() {
+        try {
+            // Charger les prochains événements
+            const upcomingEventsContainer = document.getElementById('homeUpcomingEvents');
+            if (upcomingEventsContainer) {
+                try {
+                    const eventsResponse = await window.api.getUpcomingEvents(3);
+                    if (eventsResponse.data && eventsResponse.data.length > 0) {
+                        upcomingEventsContainer.innerHTML = eventsResponse.data.map(event => `
+                            <div class="event-card-home">
+                                <div class="event-icon">📅</div>
+                                <h3>${this.escapeHtml(event.titre)}</h3>
+                                <p>${this.escapeHtml(event.description || 'Aucune description')}</p>
+                                <span class="event-date">${this.formatDate(event.date_debut)}</span>
+                            </div>
+                        `).join('');
+                    } else {
+                        upcomingEventsContainer.innerHTML = '<p class="no-data-text">Aucun événement à venir</p>';
+                    }
+                } catch (error) {
+                    console.error('Erreur chargement événements:', error);
+                    upcomingEventsContainer.innerHTML = '<p class="no-data-text">Aucun événement à venir</p>';
+                }
+            }
+
+            // Charger les anniversaires du mois
+            const birthdaysContainer = document.getElementById('homeBirthdays');
+            if (birthdaysContainer) {
+                try {
+                    const birthdaysResponse = await window.api.getCurrentMonthBirthdays();
+                    if (birthdaysResponse.data && birthdaysResponse.data.length > 0) {
+                        birthdaysContainer.innerHTML = birthdaysResponse.data.map(person => `
+                            <div class="birthday-card-home">
+                                <div class="birthday-avatar">
+                                    ${this.getInitials(person.prenom, person.nom)}
+                                </div>
+                                <h4>${this.escapeHtml(person.prenom)} ${this.escapeHtml(person.nom)}</h4>
+                                <p>${this.escapeHtml(person.poste)}</p>
+                                <span class="birthday-date">${this.formatBirthdayDate(person.date_anniversaire)}</span>
+                            </div>
+                        `).join('');
+                    } else {
+                        birthdaysContainer.innerHTML = '<p class="no-data-text">Aucun anniversaire ce mois-ci</p>';
+                    }
+                } catch (error) {
+                    console.error('Erreur chargement anniversaires:', error);
+                    birthdaysContainer.innerHTML = '<p class="no-data-text">Aucun anniversaire ce mois-ci</p>';
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement de la page d\'accueil:', error);
+        }
+    }
+
+    /**
+     * Chargement des données du tableau de bord (ancienne version, conservée pour compatibilité)
      */
     async loadDashboardData() {
         try {
@@ -190,8 +249,8 @@ class App {
             <div class="activity-item">
                 <i class="fas fa-calendar-check"></i>
                 <div>
-                    <strong>${event.titre}</strong>
-                    <span>${new Date(event.date_debut).toLocaleDateString('fr-FR')}</span>
+                    <strong>${this.escapeHtml(event.titre)}</strong>
+                    <span>${this.formatDate(event.date_debut)}</span>
                 </div>
             </div>
         `).join('');
@@ -213,8 +272,8 @@ class App {
             <div class="activity-item">
                 <i class="fas fa-cake-candles"></i>
                 <div>
-                    <strong>${person.prenom} ${person.nom}</strong>
-                    <span>${new Date(person.date_anniversaire).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}</span>
+                    <strong>${this.escapeHtml(person.prenom)} ${this.escapeHtml(person.nom)}</strong>
+                    <span>${this.formatBirthdayDate(person.date_anniversaire)}</span>
                 </div>
             </div>
         `).join('');
@@ -241,10 +300,10 @@ class App {
                         <i class="fas fa-cake-candles"></i>
                     </div>
                     <div class="birthday-info">
-                        <h3>${person.prenom} ${person.nom}</h3>
-                        <p>${person.poste} - ${person.equipe}</p>
+                        <h3>${this.escapeHtml(person.prenom)} ${this.escapeHtml(person.nom)}</h3>
+                        <p>${this.escapeHtml(person.poste)} - ${this.escapeHtml(person.equipe)}</p>
                         <span class="birthday-date">
-                            ${new Date(person.date_anniversaire).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                            ${this.formatBirthdayDate(person.date_anniversaire)}
                         </span>
                     </div>
                 </div>
@@ -254,9 +313,69 @@ class App {
             console.error('Erreur chargement anniversaires:', error);
         }
     }
+
+    /**
+     * Formatage d'une date
+     */
+    formatDate(dateString) {
+        if (!dateString) return '';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        } catch (error) {
+            return dateString;
+        }
+    }
+
+    /**
+     * Formatage d'une date d'anniversaire (sans année)
+     */
+    formatBirthdayDate(dateString) {
+        if (!dateString) return '';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long'
+            });
+        } catch (error) {
+            return dateString;
+        }
+    }
+
+    /**
+     * Génération des initiales
+     */
+    getInitials(prenom, nom) {
+        const firstInitial = prenom ? prenom.charAt(0).toUpperCase() : '';
+        const lastInitial = nom ? nom.charAt(0).toUpperCase() : '';
+        return firstInitial + lastInitial;
+    }
+
+    /**
+     * Sécurisation des chaînes HTML
+     * Protection contre les injections de code
+     */
+    escapeHtml(text) {
+        if (typeof text !== 'string') return text;
+        
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        
+        return text.replace(/[&<>"']/g, match => map[match]);
+    }
 }
 
 // Initialisation de l'application
 window.app = new App();
 
-console.log('Application FADARLES initialisée avec succès ! 🚀');
+console.log('Application Fad\'Arles initialisée avec succès ! 🚀');
